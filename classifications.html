@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Classifications — DataShield</title>
   <link rel="stylesheet" href="shared/shell.css">
@@ -27,7 +28,7 @@
         <span class="badge">3</span>
       </button>
       <button class="sds-header-icon-btn" aria-label="Help">
-        <span class="material-symbols-outlined">help_outline</span>
+        <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
       <button class="sds-header-profile" aria-label="User menu">
@@ -124,7 +125,7 @@
       </div>
 
       <!-- Tabs -->
-      <div class="sds-tabs" role="tablist">
+      <div class="sds-tabs" role="tablist" aria-label="Classification filters">
         <button class="sds-tab active" role="tab" aria-selected="true" data-tab="all">All<span class="tab-badge">24</span></button>
         <button class="sds-tab" role="tab" aria-selected="false" data-tab="sensitivity">Sensitivity Levels</button>
         <button class="sds-tab" role="tab" aria-selected="false" data-tab="pii">PII Types</button>
@@ -148,7 +149,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><a class="cell-link">Email Address</a></td>
+                <td><a href="#" class="cell-link">Email Address</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>234</td>
                 <td>198</td>
@@ -157,7 +158,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Phone Number</a></td>
+                <td><a href="#" class="cell-link">Phone Number</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>156</td>
                 <td>142</td>
@@ -166,7 +167,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Social Security Number</a></td>
+                <td><a href="#" class="cell-link">Social Security Number</a></td>
                 <td><span class="sds-tag sds-tag--error">Restricted</span></td>
                 <td>89</td>
                 <td>87</td>
@@ -175,7 +176,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Credit Card</a></td>
+                <td><a href="#" class="cell-link">Credit Card</a></td>
                 <td><span class="sds-tag sds-tag--error">Restricted</span></td>
                 <td>45</td>
                 <td>43</td>
@@ -184,7 +185,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Full Name</a></td>
+                <td><a href="#" class="cell-link">Full Name</a></td>
                 <td><span class="sds-tag sds-tag--warning">PII</span></td>
                 <td>312</td>
                 <td>290</td>
@@ -193,7 +194,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Date of Birth</a></td>
+                <td><a href="#" class="cell-link">Date of Birth</a></td>
                 <td><span class="sds-tag sds-tag--warning">PII</span></td>
                 <td>178</td>
                 <td>165</td>
@@ -202,7 +203,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">IP Address</a></td>
+                <td><a href="#" class="cell-link">IP Address</a></td>
                 <td><span class="sds-tag sds-tag--warning">Sensitive</span></td>
                 <td>67</td>
                 <td>62</td>
@@ -211,7 +212,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Revenue Data</a></td>
+                <td><a href="#" class="cell-link">Revenue Data</a></td>
                 <td><span class="sds-tag sds-tag--info">Confidential</span></td>
                 <td>34</td>
                 <td>12</td>
@@ -220,7 +221,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Product Catalog</a></td>
+                <td><a href="#" class="cell-link">Product Catalog</a></td>
                 <td><span class="sds-tag sds-tag--neutral">Internal</span></td>
                 <td>89</td>
                 <td>45</td>
@@ -229,7 +230,7 @@
                 <td><button class="sds-header-icon-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
               <tr>
-                <td><a class="cell-link">Marketing Copy</a></td>
+                <td><a href="#" class="cell-link">Marketing Copy</a></td>
                 <td><span class="sds-tag sds-tag--success">Public</span></td>
                 <td>23</td>
                 <td>8</td>
