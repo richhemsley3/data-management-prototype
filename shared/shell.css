@@ -323,7 +323,7 @@ a:hover { text-decoration: underline; }
   position: relative; overflow: hidden;
 }
 .sds-stat-card--highlighted::before, .sds-stat-card--success::before, .sds-stat-card--warning::before, .sds-stat-card--error::before {
-  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 6px;
 }
 .sds-stat-card--highlighted::before { background: var(--sds-interactive-primary); }
 .sds-stat-card--success::before { background: var(--sds-status-success-text); }
