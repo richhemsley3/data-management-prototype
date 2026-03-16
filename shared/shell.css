@@ -238,7 +238,12 @@ a:hover { text-decoration: underline; }
 .main-content {
   flex: 1; overflow-y: auto; background: var(--sds-bg-page);
   padding: var(--sds-space-800) var(--sds-space-1000) var(--sds-space-1600);
-  max-height: 100vh;
+  min-height: 0;
+}
+/* Sticky table column headers inside scrolling main content */
+.main-content .sds-table thead th {
+  position: sticky; top: 0; background: var(--sds-bg-surface); z-index: 2;
+  box-shadow: inset 0 -1px 0 var(--sds-border-default);
 }
 
 /* ============================================================
@@ -453,6 +458,7 @@ a:hover { text-decoration: underline; }
 .sds-tabs {
   display: flex; gap: 0; border-bottom: 1px solid var(--sds-border-default);
   margin-bottom: var(--sds-space-600);
+  position: sticky; top: 0; background: var(--sds-bg-page); z-index: 3;
 }
 .sds-tab {
   padding: var(--sds-space-200) var(--sds-space-400); font-size: var(--sds-type-label);

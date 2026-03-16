@@ -71,29 +71,49 @@
       color: var(--sds-text-tertiary);
       font-weight: var(--sds-weight-regular);
     }
-    /* Override main-content padding for catalog layout */
+    /* Override main-content for catalog — no scroll on main, children scroll independently */
     .main-content--catalog {
       padding: 0;
       display: flex;
       flex-direction: column;
+      overflow: hidden;        /* prevent main from scrolling */
     }
     .catalog-top {
-      padding: var(--sds-space-800) var(--sds-space-1000) 0;
+      padding: var(--sds-space-600) var(--sds-space-1000) 0;
+      flex-shrink: 0;          /* pin header + tabs at top */
     }
     .catalog-body {
       display: flex;
       flex: 1;
+      min-height: 0;           /* allow flex children to shrink below content size */
       overflow: hidden;
     }
     .catalog-body .filter-sidebar {
       border-right: 1px solid var(--sds-border-subtle);
-      height: 100%;
       overflow-y: auto;
+      flex-shrink: 0;
     }
     .catalog-body .catalog-results {
       flex: 1;
+      min-height: 0;
       padding: var(--sds-space-400) var(--sds-space-1000) var(--sds-space-1600);
       overflow-y: auto;
+    }
+    /* Sticky table column headers when results scroll */
+    .catalog-results .sds-table thead th {
+      position: sticky;
+      top: -1px;
+      background: var(--sds-bg-surface);
+      z-index: 2;
+      box-shadow: inset 0 -1px 0 var(--sds-border-default);
+    }
+    /* Sticky results header bar */
+    .catalog-results .results-header {
+      position: sticky;
+      top: 0;
+      background: var(--sds-bg-page);
+      z-index: 3;
+      padding-bottom: var(--sds-space-300);
     }
 
     /* ---- View Mode Toggle (segmented control) ---- */
@@ -167,8 +187,8 @@
       width: 280px;
       min-width: 280px;
       border-right: 1px solid var(--sds-border-subtle);
-      height: 100%;
       overflow-y: auto;
+      min-height: 0;
       background: var(--sds-bg-surface);
     }
     .tree-sidebar-header {
@@ -344,6 +364,7 @@
     /* ---- Detail Panel (Tree mode right side) ---- */
     .detail-panel {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: var(--sds-space-600) var(--sds-space-800) var(--sds-space-1600);
     }
@@ -614,13 +635,8 @@
     <!-- Main Content -->
     <main class="main-content main-content--catalog" data-view-mode="table">
 
-      <!-- Top section: breadcrumbs, header, tabs -->
+      <!-- Top section: header, tabs -->
       <div class="catalog-top">
-        <!-- Breadcrumbs -->
-        <div class="breadcrumbs">
-          <a href="index.html">Home</a><span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span><span>Catalog</span>
-        </div>
-
         <!-- Page Header -->
         <div class="page-header">
           <h1>Catalog</h1>
@@ -1330,6 +1346,23 @@
     var catalogBody = document.querySelector('.catalog-body');
     var viewBtns = document.querySelectorAll('.view-toggle-btn');
 
+    function selectFirstConnection() {
+      var firstConn = document.querySelector('.tree-sidebar .tree-item[data-detail-type="connection"]');
+      if (firstConn) {
+        // Expand the first connection's children
+        var toggleId = firstConn.getAttribute('data-tree-toggle');
+        if (toggleId) {
+          var children = document.getElementById('tree-' + toggleId);
+          var chevron = firstConn.querySelector('.tree-chevron');
+          if (children && !children.classList.contains('open')) {
+            children.classList.add('open');
+            if (chevron) chevron.classList.add('open');
+          }
+        }
+        showDetail(firstConn);
+      }
+    }
+
     viewBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
         var mode = btn.getAttribute('data-mode');
@@ -1341,6 +1374,11 @@
         btn.setAttribute('aria-checked', 'true');
         mainContent.setAttribute('data-view-mode', mode);
         catalogBody.setAttribute('data-mode', mode);
+
+        // Auto-select first connection when switching to Browse mode
+        if (mode === 'tree' && !document.querySelector('.tree-sidebar .tree-item.active')) {
+          selectFirstConnection();
+        }
       });
     });
 

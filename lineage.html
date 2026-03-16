@@ -43,10 +43,10 @@
        Content layout: graph + side panel
        ============================================================ */
     .lineage-content {
-      display: flex; flex: 1; overflow: hidden;
+      display: flex; flex: 1; min-height: 0; overflow: hidden;
     }
     .lineage-main {
-      flex: 1; overflow: hidden; padding: 0;
+      flex: 1; min-height: 0; overflow: hidden; padding: 0;
     }
 
     /* ============================================================
@@ -351,12 +351,6 @@
 
     <!-- Main Content -->
     <main class="main-content lineage-page">
-
-      <div class="breadcrumbs">
-        <a href="index.html">Home</a>
-        <span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span>
-        <span>Lineage</span>
-      </div>
 
       <div class="page-header">
         <div>
