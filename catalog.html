@@ -95,6 +95,464 @@
       padding: var(--sds-space-400) var(--sds-space-1000) var(--sds-space-1600);
       overflow-y: auto;
     }
+
+    /* ---- View Mode Toggle (segmented control) ---- */
+    .view-toggle {
+      display: inline-flex;
+      border: 1px solid var(--sds-border-default);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--sds-bg-surface);
+    }
+    .view-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+      padding: var(--sds-space-150) var(--sds-space-300);
+      font-size: var(--sds-type-caption);
+      font-weight: var(--sds-weight-medium);
+      font-family: var(--sds-font-sans);
+      color: var(--sds-text-secondary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      line-height: 1;
+    }
+    .view-toggle-btn:not(:last-child) {
+      border-right: 1px solid var(--sds-border-default);
+    }
+    .view-toggle-btn .material-symbols-outlined {
+      font-size: 16px;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .view-toggle-btn:hover {
+      background: var(--sds-bg-subtle);
+      color: var(--sds-text-primary);
+    }
+    .view-toggle-btn.active {
+      background: var(--sds-nav-item-active-bg);
+      color: var(--sds-nav-item-active-text);
+    }
+    .view-toggle-btn.active .material-symbols-outlined {
+      color: var(--sds-nav-item-active-text);
+    }
+
+    /* Page header layout */
+    .page-header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-400);
+    }
+
+    /* ---- Mode Visibility ---- */
+    /* Table mode (default) */
+    .catalog-body[data-mode="table"] .tree-sidebar { display: none; }
+    .catalog-body[data-mode="table"] .detail-panel { display: none; }
+    .catalog-body[data-mode="table"] .filter-sidebar { display: flex; flex-direction: column; }
+    .catalog-body[data-mode="table"] .catalog-results { display: block; }
+
+    /* Tree mode */
+    .catalog-body[data-mode="tree"] .filter-sidebar { display: none; }
+    .catalog-body[data-mode="tree"] .catalog-results { display: none; }
+    .catalog-body[data-mode="tree"] .tree-sidebar { display: flex; flex-direction: column; }
+    .catalog-body[data-mode="tree"] .detail-panel { display: flex; flex-direction: column; }
+
+    /* Hide scope tabs in tree mode */
+    [data-view-mode="tree"] .sds-tabs { display: none; }
+    [data-view-mode="tree"] .catalog-top { padding-bottom: var(--sds-space-400); }
+
+    /* ---- Tree Sidebar ---- */
+    .tree-sidebar {
+      width: 280px;
+      min-width: 280px;
+      border-right: 1px solid var(--sds-border-subtle);
+      height: 100%;
+      overflow-y: auto;
+      background: var(--sds-bg-surface);
+    }
+    .tree-sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sds-space-300) var(--sds-space-400);
+      border-bottom: 1px solid var(--sds-border-default);
+      font-size: var(--sds-type-overline);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      position: sticky;
+      top: 0;
+      background: var(--sds-bg-surface);
+      z-index: 1;
+    }
+    .tree-sidebar-count {
+      font-size: var(--sds-type-overline);
+      font-weight: var(--sds-weight-regular);
+      color: var(--sds-text-tertiary);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* Connection health dot in tree */
+    .tree-conn-status {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .tree-conn-status--healthy { background: var(--sds-status-success-text); }
+    .tree-conn-status--warning { background: var(--sds-status-warning-text); }
+    .tree-conn-status--error { background: var(--sds-status-error-text); }
+
+    /* Ancestor highlight — parent nodes of active item */
+    .tree-item.ancestor {
+      color: var(--sds-text-primary);
+      font-weight: var(--sds-weight-medium);
+    }
+    .tree-item.ancestor .tree-icon .material-symbols-outlined {
+      color: var(--sds-color-warm-gray-700);
+    }
+
+    /* ---- Tree View ---- */
+    .tree-panel {
+      padding: var(--sds-space-200) var(--sds-space-300);
+    }
+    .tree-node { margin: 0; }
+
+    /* Tree item — matches .sds-sidenav-item specs */
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-250);
+      padding: var(--sds-space-200) var(--sds-space-300);
+      border-radius: 8px;
+      font-size: var(--sds-type-body);
+      font-weight: var(--sds-weight-regular);
+      color: var(--sds-color-warm-gray-700);
+      cursor: pointer;
+      user-select: none;
+      margin: var(--sds-space-050) 0;
+      line-height: 1.3;
+      transition: background 0.12s ease, color 0.12s ease;
+      text-decoration: none;
+    }
+    .tree-item:hover {
+      background: var(--sds-bg-subtle);
+      color: var(--sds-text-primary);
+    }
+    .tree-item.active {
+      background: var(--sds-nav-item-active-bg);
+      color: var(--sds-nav-item-active-text);
+      font-weight: var(--sds-weight-medium);
+    }
+    .tree-item.active:hover {
+      background: var(--sds-color-blue-150);
+    }
+    .tree-item.active .tree-icon .material-symbols-outlined {
+      color: var(--sds-nav-item-active-text);
+    }
+    .tree-item:focus-visible {
+      outline: 2px solid var(--sds-interactive-primary);
+      outline-offset: -2px;
+    }
+    .tree-item--conn {
+      font-weight: var(--sds-weight-regular);
+    }
+    .tree-item--schema {
+      font-size: var(--sds-type-label);
+    }
+    .tree-item--table {
+      font-size: var(--sds-type-label);
+    }
+    .tree-item--table .table-leaf-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: var(--sds-font-mono);
+      font-size: var(--sds-type-caption);
+    }
+
+    /* Chevron icon in tree */
+    .tree-chevron {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sds-text-tertiary);
+      transition: transform 0.15s ease;
+    }
+    .tree-chevron .material-symbols-outlined {
+      font-size: 16px;
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+    .tree-chevron.open {
+      transform: rotate(90deg);
+    }
+
+    /* Tree icon (same as .sds-sidenav-icon) */
+    .tree-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tree-icon .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--sds-text-tertiary);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      transition: color 0.12s;
+    }
+    .tree-item:hover .tree-icon .material-symbols-outlined {
+      color: var(--sds-color-warm-gray-700);
+    }
+
+    /* Tree label + count badge */
+    .tree-label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tree-count {
+      font-size: var(--sds-type-overline);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-tertiary);
+      background: var(--sds-status-neutral-bg);
+      border-radius: 10px;
+      padding: 1px 6px;
+      min-width: 18px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* Children container */
+    .tree-children {
+      display: none;
+      padding-left: var(--sds-space-400);
+    }
+    .tree-children.open {
+      display: block;
+    }
+
+    /* ---- Detail Panel (Tree mode right side) ---- */
+    .detail-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sds-space-600) var(--sds-space-800) var(--sds-space-1600);
+    }
+    #detail-content {
+      max-width: 760px;
+    }
+
+    /* Empty state */
+    .detail-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--sds-text-tertiary);
+      text-align: center;
+      gap: var(--sds-space-300);
+    }
+    .detail-empty .material-symbols-outlined {
+      font-size: 48px;
+      color: var(--sds-color-warm-gray-300);
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;
+    }
+    .detail-empty p {
+      font-size: var(--sds-type-label);
+      max-width: 280px;
+      line-height: var(--sds-leading-relaxed);
+    }
+
+    /* Detail header */
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sds-space-400);
+      margin-bottom: var(--sds-space-600);
+    }
+    .detail-header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--sds-bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .detail-header-icon .material-symbols-outlined {
+      font-size: 24px;
+      color: var(--sds-text-secondary);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .detail-header-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .detail-header-info h2 {
+      font-size: var(--sds-type-title);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      margin: 0 0 var(--sds-space-050);
+    }
+    .detail-breadcrumb {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-tertiary);
+      margin-bottom: var(--sds-space-100);
+    }
+    .detail-breadcrumb span { color: var(--sds-text-tertiary); }
+    .detail-subtitle {
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-secondary);
+      margin: 0;
+    }
+
+    /* Detail stats row */
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--sds-space-300);
+      margin-bottom: var(--sds-space-600);
+    }
+    .detail-stat {
+      background: var(--sds-bg-card);
+      border: 1px solid var(--sds-border-default);
+      border-radius: 8px;
+      padding: var(--sds-space-300) var(--sds-space-400);
+    }
+    .detail-stat-value {
+      font-size: var(--sds-type-title);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      line-height: 1;
+    }
+    .detail-stat-label {
+      font-size: var(--sds-type-overline);
+      font-weight: var(--sds-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--sds-text-tertiary);
+      margin-top: var(--sds-space-100);
+    }
+
+    /* Detail section */
+    .detail-section {
+      margin-bottom: var(--sds-space-600);
+    }
+    .detail-section-title {
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      margin: 0 0 var(--sds-space-300);
+      padding-bottom: var(--sds-space-200);
+      border-bottom: 1px solid var(--sds-border-subtle);
+    }
+
+    /* Detail table list (for schema/connection children) */
+    .detail-table-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sds-space-100);
+    }
+    .detail-table-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-250) var(--sds-space-300);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.12s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .detail-table-row:hover {
+      background: var(--sds-bg-subtle);
+      text-decoration: none;
+    }
+    .detail-table-name {
+      font-family: var(--sds-font-mono);
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-medium);
+      color: var(--sds-text-link);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .detail-table-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+      flex-shrink: 0;
+    }
+
+    /* Detail column preview (for table selected) */
+    .detail-columns-table {
+      width: 100%;
+      font-size: var(--sds-type-caption);
+    }
+    .detail-columns-table th {
+      text-align: left;
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-secondary);
+      padding: var(--sds-space-200) var(--sds-space-300);
+      border-bottom: 1px solid var(--sds-border-default);
+      font-size: var(--sds-type-overline);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .detail-columns-table td {
+      padding: var(--sds-space-200) var(--sds-space-300);
+      border-bottom: 1px solid var(--sds-border-subtle);
+      color: var(--sds-text-primary);
+    }
+    .detail-columns-table .col-name {
+      font-family: var(--sds-font-mono);
+      font-weight: var(--sds-weight-medium);
+    }
+    .detail-columns-table .col-type {
+      color: var(--sds-text-tertiary);
+    }
+
+    /* Detail tag row */
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sds-space-200);
+    }
+
+    /* Detail metadata pairs */
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--sds-space-200) var(--sds-space-400);
+      font-size: var(--sds-type-label);
+    }
+    .detail-meta-label {
+      color: var(--sds-text-tertiary);
+      font-weight: var(--sds-weight-medium);
+    }
+    .detail-meta-value {
+      color: var(--sds-text-primary);
+    }
+
+    /* Action bar at top of detail */
+    .detail-actions {
+      display: flex;
+      gap: var(--sds-space-200);
+      margin-top: var(--sds-space-200);
+    }
   </style>
 </head>
 <body>
@@ -154,7 +612,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="main-content main-content--catalog">
+    <main class="main-content main-content--catalog" data-view-mode="table">
 
       <!-- Top section: breadcrumbs, header, tabs -->
       <div class="catalog-top">
@@ -168,10 +626,20 @@
           <h1>Catalog</h1>
           <div class="page-header-actions">
             <span class="asset-count">1,847 assets</span>
+            <div class="view-toggle" role="radiogroup" aria-label="View mode">
+              <button class="view-toggle-btn active" data-mode="table" role="radio" aria-checked="true">
+                <span class="material-symbols-outlined">view_list</span>
+                Table
+              </button>
+              <button class="view-toggle-btn" data-mode="tree" role="radio" aria-checked="false">
+                <span class="material-symbols-outlined">account_tree</span>
+                Browse
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Scope Tabs -->
+        <!-- Scope Tabs (visible in table mode only) -->
         <div class="sds-tabs" role="tablist" aria-label="Asset type filter">
           <button class="sds-tab active" role="tab" aria-selected="true" data-filter="all">All</button>
           <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables</button>
@@ -181,10 +649,10 @@
         </div>
       </div>
 
-      <!-- Catalog Body: Filter Sidebar + Results -->
-      <div class="catalog-body">
+      <!-- Catalog Body -->
+      <div class="catalog-body" data-mode="table">
 
-        <!-- Filter Sidebar -->
+        <!-- ==================== TABLE MODE: Filter Sidebar ==================== -->
         <aside class="filter-sidebar" aria-label="Filters">
           <!-- Active Filters -->
           <div class="active-filters">
@@ -281,7 +749,7 @@
           </div>
         </aside>
 
-        <!-- Results -->
+        <!-- ==================== TABLE MODE: Results ==================== -->
         <div class="catalog-results">
           <!-- Results Header -->
           <div class="results-header">
@@ -304,7 +772,7 @@
               </thead>
               <tbody>
                 <!-- Row 1 -->
-                <tr data-type="table">
+                <tr data-type="table" data-source="Snowflake" data-asset="customer_orders">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">customer_orders</a></div>
                     <div class="table-desc">Customer purchase transactions from...</div>
@@ -326,7 +794,7 @@
                   </td>
                 </tr>
                 <!-- Row 2 -->
-                <tr data-type="table">
+                <tr data-type="table" data-source="BigQuery" data-asset="campaign_metrics">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">campaign_metrics</a></div>
                     <div class="table-desc">Marketing campaign performance...</div>
@@ -348,7 +816,7 @@
                   </td>
                 </tr>
                 <!-- Row 3 -->
-                <tr data-type="table">
+                <tr data-type="table" data-source="Salesforce" data-asset="email_subscribers">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">email_subscribers</a></div>
                     <div class="table-desc">Email subscriber list with...</div>
@@ -370,7 +838,7 @@
                   </td>
                 </tr>
                 <!-- Row 4 -->
-                <tr data-type="view">
+                <tr data-type="view" data-source="Snowflake" data-asset="ad_spend_daily">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">ad_spend_daily</a></div>
                     <div class="table-desc">Daily advertising spend across...</div>
@@ -391,7 +859,7 @@
                   </td>
                 </tr>
                 <!-- Row 5 -->
-                <tr data-type="table">
+                <tr data-type="table" data-source="BigQuery" data-asset="social_engagement">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">social_engagement</a></div>
                     <div class="table-desc">Social media engagement metrics...</div>
@@ -413,7 +881,7 @@
                   </td>
                 </tr>
                 <!-- Row 6 -->
-                <tr data-type="dashboard">
+                <tr data-type="dashboard" data-source="Salesforce" data-asset="lead_pipeline">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">lead_pipeline</a></div>
                     <div class="table-desc">Sales lead pipeline with...</div>
@@ -435,7 +903,7 @@
                   </td>
                 </tr>
                 <!-- Row 7 -->
-                <tr data-type="column">
+                <tr data-type="column" data-source="PostgreSQL" data-asset="content_performance">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">content_performance</a></div>
                     <div class="table-desc">Content marketing performance...</div>
@@ -456,7 +924,7 @@
                   </td>
                 </tr>
                 <!-- Row 8 -->
-                <tr data-type="view">
+                <tr data-type="view" data-source="Snowflake" data-asset="customer_segments">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">customer_segments</a></div>
                     <div class="table-desc">Customer segmentation model...</div>
@@ -516,21 +984,677 @@
           </div>
         </div>
 
+        <!-- ==================== TREE MODE: Tree Sidebar ==================== -->
+        <aside class="tree-sidebar" aria-label="Data source browser">
+          <div class="tree-sidebar-header">Connections <span class="tree-sidebar-count">4 sources</span></div>
+          <div class="tree-panel" role="tree" aria-label="Data source tree">
+
+            <!-- Snowflake -->
+            <div class="tree-node">
+              <div class="tree-item tree-item--conn" data-tree-toggle="conn-snowflake" data-detail-type="connection" data-detail-id="snowflake">
+                <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                <span class="tree-conn-status tree-conn-status--healthy" title="Healthy"></span>
+                <span class="tree-icon"><span class="material-symbols-outlined">ac_unit</span></span>
+                <span class="tree-label">Snowflake</span>
+                <span class="tree-count">4</span>
+              </div>
+              <div class="tree-children" id="tree-conn-snowflake">
+                <!-- marketing schema -->
+                <div class="tree-node">
+                  <div class="tree-item tree-item--schema" data-tree-toggle="schema-sf-marketing" data-detail-type="schema" data-detail-id="sf-marketing" data-detail-parent="Snowflake">
+                    <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                    <span class="tree-icon"><span class="material-symbols-outlined">folder</span></span>
+                    <span class="tree-label">marketing</span>
+                    <span class="tree-count">2</span>
+                  </div>
+                  <div class="tree-children" id="tree-schema-sf-marketing">
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="customer_orders" data-detail-parent="Snowflake / marketing">
+                      <span class="status-dot status-dot--success"></span>
+                      <span class="table-leaf-name">customer_orders</span>
+                      <span class="sds-tag sds-tag--purple" style="font-size:9px;padding:1px 4px;">Certified</span>
+                    </div>
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="ad_spend_daily" data-detail-parent="Snowflake / marketing">
+                      <span class="status-dot status-dot--warning"></span>
+                      <span class="table-leaf-name">ad_spend_daily</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- analytics schema -->
+                <div class="tree-node">
+                  <div class="tree-item tree-item--schema" data-tree-toggle="schema-sf-analytics" data-detail-type="schema" data-detail-id="sf-analytics" data-detail-parent="Snowflake">
+                    <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                    <span class="tree-icon"><span class="material-symbols-outlined">folder</span></span>
+                    <span class="tree-label">analytics</span>
+                    <span class="tree-count">2</span>
+                  </div>
+                  <div class="tree-children" id="tree-schema-sf-analytics">
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="customer_segments" data-detail-parent="Snowflake / analytics">
+                      <span class="status-dot status-dot--success"></span>
+                      <span class="table-leaf-name">customer_segments</span>
+                      <span class="sds-tag sds-tag--purple" style="font-size:9px;padding:1px 4px;">Certified</span>
+                    </div>
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="revenue_metrics" data-detail-parent="Snowflake / analytics">
+                      <span class="status-dot status-dot--success"></span>
+                      <span class="table-leaf-name">revenue_metrics</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BigQuery -->
+            <div class="tree-node">
+              <div class="tree-item tree-item--conn" data-tree-toggle="conn-bigquery" data-detail-type="connection" data-detail-id="bigquery">
+                <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                <span class="tree-conn-status tree-conn-status--healthy" title="Healthy"></span>
+                <span class="tree-icon"><span class="material-symbols-outlined">cloud</span></span>
+                <span class="tree-label">BigQuery</span>
+                <span class="tree-count">2</span>
+              </div>
+              <div class="tree-children" id="tree-conn-bigquery">
+                <div class="tree-node">
+                  <div class="tree-item tree-item--schema" data-tree-toggle="schema-bq-marketing" data-detail-type="schema" data-detail-id="bq-marketing" data-detail-parent="BigQuery">
+                    <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                    <span class="tree-icon"><span class="material-symbols-outlined">folder</span></span>
+                    <span class="tree-label">marketing</span>
+                    <span class="tree-count">2</span>
+                  </div>
+                  <div class="tree-children" id="tree-schema-bq-marketing">
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="campaign_metrics" data-detail-parent="BigQuery / marketing">
+                      <span class="status-dot status-dot--success"></span>
+                      <span class="table-leaf-name">campaign_metrics</span>
+                    </div>
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="social_engagement" data-detail-parent="BigQuery / marketing">
+                      <span class="status-dot status-dot--success"></span>
+                      <span class="table-leaf-name">social_engagement</span>
+                      <span class="sds-tag sds-tag--purple" style="font-size:9px;padding:1px 4px;">Certified</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salesforce -->
+            <div class="tree-node">
+              <div class="tree-item tree-item--conn" data-tree-toggle="conn-salesforce" data-detail-type="connection" data-detail-id="salesforce">
+                <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                <span class="tree-conn-status tree-conn-status--warning" title="Warning"></span>
+                <span class="tree-icon"><span class="material-symbols-outlined">cloud</span></span>
+                <span class="tree-label">Salesforce</span>
+                <span class="tree-count">2</span>
+              </div>
+              <div class="tree-children" id="tree-conn-salesforce">
+                <div class="tree-node">
+                  <div class="tree-item tree-item--schema" data-tree-toggle="schema-sf-crm" data-detail-type="schema" data-detail-id="sf-crm" data-detail-parent="Salesforce">
+                    <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                    <span class="tree-icon"><span class="material-symbols-outlined">folder</span></span>
+                    <span class="tree-label">crm</span>
+                    <span class="tree-count">2</span>
+                  </div>
+                  <div class="tree-children" id="tree-schema-sf-crm">
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="email_subscribers" data-detail-parent="Salesforce / crm">
+                      <span class="status-dot status-dot--error"></span>
+                      <span class="table-leaf-name">email_subscribers</span>
+                      <span class="sds-tag sds-tag--error" style="font-size:9px;padding:1px 4px;">PII</span>
+                    </div>
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="lead_pipeline" data-detail-parent="Salesforce / crm">
+                      <span class="status-dot status-dot--error"></span>
+                      <span class="table-leaf-name">lead_pipeline</span>
+                      <span class="sds-tag sds-tag--error" style="font-size:9px;padding:1px 4px;">PII</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PostgreSQL -->
+            <div class="tree-node">
+              <div class="tree-item tree-item--conn" data-tree-toggle="conn-postgres" data-detail-type="connection" data-detail-id="postgres">
+                <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                <span class="tree-conn-status tree-conn-status--error" title="Error"></span>
+                <span class="tree-icon"><span class="material-symbols-outlined">database</span></span>
+                <span class="tree-label">PostgreSQL</span>
+                <span class="tree-count">1</span>
+              </div>
+              <div class="tree-children" id="tree-conn-postgres">
+                <div class="tree-node">
+                  <div class="tree-item tree-item--schema" data-tree-toggle="schema-pg-content" data-detail-type="schema" data-detail-id="pg-content" data-detail-parent="PostgreSQL">
+                    <span class="tree-chevron"><span class="material-symbols-outlined">chevron_right</span></span>
+                    <span class="tree-icon"><span class="material-symbols-outlined">folder</span></span>
+                    <span class="tree-label">content</span>
+                    <span class="tree-count">1</span>
+                  </div>
+                  <div class="tree-children" id="tree-schema-pg-content">
+                    <div class="tree-item tree-item--table" data-detail-type="table" data-detail-id="content_performance" data-detail-parent="PostgreSQL / content">
+                      <span class="status-dot status-dot--error"></span>
+                      <span class="table-leaf-name">content_performance</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- ==================== TREE MODE: Detail Panel ==================== -->
+        <div class="detail-panel" id="detail-panel">
+          <!-- Empty state (default) -->
+          <div class="detail-empty" id="detail-empty">
+            <span class="material-symbols-outlined">account_tree</span>
+            <p>Select a connection, schema, or table from the tree to view its details.</p>
+          </div>
+
+          <!-- Detail content (populated by JS) -->
+          <div id="detail-content" style="display:none;"></div>
+        </div>
+
       </div>
     </main>
   </div>
 
-  <!-- Catalog JS: Tab switching, filter checkboxes, pagination -->
   <script>
   (function() {
-    // === Tab switching ===
+    // ============================================================
+    //  DATA: Asset metadata for detail panel rendering
+    // ============================================================
+    var assetData = {
+      connections: {
+        snowflake: {
+          name: 'Snowflake', icon: 'ac_unit', type: 'Data Warehouse',
+          status: 'Healthy', lastSync: '12 min ago', schemas: 2, tables: 4, columns: 86,
+          classified: '72%',
+          schemas_list: [
+            { name: 'marketing', tables: 2, icon: 'folder' },
+            { name: 'analytics', tables: 2, icon: 'folder' }
+          ]
+        },
+        bigquery: {
+          name: 'BigQuery', icon: 'cloud', type: 'Data Warehouse',
+          status: 'Healthy', lastSync: '34 min ago', schemas: 1, tables: 2, columns: 42,
+          classified: '85%',
+          schemas_list: [
+            { name: 'marketing', tables: 2, icon: 'folder' }
+          ]
+        },
+        salesforce: {
+          name: 'Salesforce', icon: 'cloud', type: 'SaaS CRM',
+          status: 'Warning', lastSync: '2h ago', schemas: 1, tables: 2, columns: 38,
+          classified: '45%',
+          schemas_list: [
+            { name: 'crm', tables: 2, icon: 'folder' }
+          ]
+        },
+        postgres: {
+          name: 'PostgreSQL', icon: 'database', type: 'Database',
+          status: 'Error', lastSync: '8d ago', schemas: 1, tables: 1, columns: 18,
+          classified: '22%',
+          schemas_list: [
+            { name: 'content', tables: 1, icon: 'folder' }
+          ]
+        }
+      },
+      tables: {
+        customer_orders: {
+          name: 'customer_orders', desc: 'Customer purchase transactions from e-commerce platform, including order details, payment info, and shipping status.',
+          source: 'Snowflake', schema: 'marketing', owner: 'J. Smith', ownerInitials: 'JS', ownerColor: 'var(--sds-color-blue-450)',
+          freshness: 'Fresh:2h', quality: 'High', certified: true, pii: false,
+          columns: [
+            { name: 'order_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'customer_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'customer_email', type: 'VARCHAR(255)', classification: 'PII' },
+            { name: 'order_date', type: 'TIMESTAMP', classification: '' },
+            { name: 'total_amount', type: 'DECIMAL(10,2)', classification: '' },
+            { name: 'shipping_address', type: 'VARCHAR(500)', classification: 'PII' },
+            { name: 'status', type: 'VARCHAR(20)', classification: '' },
+            { name: 'payment_method', type: 'VARCHAR(50)', classification: '' }
+          ],
+          rowCount: '2.4M', lastUpdated: '2h ago', created: 'Jan 12, 2025'
+        },
+        ad_spend_daily: {
+          name: 'ad_spend_daily', desc: 'Daily advertising spend across all marketing channels with campaign-level breakdowns.',
+          source: 'Snowflake', schema: 'marketing', owner: 'S. Wong', ownerInitials: 'SW', ownerColor: 'var(--sds-color-yellow-500)',
+          freshness: 'Fresh:12h', quality: 'Medium', certified: false, pii: false,
+          columns: [
+            { name: 'date', type: 'DATE', classification: '' },
+            { name: 'campaign_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'channel', type: 'VARCHAR(50)', classification: '' },
+            { name: 'spend', type: 'DECIMAL(10,2)', classification: '' },
+            { name: 'impressions', type: 'BIGINT', classification: '' },
+            { name: 'clicks', type: 'INT', classification: '' }
+          ],
+          rowCount: '156K', lastUpdated: '12h ago', created: 'Mar 4, 2025'
+        },
+        customer_segments: {
+          name: 'customer_segments', desc: 'Customer segmentation model output with behavioral clusters and lifetime value predictions.',
+          source: 'Snowflake', schema: 'analytics', owner: 'T. Wilson', ownerInitials: 'TW', ownerColor: 'var(--sds-color-green-500)',
+          freshness: 'Fresh:2d', quality: 'High', certified: true, pii: false,
+          columns: [
+            { name: 'customer_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'segment', type: 'VARCHAR(50)', classification: '' },
+            { name: 'ltv_score', type: 'DECIMAL(6,2)', classification: '' },
+            { name: 'churn_risk', type: 'DECIMAL(4,3)', classification: '' },
+            { name: 'last_purchase', type: 'DATE', classification: '' }
+          ],
+          rowCount: '890K', lastUpdated: '2d ago', created: 'Feb 20, 2025'
+        },
+        revenue_metrics: {
+          name: 'revenue_metrics', desc: 'Aggregated revenue metrics by product line, region, and time period.',
+          source: 'Snowflake', schema: 'analytics', owner: 'A. Patel', ownerInitials: 'AP', ownerColor: 'var(--sds-color-green-400)',
+          freshness: 'Fresh:6h', quality: 'High', certified: false, pii: false,
+          columns: [
+            { name: 'period', type: 'DATE', classification: '' },
+            { name: 'product_line', type: 'VARCHAR(100)', classification: '' },
+            { name: 'region', type: 'VARCHAR(50)', classification: '' },
+            { name: 'revenue', type: 'DECIMAL(12,2)', classification: '' },
+            { name: 'units_sold', type: 'INT', classification: '' }
+          ],
+          rowCount: '45K', lastUpdated: '6h ago', created: 'Jan 30, 2025'
+        },
+        campaign_metrics: {
+          name: 'campaign_metrics', desc: 'Marketing campaign performance data including attribution, conversion funnels, and ROI metrics.',
+          source: 'BigQuery', schema: 'marketing', owner: 'A. Patel', ownerInitials: 'AP', ownerColor: 'var(--sds-color-green-400)',
+          freshness: 'Fresh:1d', quality: 'High', certified: false, pii: false,
+          columns: [
+            { name: 'campaign_id', type: 'STRING', classification: '' },
+            { name: 'campaign_name', type: 'STRING', classification: '' },
+            { name: 'start_date', type: 'DATE', classification: '' },
+            { name: 'spend', type: 'FLOAT64', classification: '' },
+            { name: 'conversions', type: 'INT64', classification: '' },
+            { name: 'roi', type: 'FLOAT64', classification: '' }
+          ],
+          rowCount: '12K', lastUpdated: '1d ago', created: 'Feb 8, 2025'
+        },
+        social_engagement: {
+          name: 'social_engagement', desc: 'Social media engagement metrics across platforms with sentiment analysis scores.',
+          source: 'BigQuery', schema: 'marketing', owner: 'M. Chen', ownerInitials: 'MC', ownerColor: 'var(--sds-color-purple-550)',
+          freshness: 'Fresh:3h', quality: 'High', certified: true, pii: false,
+          columns: [
+            { name: 'post_id', type: 'STRING', classification: '' },
+            { name: 'platform', type: 'STRING', classification: '' },
+            { name: 'likes', type: 'INT64', classification: '' },
+            { name: 'shares', type: 'INT64', classification: '' },
+            { name: 'sentiment_score', type: 'FLOAT64', classification: '' },
+            { name: 'posted_at', type: 'TIMESTAMP', classification: '' }
+          ],
+          rowCount: '340K', lastUpdated: '3h ago', created: 'Jan 18, 2025'
+        },
+        email_subscribers: {
+          name: 'email_subscribers', desc: 'Email subscriber list with contact details, subscription preferences, and engagement history.',
+          source: 'Salesforce', schema: 'crm', owner: 'L. Garcia', ownerInitials: 'LG', ownerColor: 'var(--sds-color-red-500)',
+          freshness: 'Fresh:6h', quality: 'High', certified: false, pii: true,
+          columns: [
+            { name: 'subscriber_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'email', type: 'VARCHAR(255)', classification: 'PII' },
+            { name: 'full_name', type: 'VARCHAR(200)', classification: 'PII' },
+            { name: 'phone', type: 'VARCHAR(20)', classification: 'PII' },
+            { name: 'subscribed_at', type: 'DATETIME', classification: '' },
+            { name: 'preferences', type: 'TEXT', classification: '' }
+          ],
+          rowCount: '1.2M', lastUpdated: '6h ago', created: 'Dec 5, 2024'
+        },
+        lead_pipeline: {
+          name: 'lead_pipeline', desc: 'Sales lead pipeline with deal stages, contact information, and probability scoring.',
+          source: 'Salesforce', schema: 'crm', owner: 'R. Johnson', ownerInitials: 'RJ', ownerColor: 'var(--sds-color-blue-700)',
+          freshness: 'Fresh:1h', quality: 'High', certified: false, pii: true,
+          columns: [
+            { name: 'lead_id', type: 'VARCHAR(36)', classification: '' },
+            { name: 'contact_name', type: 'VARCHAR(200)', classification: 'PII' },
+            { name: 'company', type: 'VARCHAR(200)', classification: '' },
+            { name: 'deal_stage', type: 'VARCHAR(50)', classification: '' },
+            { name: 'probability', type: 'DECIMAL(4,3)', classification: '' },
+            { name: 'deal_value', type: 'DECIMAL(12,2)', classification: '' }
+          ],
+          rowCount: '34K', lastUpdated: '1h ago', created: 'Nov 22, 2024'
+        },
+        content_performance: {
+          name: 'content_performance', desc: 'Content marketing performance metrics including page views, engagement time, and conversion data.',
+          source: 'PostgreSQL', schema: 'content', owner: 'K. Davis', ownerInitials: 'KD', ownerColor: 'var(--sds-color-warm-gray-500)',
+          freshness: 'Stale:8d', quality: 'Low', certified: false, pii: false,
+          columns: [
+            { name: 'page_url', type: 'VARCHAR(500)', classification: '' },
+            { name: 'views', type: 'INTEGER', classification: '' },
+            { name: 'avg_time_on_page', type: 'DECIMAL(6,1)', classification: '' },
+            { name: 'bounce_rate', type: 'DECIMAL(4,3)', classification: '' },
+            { name: 'conversions', type: 'INTEGER', classification: '' }
+          ],
+          rowCount: '8.5K', lastUpdated: '8d ago', created: 'Feb 2, 2025'
+        }
+      }
+    };
+
+    // ============================================================
+    //  VIEW MODE TOGGLE
+    // ============================================================
+    var mainContent = document.querySelector('.main-content--catalog');
+    var catalogBody = document.querySelector('.catalog-body');
+    var viewBtns = document.querySelectorAll('.view-toggle-btn');
+
+    viewBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var mode = btn.getAttribute('data-mode');
+        viewBtns.forEach(function(b) {
+          b.classList.remove('active');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-checked', 'true');
+        mainContent.setAttribute('data-view-mode', mode);
+        catalogBody.setAttribute('data-mode', mode);
+      });
+    });
+
+    // ============================================================
+    //  TREE: Expand/Collapse
+    // ============================================================
+    document.querySelectorAll('[data-tree-toggle]').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = 'tree-' + item.getAttribute('data-tree-toggle');
+        var children = document.getElementById(targetId);
+        var chevron = item.querySelector('.tree-chevron');
+        if (children) {
+          children.classList.toggle('open');
+          if (chevron) chevron.classList.toggle('open');
+        }
+        // Also show detail for this item
+        showDetail(item);
+      });
+    });
+
+    // Table leaf items (no toggle, just show detail)
+    document.querySelectorAll('.tree-sidebar .tree-item--table').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        showDetail(item);
+      });
+    });
+
+    // ============================================================
+    //  TREE: Active state + Detail panel
+    // ============================================================
+    var detailEmpty = document.getElementById('detail-empty');
+    var detailContent = document.getElementById('detail-content');
+
+    function showDetail(treeItem) {
+      // Clear all active + ancestor states
+      document.querySelectorAll('.tree-sidebar .tree-item').forEach(function(i) {
+        i.classList.remove('active');
+        i.classList.remove('ancestor');
+      });
+      treeItem.classList.add('active');
+
+      // Walk up the tree and mark ancestor items
+      var parent = treeItem.parentElement;
+      while (parent && !parent.classList.contains('tree-panel')) {
+        if (parent.classList.contains('tree-children')) {
+          var prevSibling = parent.previousElementSibling;
+          if (prevSibling && prevSibling.classList.contains('tree-item')) {
+            prevSibling.classList.add('ancestor');
+          }
+        }
+        parent = parent.parentElement;
+      }
+
+      var type = treeItem.getAttribute('data-detail-type');
+      var id = treeItem.getAttribute('data-detail-id');
+      var parent = treeItem.getAttribute('data-detail-parent') || '';
+
+      if (!type || !id) return;
+
+      detailEmpty.style.display = 'none';
+      detailContent.style.display = 'block';
+
+      if (type === 'connection') {
+        renderConnectionDetail(id);
+      } else if (type === 'schema') {
+        renderSchemaDetail(id, parent);
+      } else if (type === 'table') {
+        renderTableDetail(id, parent);
+      }
+    }
+
+    // ---- Render: Connection detail ----
+    function renderConnectionDetail(connId) {
+      var conn = assetData.connections[connId];
+      if (!conn) return;
+
+      var statusClass = conn.status === 'Healthy' ? 'sds-tag--success' :
+                        conn.status === 'Warning' ? 'sds-tag--warning' : 'sds-tag--error';
+
+      var html = '';
+      html += '<div class="detail-header">';
+      html += '  <div class="detail-header-icon"><span class="material-symbols-outlined">' + conn.icon + '</span></div>';
+      html += '  <div class="detail-header-info">';
+      html += '    <h2>' + conn.name + '</h2>';
+      html += '    <p class="detail-subtitle">' + conn.type + ' &middot; <span class="sds-tag ' + statusClass + '">' + conn.status + '</span></p>';
+      html += '  </div>';
+      html += '</div>';
+
+      html += '<div class="detail-stats">';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + conn.schemas + '</div><div class="detail-stat-label">Schemas</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + conn.tables + '</div><div class="detail-stat-label">Tables</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + conn.columns + '</div><div class="detail-stat-label">Columns</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + conn.classified + '</div><div class="detail-stat-label">Classified</div></div>';
+      html += '</div>';
+
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-meta-grid">';
+      html += '    <span class="detail-meta-label">Last Sync</span><span class="detail-meta-value">' + conn.lastSync + '</span>';
+      html += '    <span class="detail-meta-label">Type</span><span class="detail-meta-value">' + conn.type + '</span>';
+      html += '  </div>';
+      html += '</div>';
+
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-section-title">Schemas</div>';
+      html += '  <div class="detail-table-list">';
+      conn.schemas_list.forEach(function(s, idx) {
+        html += '  <div class="detail-table-row" data-nav-schema="' + connId + '-' + idx + '">';
+        html += '    <span class="tree-icon"><span class="material-symbols-outlined">' + s.icon + '</span></span>';
+        html += '    <span class="detail-table-name" style="font-family:var(--sds-font-sans);color:var(--sds-text-primary)">' + s.name + '</span>';
+        html += '    <span class="detail-table-meta"><span class="sds-tag sds-tag--neutral">' + s.tables + ' tables</span></span>';
+        html += '    <span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span>';
+        html += '  </div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      detailContent.innerHTML = html;
+
+      // Wire up schema row clicks — navigate to schema in tree
+      detailContent.querySelectorAll('[data-nav-schema]').forEach(function(row, idx) {
+        row.addEventListener('click', function() {
+          // Find the matching schema item in the tree under this connection
+          var connToggle = 'conn-' + connId;
+          var connChildren = document.getElementById('tree-' + connToggle);
+          if (connChildren) {
+            // Ensure connection children are open
+            if (!connChildren.classList.contains('open')) {
+              connChildren.classList.add('open');
+              var connChevron = connChildren.previousElementSibling.querySelector('.tree-chevron');
+              if (connChevron) connChevron.classList.add('open');
+            }
+            var schemaItems = connChildren.querySelectorAll('.tree-item--schema');
+            if (schemaItems[idx]) {
+              // Expand the schema
+              var schemaToggleId = schemaItems[idx].getAttribute('data-tree-toggle');
+              var schemaChildren = document.getElementById('tree-' + schemaToggleId);
+              if (schemaChildren && !schemaChildren.classList.contains('open')) {
+                schemaChildren.classList.add('open');
+                var schemaChevron = schemaItems[idx].querySelector('.tree-chevron');
+                if (schemaChevron) schemaChevron.classList.add('open');
+              }
+              showDetail(schemaItems[idx]);
+            }
+          }
+        });
+      });
+    }
+
+    // ---- Render: Schema detail ----
+    function renderSchemaDetail(schemaId, parentConn) {
+      // Find tables in this schema by looking at tree children
+      var schemaLabel = '';
+      var tables = [];
+      var treeChildren = document.getElementById('tree-' + schemaId.replace(/^(sf|bq|pg)-/, function(m) { return 'schema-' + m; }));
+
+      // Get schema name from the tree item
+      var schemaItem = document.querySelector('[data-detail-id="' + schemaId + '"]');
+      if (schemaItem) {
+        schemaLabel = schemaItem.querySelector('.tree-label').textContent.trim();
+      }
+
+      // Collect table names from tree children
+      var schemaToggle = schemaItem ? schemaItem.getAttribute('data-tree-toggle') : '';
+      var childContainer = document.getElementById('tree-' + schemaToggle);
+      if (childContainer) {
+        childContainer.querySelectorAll('.tree-item--table').forEach(function(t) {
+          var name = t.querySelector('.table-leaf-name').textContent.trim();
+          if (assetData.tables[name]) {
+            tables.push(assetData.tables[name]);
+          }
+        });
+      }
+
+      var html = '';
+      html += '<div class="detail-header">';
+      html += '  <div class="detail-header-icon"><span class="material-symbols-outlined">folder</span></div>';
+      html += '  <div class="detail-header-info">';
+      html += '    <div class="detail-breadcrumb">' + parentConn + '</div>';
+      html += '    <h2>' + schemaLabel + '</h2>';
+      html += '    <p class="detail-subtitle">' + tables.length + ' tables</p>';
+      html += '  </div>';
+      html += '</div>';
+
+      html += '<div class="detail-stats">';
+      var totalCols = 0;
+      var piiCount = 0;
+      tables.forEach(function(t) {
+        totalCols += t.columns.length;
+        t.columns.forEach(function(c) { if (c.classification === 'PII') piiCount++; });
+      });
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + tables.length + '</div><div class="detail-stat-label">Tables</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + totalCols + '</div><div class="detail-stat-label">Columns</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + piiCount + '</div><div class="detail-stat-label">PII Fields</div></div>';
+      html += '</div>';
+
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-section-title">Tables</div>';
+      html += '  <div class="detail-table-list">';
+      tables.forEach(function(t) {
+        var freshClass = t.freshness.indexOf('Stale') !== -1 ? 'sds-tag--error' : 'sds-tag--success';
+        var qualClass = t.quality === 'High' ? 'sds-tag--success' : t.quality === 'Low' ? 'sds-tag--error' : 'sds-tag--warning';
+        html += '<div class="detail-table-row" data-nav-table="' + t.name + '">';
+        html += '  <span class="status-dot status-dot--' + (t.freshness.indexOf('Stale') !== -1 ? 'error' : t.freshness.indexOf('12h') !== -1 ? 'warning' : 'success') + '"></span>';
+        html += '  <span class="detail-table-name">' + t.name + '</span>';
+        html += '  <span class="detail-table-meta">';
+        if (t.certified) html += '<span class="sds-tag sds-tag--purple">Certified</span>';
+        if (t.pii) html += '<span class="sds-tag sds-tag--error">PII</span>';
+        html += '    <span class="sds-tag ' + qualClass + '">Quality:' + t.quality + '</span>';
+        html += '    <span class="sds-tag ' + freshClass + '">' + t.freshness + '</span>';
+        html += '  </span>';
+        html += '  <span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span>';
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      detailContent.innerHTML = html;
+
+      // Wire up table row clicks — navigate to table in tree
+      detailContent.querySelectorAll('[data-nav-table]').forEach(function(row) {
+        row.addEventListener('click', function(e) {
+          e.preventDefault();
+          var tableName = row.getAttribute('data-nav-table');
+          var tableItem = document.querySelector('.tree-sidebar [data-detail-id="' + tableName + '"]');
+          if (tableItem) {
+            showDetail(tableItem);
+            tableItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        });
+      });
+    }
+
+    // ---- Render: Table detail ----
+    function renderTableDetail(tableId, parentPath) {
+      var t = assetData.tables[tableId];
+      if (!t) return;
+
+      var freshClass = t.freshness.indexOf('Stale') !== -1 ? 'sds-tag--error' : 'sds-tag--success';
+      var qualClass = t.quality === 'High' ? 'sds-tag--success' : t.quality === 'Low' ? 'sds-tag--error' : 'sds-tag--warning';
+
+      var html = '';
+      html += '<div class="detail-header">';
+      html += '  <div class="detail-header-icon"><span class="material-symbols-outlined">table_chart</span></div>';
+      html += '  <div class="detail-header-info">';
+      html += '    <div class="detail-breadcrumb">' + parentPath + '</div>';
+      html += '    <h2 style="font-family:var(--sds-font-mono)">' + t.name + '</h2>';
+      html += '    <p class="detail-subtitle">' + t.desc + '</p>';
+      html += '    <div class="detail-actions">';
+      html += '      <a href="asset.html" class="btn btn-primary btn-sm">Open Full Detail</a>';
+      html += '      <button class="btn btn-secondary btn-sm"><span class="material-symbols-outlined" style="font-size:14px">open_in_new</span> Query</button>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</div>';
+
+      // Trust signals
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-tags">';
+      html += '    <span class="sds-tag ' + freshClass + '">' + t.freshness + '</span>';
+      html += '    <span class="sds-tag ' + qualClass + '">Quality:' + t.quality + '</span>';
+      if (t.certified) html += '<span class="sds-tag sds-tag--purple">Certified</span>';
+      if (t.pii) html += '<span class="sds-tag sds-tag--error">PII</span>';
+      html += '  </div>';
+      html += '</div>';
+
+      // Stats
+      html += '<div class="detail-stats">';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + t.rowCount + '</div><div class="detail-stat-label">Rows</div></div>';
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + t.columns.length + '</div><div class="detail-stat-label">Columns</div></div>';
+      var piiCols = t.columns.filter(function(c) { return c.classification === 'PII'; }).length;
+      html += '  <div class="detail-stat"><div class="detail-stat-value">' + piiCols + '</div><div class="detail-stat-label">PII Fields</div></div>';
+      html += '</div>';
+
+      // Metadata
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-meta-grid">';
+      html += '    <span class="detail-meta-label">Owner</span><span class="detail-meta-value"><div class="owner-cell"><div class="avatar avatar-sm" style="background:' + t.ownerColor + '">' + t.ownerInitials + '</div>' + t.owner + '</div></span>';
+      html += '    <span class="detail-meta-label">Source</span><span class="detail-meta-value">' + t.source + '</span>';
+      html += '    <span class="detail-meta-label">Schema</span><span class="detail-meta-value">' + t.schema + '</span>';
+      html += '    <span class="detail-meta-label">Last Updated</span><span class="detail-meta-value">' + t.lastUpdated + '</span>';
+      html += '    <span class="detail-meta-label">Created</span><span class="detail-meta-value">' + t.created + '</span>';
+      html += '  </div>';
+      html += '</div>';
+
+      // Columns
+      html += '<div class="detail-section">';
+      html += '  <div class="detail-section-title">Schema (' + t.columns.length + ' columns)</div>';
+      html += '  <table class="detail-columns-table">';
+      html += '    <thead><tr><th>Column</th><th>Type</th><th>Classification</th></tr></thead>';
+      html += '    <tbody>';
+      t.columns.forEach(function(col) {
+        html += '    <tr>';
+        html += '      <td class="col-name">' + col.name + '</td>';
+        html += '      <td class="col-type">' + col.type + '</td>';
+        html += '      <td>' + (col.classification ? '<span class="sds-tag sds-tag--error">' + col.classification + '</span>' : '<span style="color:var(--sds-text-tertiary)">—</span>') + '</td>';
+        html += '    </tr>';
+      });
+      html += '    </tbody>';
+      html += '  </table>';
+      html += '</div>';
+
+      detailContent.innerHTML = html;
+    }
+
+    // ============================================================
+    //  TABLE MODE: Tab switching
+    // ============================================================
     var tabs = document.querySelectorAll('.sds-tabs .sds-tab[data-filter]');
     var dataRows = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type]');
     var emptyStateRow = document.querySelector('.empty-state-row');
     var resultsCount = document.querySelector('.results-count');
     var activeFilter = 'all';
 
-    // === Tab label map for Fix 4 ===
     var tabLabelMap = {
       'all': null,
       'table': 'tables',
@@ -539,7 +1663,6 @@
       'column': 'columns'
     };
 
-    // === Empty state (Fix 1) ===
     function updateEmptyState() {
       var anyVisible = false;
       dataRows.forEach(function(row) {
@@ -564,7 +1687,6 @@
         }
       });
 
-      // Fix 4: Update count text based on active tab
       if (resultsCount) {
         if (activeFilter === 'all') {
           resultsCount.textContent = 'Showing ' + count + ' of 1,847 assets';
@@ -577,7 +1699,6 @@
       if (paginationInfo) {
         paginationInfo.textContent = 'Showing 1-' + count + ' of 1,847 results';
       }
-
       updateEmptyState();
     }
 
@@ -594,7 +1715,9 @@
       });
     });
 
-    // === Filter checkbox functionality (Fix 2) ===
+    // ============================================================
+    //  TABLE MODE: Filter checkboxes
+    // ============================================================
     var filterSidebar = document.querySelector('.filter-sidebar');
     var checkboxes = filterSidebar.querySelectorAll('input[type="checkbox"]');
     var activeFiltersContainer = document.querySelector('.active-filters');
@@ -613,7 +1736,6 @@
       return label.textContent.trim();
     }
 
-    // Source type mapping: checkbox label -> text to look for in the Source column
     var sourceTypeMap = {
       'warehouse': ['snowflake', 'bigquery', 'redshift'],
       'lake': ['databricks', 's3', 'delta lake', 'lake'],
@@ -621,14 +1743,11 @@
       'saas': ['salesforce', 'hubspot', 'marketo', 'stripe']
     };
 
-    // Freshness mapping: checkbox label -> what to match in trust signals
     var freshnessMap = {
       'last 24h': function(text) {
-        // Match Fresh: with hours (h) or minutes
         return /fresh:\d+h/i.test(text) || /fresh:\d+m/i.test(text);
       },
       'last 7d': function(text) {
-        // Match Fresh with hours or 1-7 days
         var m = text.match(/fresh:(\d+)(h|d|m)/i);
         if (!m) return false;
         var val = parseInt(m[1]);
@@ -692,7 +1811,6 @@
           var qualCell = row.querySelector('td:nth-child(4)');
           var qualText = qualCell ? qualCell.textContent.trim().toLowerCase() : '';
           match = checkedVals.some(function(v) {
-            // Match "Quality:High", "Quality:Med", "Quality:Low"
             if (v === 'high') return /quality:high/i.test(qualText);
             if (v === 'medium') return /quality:med/i.test(qualText);
             if (v === 'low') return /quality:low/i.test(qualText);
@@ -771,21 +1889,16 @@
 
     updatePills();
 
-    // === Column sort functionality (Fix 3) ===
+    // ============================================================
+    //  TABLE MODE: Column sort
+    // ============================================================
     var sortableHeaders = document.querySelectorAll('.sds-table--hoverable thead th.sortable');
     sortableHeaders.forEach(function(th) {
       th.style.cursor = 'pointer';
       th.style.userSelect = 'none';
       th.addEventListener('click', function() {
         var isAsc = th.classList.contains('sort-asc');
-        var isDesc = th.classList.contains('sort-desc');
-
-        // Remove sort classes from all headers
-        sortableHeaders.forEach(function(h) {
-          h.classList.remove('sort-asc', 'sort-desc');
-        });
-
-        // Toggle direction
+        sortableHeaders.forEach(function(h) { h.classList.remove('sort-asc', 'sort-desc'); });
         var direction;
         if (isAsc) {
           th.classList.add('sort-desc');
@@ -794,20 +1907,11 @@
           th.classList.add('sort-asc');
           direction = 'asc';
         }
-
-        // Find column index
         var allThs = Array.from(th.parentElement.children);
         var colIndex = allThs.indexOf(th);
-
-        // Get visible data rows and sort them
         var tbody = document.querySelector('.sds-table--hoverable tbody');
-        var visibleRows = Array.from(dataRows).filter(function(r) {
-          return r.style.display !== 'none';
-        });
-        var hiddenRows = Array.from(dataRows).filter(function(r) {
-          return r.style.display === 'none';
-        });
-
+        var visibleRows = Array.from(dataRows).filter(function(r) { return r.style.display !== 'none'; });
+        var hiddenRows = Array.from(dataRows).filter(function(r) { return r.style.display === 'none'; });
         visibleRows.sort(function(a, b) {
           var aText = a.children[colIndex] ? a.children[colIndex].textContent.trim().toLowerCase() : '';
           var bText = b.children[colIndex] ? b.children[colIndex].textContent.trim().toLowerCase() : '';
@@ -815,15 +1919,15 @@
           if (aText > bText) return direction === 'asc' ? 1 : -1;
           return 0;
         });
-
-        // Re-append in sorted order: visible rows first, then hidden, then empty state
         visibleRows.forEach(function(r) { tbody.appendChild(r); });
         hiddenRows.forEach(function(r) { tbody.appendChild(r); });
         if (emptyStateRow) tbody.appendChild(emptyStateRow);
       });
     });
 
-    // === Pagination interactivity ===
+    // ============================================================
+    //  TABLE MODE: Pagination
+    // ============================================================
     var pageBtns = document.querySelectorAll('.pagination-btn');
     var prevBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Previous page"]');
     var nextBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Next page"]');
@@ -840,14 +1944,11 @@
       if (prevBtn) prevBtn.disabled = (currentPage === 1);
       if (nextBtn) nextBtn.disabled = (currentPage === totalPages);
       if (pageCountEl) pageCountEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
-
       var perPage = parseInt(perPageSelect ? perPageSelect.value : 10);
       var start = (currentPage - 1) * perPage + 1;
       var end = Math.min(currentPage * perPage, 1847);
       var paginationInfo = document.querySelector('.pagination-info');
-      if (paginationInfo) {
-        paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 1,847 results';
-      }
+      if (paginationInfo) paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 1,847 results';
     }
 
     pageBtns.forEach(function(btn) {
@@ -859,10 +1960,7 @@
 
     if (prevBtn) {
       prevBtn.addEventListener('click', function() {
-        if (currentPage > 1) {
-          currentPage--;
-          updatePaginationState();
-        }
+        if (currentPage > 1) { currentPage--; updatePaginationState(); }
       });
     }
 
@@ -887,9 +1985,7 @@
         totalPages = Math.ceil(1847 / perPage);
         currentPage = 1;
         if (pageCountEl) pageCountEl.textContent = 'Page 1 of ' + totalPages;
-        pageBtns.forEach(function(btn, i) {
-          btn.textContent = i + 1;
-        });
+        pageBtns.forEach(function(btn, i) { btn.textContent = i + 1; });
         updatePaginationState();
       });
     }
