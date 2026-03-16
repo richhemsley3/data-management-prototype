@@ -387,7 +387,7 @@
             </tbody>
           </table>
           <div class="table-footer">
-            <a href="javascript:void(0)" onclick="document.querySelector('[data-tab=tasks]').click()">View all 12 tasks &rarr;</a>
+            <span style="font-size:var(--sds-type-label);color:var(--sds-text-secondary)">Showing 6 of 12 tasks</span>
           </div>
         </div>
       </div>
@@ -412,6 +412,28 @@ document.querySelectorAll('.sds-tab[role="tab"]').forEach(function(tab) {
     var target = document.querySelector('[data-tab-content="' + tabId + '"]');
     if (target) target.classList.add('active');
   });
+});
+
+// Start button handlers
+document.querySelectorAll('.btn.btn-primary.btn-sm').forEach(function(btn) {
+  if (btn.textContent.trim() === 'Start') {
+    btn.addEventListener('click', function() {
+      this.textContent = 'In Progress';
+      this.classList.remove('btn-primary');
+      this.classList.add('btn-secondary');
+      this.disabled = true;
+
+      // Update status tag in the same row if present
+      var row = this.closest('tr');
+      if (row) {
+        var statusTag = row.querySelector('.sds-tag');
+        if (statusTag) {
+          statusTag.className = 'sds-tag sds-tag--info';
+          statusTag.textContent = 'In Progress';
+        }
+      }
+    });
+  }
 });
 </script>
 

@@ -192,7 +192,7 @@
               Domain: Marketing
               <button class="filter-pill-remove" aria-label="Remove Marketing filter">&times;</button>
             </div>
-            <button class="btn btn-tertiary btn-sm" style="margin-left:auto;font-size:var(--sds-type-caption)">Clear all</button>
+            <button class="btn btn-tertiary btn-sm clear-all-btn" style="margin-left:auto;font-size:var(--sds-type-caption)">Clear all</button>
           </div>
 
           <!-- Domain -->
@@ -477,6 +477,16 @@
                     </div>
                   </td>
                 </tr>
+                <tr class="empty-state-row" style="display:none;">
+                  <td colspan="6" style="text-align:center; padding: var(--sds-space-1200) var(--sds-space-600);">
+                    <div style="color: var(--sds-text-secondary);">
+                      <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
+                      <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
+                      <p style="font-size: var(--sds-type-label); margin-bottom: var(--sds-space-400);">Try adjusting your filters or search criteria.</p>
+                      <button class="btn btn-secondary" onclick="document.querySelector('.clear-all-btn').click()">Clear all filters</button>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
 
@@ -513,15 +523,36 @@
   <!-- Catalog JS: Tab switching, filter checkboxes, pagination -->
   <script>
   (function() {
-    // === Fix 1: Tab switching ===
+    // === Tab switching ===
     var tabs = document.querySelectorAll('.sds-tabs .sds-tab[data-filter]');
-    var rows = document.querySelectorAll('.sds-table--hoverable tbody tr');
+    var dataRows = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type]');
+    var emptyStateRow = document.querySelector('.empty-state-row');
     var resultsCount = document.querySelector('.results-count');
     var activeFilter = 'all';
 
+    // === Tab label map for Fix 4 ===
+    var tabLabelMap = {
+      'all': null,
+      'table': 'tables',
+      'view': 'views',
+      'dashboard': 'dashboards',
+      'column': 'columns'
+    };
+
+    // === Empty state (Fix 1) ===
+    function updateEmptyState() {
+      var anyVisible = false;
+      dataRows.forEach(function(row) {
+        if (row.style.display !== 'none') anyVisible = true;
+      });
+      if (emptyStateRow) {
+        emptyStateRow.style.display = anyVisible ? 'none' : '';
+      }
+    }
+
     function updateVisibleRows() {
       var count = 0;
-      rows.forEach(function(row) {
+      dataRows.forEach(function(row) {
         var type = row.getAttribute('data-type');
         var matchesTab = (activeFilter === 'all' || type === activeFilter);
         var matchesCheckbox = checkRowMatchesFilters(row);
@@ -532,13 +563,22 @@
           row.style.display = 'none';
         }
       });
+
+      // Fix 4: Update count text based on active tab
       if (resultsCount) {
-        resultsCount.textContent = 'Showing ' + count + ' of 1,847 assets';
+        if (activeFilter === 'all') {
+          resultsCount.textContent = 'Showing ' + count + ' of 1,847 assets';
+        } else {
+          var label = tabLabelMap[activeFilter] || 'assets';
+          resultsCount.textContent = 'Showing ' + count + ' ' + label;
+        }
       }
       var paginationInfo = document.querySelector('.pagination-info');
       if (paginationInfo) {
         paginationInfo.textContent = 'Showing 1-' + count + ' of 1,847 results';
       }
+
+      updateEmptyState();
     }
 
     tabs.forEach(function(tab) {
@@ -554,11 +594,11 @@
       });
     });
 
-    // === Fix 2: Filter checkbox functionality ===
+    // === Filter checkbox functionality (Fix 2) ===
     var filterSidebar = document.querySelector('.filter-sidebar');
     var checkboxes = filterSidebar.querySelectorAll('input[type="checkbox"]');
     var activeFiltersContainer = document.querySelector('.active-filters');
-    var clearAllBtn = activeFiltersContainer.querySelector('.btn-tertiary');
+    var clearAllBtn = activeFiltersContainer.querySelector('.clear-all-btn');
 
     function getFilterGroupLabel(checkbox) {
       var group = checkbox.closest('.filter-group');
@@ -573,8 +613,45 @@
       return label.textContent.trim();
     }
 
+    // Source type mapping: checkbox label -> text to look for in the Source column
+    var sourceTypeMap = {
+      'warehouse': ['snowflake', 'bigquery', 'redshift'],
+      'lake': ['databricks', 's3', 'delta lake', 'lake'],
+      'bi tool': ['tableau', 'looker', 'power bi', 'metabase'],
+      'saas': ['salesforce', 'hubspot', 'marketo', 'stripe']
+    };
+
+    // Freshness mapping: checkbox label -> what to match in trust signals
+    var freshnessMap = {
+      'last 24h': function(text) {
+        // Match Fresh: with hours (h) or minutes
+        return /fresh:\d+h/i.test(text) || /fresh:\d+m/i.test(text);
+      },
+      'last 7d': function(text) {
+        // Match Fresh with hours or 1-7 days
+        var m = text.match(/fresh:(\d+)(h|d|m)/i);
+        if (!m) return false;
+        var val = parseInt(m[1]);
+        var unit = m[2].toLowerCase();
+        if (unit === 'h' || unit === 'm') return true;
+        if (unit === 'd' && val <= 7) return true;
+        return false;
+      },
+      'last 30d': function(text) {
+        var m = text.match(/fresh:(\d+)(h|d|m)/i);
+        if (!m) return false;
+        var val = parseInt(m[1]);
+        var unit = m[2].toLowerCase();
+        if (unit === 'h' || unit === 'm') return true;
+        if (unit === 'd' && val <= 30) return true;
+        return false;
+      },
+      'stale': function(text) {
+        return /stale/i.test(text);
+      }
+    };
+
     function checkRowMatchesFilters(row) {
-      // Gather checked values per group
       var groups = filterSidebar.querySelectorAll('.filter-group');
       var anyGroupHasChecked = false;
       var allGroupsMatch = true;
@@ -585,25 +662,59 @@
         cbs.forEach(function(cb) {
           if (cb.checked) checkedVals.push(getFilterValue(cb).toLowerCase());
         });
-        if (checkedVals.length > 0) {
-          anyGroupHasChecked = true;
-          // For prototype: domain filter checks domain column, others are visual only
-          var groupLabel = group.querySelector('.filter-group-label').textContent.trim();
-          if (groupLabel === 'Domain') {
-            var domainCell = row.querySelector('td:nth-child(3)');
-            var domainText = domainCell ? domainCell.textContent.trim().toLowerCase() : '';
-            var match = checkedVals.some(function(v) { return domainText.indexOf(v) !== -1; });
-            if (!match) allGroupsMatch = false;
-          }
-          // Other filter groups are prototype placeholders - don't actually filter
+        if (checkedVals.length === 0) return;
+
+        anyGroupHasChecked = true;
+        var groupLabel = group.querySelector('.filter-group-label').textContent.trim();
+        var match = false;
+
+        if (groupLabel === 'Domain') {
+          var domainCell = row.querySelector('td:nth-child(3)');
+          var domainText = domainCell ? domainCell.textContent.trim().toLowerCase() : '';
+          match = checkedVals.some(function(v) { return domainText.indexOf(v) !== -1; });
+        } else if (groupLabel === 'Source Type') {
+          var sourceCell = row.querySelector('td:nth-child(2)');
+          var sourceText = sourceCell ? sourceCell.textContent.trim().toLowerCase() : '';
+          match = checkedVals.some(function(v) {
+            var mappedSources = sourceTypeMap[v];
+            if (mappedSources) {
+              return mappedSources.some(function(s) { return sourceText.indexOf(s) !== -1; });
+            }
+            return sourceText.indexOf(v) !== -1;
+          });
+        } else if (groupLabel === 'Classification') {
+          var trustCell = row.querySelector('td:nth-child(4)');
+          var trustText = trustCell ? trustCell.textContent.trim().toLowerCase() : '';
+          match = checkedVals.some(function(v) {
+            return trustText.indexOf(v) !== -1;
+          });
+        } else if (groupLabel === 'Quality') {
+          var qualCell = row.querySelector('td:nth-child(4)');
+          var qualText = qualCell ? qualCell.textContent.trim().toLowerCase() : '';
+          match = checkedVals.some(function(v) {
+            // Match "Quality:High", "Quality:Med", "Quality:Low"
+            if (v === 'high') return /quality:high/i.test(qualText);
+            if (v === 'medium') return /quality:med/i.test(qualText);
+            if (v === 'low') return /quality:low/i.test(qualText);
+            return qualText.indexOf(v) !== -1;
+          });
+        } else if (groupLabel === 'Freshness') {
+          var freshCell = row.querySelector('td:nth-child(4)');
+          var freshText = freshCell ? freshCell.textContent.trim() : '';
+          match = checkedVals.some(function(v) {
+            var fn = freshnessMap[v];
+            if (fn) return fn(freshText);
+            return freshText.toLowerCase().indexOf(v) !== -1;
+          });
         }
+
+        if (!match) allGroupsMatch = false;
       });
 
       return !anyGroupHasChecked || allGroupsMatch;
     }
 
     function updatePills() {
-      // Remove existing pills (but keep clearAll button)
       var existingPills = activeFiltersContainer.querySelectorAll('.filter-pill');
       existingPills.forEach(function(p) { p.remove(); });
 
@@ -630,7 +741,6 @@
         }
       });
 
-      // Update filter tag count
       var filterTag = document.querySelector('.sds-tag--info');
       if (filterTag) {
         var checkedCount = 0;
@@ -653,17 +763,67 @@
       });
     });
 
-    // Clear all
     clearAllBtn.addEventListener('click', function() {
       checkboxes.forEach(function(cb) { cb.checked = false; });
       updatePills();
       updateVisibleRows();
     });
 
-    // Initialize pills on load
     updatePills();
 
-    // === Fix 4: Pagination interactivity ===
+    // === Column sort functionality (Fix 3) ===
+    var sortableHeaders = document.querySelectorAll('.sds-table--hoverable thead th.sortable');
+    sortableHeaders.forEach(function(th) {
+      th.style.cursor = 'pointer';
+      th.style.userSelect = 'none';
+      th.addEventListener('click', function() {
+        var isAsc = th.classList.contains('sort-asc');
+        var isDesc = th.classList.contains('sort-desc');
+
+        // Remove sort classes from all headers
+        sortableHeaders.forEach(function(h) {
+          h.classList.remove('sort-asc', 'sort-desc');
+        });
+
+        // Toggle direction
+        var direction;
+        if (isAsc) {
+          th.classList.add('sort-desc');
+          direction = 'desc';
+        } else {
+          th.classList.add('sort-asc');
+          direction = 'asc';
+        }
+
+        // Find column index
+        var allThs = Array.from(th.parentElement.children);
+        var colIndex = allThs.indexOf(th);
+
+        // Get visible data rows and sort them
+        var tbody = document.querySelector('.sds-table--hoverable tbody');
+        var visibleRows = Array.from(dataRows).filter(function(r) {
+          return r.style.display !== 'none';
+        });
+        var hiddenRows = Array.from(dataRows).filter(function(r) {
+          return r.style.display === 'none';
+        });
+
+        visibleRows.sort(function(a, b) {
+          var aText = a.children[colIndex] ? a.children[colIndex].textContent.trim().toLowerCase() : '';
+          var bText = b.children[colIndex] ? b.children[colIndex].textContent.trim().toLowerCase() : '';
+          if (aText < bText) return direction === 'asc' ? -1 : 1;
+          if (aText > bText) return direction === 'asc' ? 1 : -1;
+          return 0;
+        });
+
+        // Re-append in sorted order: visible rows first, then hidden, then empty state
+        visibleRows.forEach(function(r) { tbody.appendChild(r); });
+        hiddenRows.forEach(function(r) { tbody.appendChild(r); });
+        if (emptyStateRow) tbody.appendChild(emptyStateRow);
+      });
+    });
+
+    // === Pagination interactivity ===
     var pageBtns = document.querySelectorAll('.pagination-btn');
     var prevBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Previous page"]');
     var nextBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Next page"]');
@@ -710,7 +870,6 @@
       nextBtn.addEventListener('click', function() {
         if (currentPage < totalPages) {
           currentPage++;
-          // Update page button labels for pages beyond 3
           pageBtns.forEach(function(btn, i) {
             var pageNum = currentPage - 1 + i;
             if (pageNum < 1) pageNum = 1;

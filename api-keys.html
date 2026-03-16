@@ -245,5 +245,66 @@
     </main>
   </div>
 
+  <!-- Generate Key Modal -->
+  <div class="modal-overlay" id="generate-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:12px; padding:var(--sds-space-800); width:480px; max-width:90vw;">
+      <h3 style="margin-bottom:var(--sds-space-200);">API Key Generated</h3>
+      <p style="color:var(--sds-text-secondary); font-size:var(--sds-type-label); margin-bottom:var(--sds-space-400);">Copy this key now. It won't be shown again.</p>
+      <div style="background:var(--sds-bg-surface); border:1px solid var(--sds-border-default); border-radius:6px; padding:var(--sds-space-300) var(--sds-space-400); font-family:var(--sds-font-mono); font-size:var(--sds-type-caption); word-break:break-all; margin-bottom:var(--sds-space-400);">ds_key_example_a1b2c3d4e5f6g7h8i9j0</div>
+      <div style="display:flex; gap:var(--sds-space-200); justify-content:flex-end;">
+        <button class="btn btn-secondary" onclick="document.getElementById('generate-modal').style.display='none'">Close</button>
+        <button class="btn btn-primary" onclick="this.textContent='Copied!'; setTimeout(() => this.textContent='Copy Key', 2000)">Copy Key</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    // Fix 2: Generate Key button handler
+    var generateBtn = document.querySelector('.page-header-actions .btn-primary');
+    var modal = document.getElementById('generate-modal');
+    if (generateBtn && modal) {
+      generateBtn.addEventListener('click', function() {
+        modal.style.display = 'flex';
+      });
+    }
+
+    // Fix 3: Revoke button handlers
+    var revokeButtons = document.querySelectorAll('.btn-danger');
+    revokeButtons.forEach(function(btn) {
+      var timer = null;
+      var waiting = false;
+
+      btn.addEventListener('click', function() {
+        if (waiting) {
+          // Second click: revoke the key
+          clearTimeout(timer);
+          waiting = false;
+          var row = btn.closest('tr');
+          var statusTag = row.querySelector('.sds-tag--success');
+          if (statusTag) {
+            statusTag.classList.remove('sds-tag--success');
+            statusTag.classList.add('sds-tag--error');
+            statusTag.textContent = 'Revoked';
+          }
+          btn.textContent = 'Revoked';
+          btn.disabled = true;
+          btn.style.color = '';
+        } else {
+          // First click: ask for confirmation
+          waiting = true;
+          btn.textContent = 'Confirm?';
+          btn.style.color = 'var(--sds-status-error-text)';
+          timer = setTimeout(function() {
+            waiting = false;
+            btn.textContent = 'Revoke';
+            btn.style.color = '';
+          }, 3000);
+        }
+      });
+    });
+  })();
+  </script>
+
 </body>
 </html>

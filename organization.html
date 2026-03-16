@@ -98,6 +98,11 @@
     <!-- Main Content -->
     <main class="main-content">
 
+      <!-- Toast notification -->
+      <div class="toast" id="toast" style="display:none; position:fixed; bottom:24px; right:24px; background:var(--sds-color-warm-gray-800); color:white; padding:var(--sds-space-300) var(--sds-space-500); border-radius:8px; font-size:var(--sds-type-label); z-index:100; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <span id="toast-text"></span>
+      </div>
+
       <!-- Breadcrumbs -->
       <div class="breadcrumbs">
         <a href="settings.html">Settings</a>
@@ -274,6 +279,108 @@
 
     </main>
   </div>
+
+  <script>
+    (function () {
+      // Toast notification system
+      function showToast(message, duration) {
+        duration = duration || 3000;
+        var toast = document.getElementById('toast');
+        document.getElementById('toast-text').textContent = message;
+        toast.style.display = 'block';
+        setTimeout(function () { toast.style.display = 'none'; }, duration);
+      }
+
+      // Save Preferences button
+      var saveBtn = document.querySelector('.btn.btn-primary');
+      if (saveBtn && saveBtn.textContent.trim() === 'Save Preferences') {
+        saveBtn.addEventListener('click', function () {
+          var orig = saveBtn.textContent;
+          saveBtn.textContent = 'Saved \u2713';
+          saveBtn.style.background = 'var(--sds-status-success-text)';
+          saveBtn.disabled = true;
+          setTimeout(function () {
+            saveBtn.textContent = orig;
+            saveBtn.style.background = '';
+            saveBtn.disabled = false;
+          }, 2000);
+        });
+      }
+
+      // Edit button (General Information)
+      var editBtns = document.querySelectorAll('.btn.btn-secondary');
+      editBtns.forEach(function (btn) {
+        var text = btn.textContent.trim();
+        if (text === 'Edit') {
+          btn.addEventListener('click', function () {
+            btn.textContent = 'Editing...';
+            showToast('Edit mode is not available in this prototype.');
+            setTimeout(function () { btn.textContent = 'Edit'; }, 3000);
+          });
+        } else if (text === 'Edit Policy') {
+          btn.addEventListener('click', function () {
+            btn.textContent = 'Editing...';
+            showToast('Edit mode is not available in this prototype.');
+            setTimeout(function () { btn.textContent = 'Edit Policy'; }, 3000);
+          });
+        }
+      });
+
+      // Add Domain button
+      var addDomainBtn = document.querySelector('.btn.btn-tertiary');
+      if (addDomainBtn && addDomainBtn.textContent.trim().includes('Add Domain')) {
+        addDomainBtn.addEventListener('click', function () {
+          showToast('Add domain is not available in this prototype.');
+        });
+      }
+
+      // more_vert action buttons - dropdown menus
+      var actionBtns = document.querySelectorAll('.table-action-btn');
+      var openMenu = null;
+
+      function closeMenu() {
+        if (openMenu) {
+          openMenu.remove();
+          openMenu = null;
+        }
+      }
+
+      document.addEventListener('click', function (e) {
+        if (openMenu && !openMenu.contains(e.target) && !e.target.closest('.table-action-btn')) {
+          closeMenu();
+        }
+      });
+
+      actionBtns.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (openMenu) {
+            closeMenu();
+            return;
+          }
+          var menu = document.createElement('div');
+          menu.style.cssText = 'position:absolute; background:white; border:1px solid var(--sds-border-subtle); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.12); z-index:50; min-width:120px; padding:4px 0;';
+          var options = ['Edit', 'Remove'];
+          options.forEach(function (opt) {
+            var item = document.createElement('div');
+            item.textContent = opt;
+            item.style.cssText = 'padding:8px 16px; cursor:pointer; font-size:var(--sds-type-label); color:var(--sds-text-primary);';
+            item.addEventListener('mouseenter', function () { item.style.background = 'var(--sds-surface-secondary)'; });
+            item.addEventListener('mouseleave', function () { item.style.background = ''; });
+            item.addEventListener('click', function () { closeMenu(); });
+            menu.appendChild(item);
+          });
+          btn.style.position = 'relative';
+          var rect = btn.getBoundingClientRect();
+          menu.style.position = 'fixed';
+          menu.style.top = rect.bottom + 'px';
+          menu.style.right = (window.innerWidth - rect.right) + 'px';
+          document.body.appendChild(menu);
+          openMenu = menu;
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>

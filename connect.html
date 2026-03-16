@@ -622,6 +622,18 @@
           </div>
         </div>
 
+        <!-- ======== Completion Step ======== -->
+        <div class="wizard-step-content" data-step-content="complete" style="display:none; text-align:center; padding: var(--sds-space-1600) var(--sds-space-600);">
+          <span class="material-symbols-outlined" style="font-size:64px; color:var(--sds-status-success-text); display:block; margin-bottom:var(--sds-space-400);">check_circle</span>
+          <h2 style="font-size:var(--sds-type-heading); margin-bottom:var(--sds-space-200);">Source Connected Successfully</h2>
+          <p style="color:var(--sds-text-secondary); font-size:var(--sds-type-body); margin-bottom:var(--sds-space-200);">Snowflake has been added to your data catalog.</p>
+          <p style="color:var(--sds-text-tertiary); font-size:var(--sds-type-label); margin-bottom:var(--sds-space-800);">4 schemas · 42 tables · 847 columns discovered</p>
+          <div style="display:flex; gap:var(--sds-space-300); justify-content:center;">
+            <a href="catalog.html" class="btn btn-secondary">Browse Catalog</a>
+            <a href="settings.html" class="btn btn-primary">View Sources</a>
+          </div>
+        </div>
+
       </div><!-- /wizard-body -->
 
       <!-- Wizard Footer -->
@@ -703,8 +715,15 @@
         if (currentStep < totalSteps - 1) {
           goToStep(currentStep + 1);
         } else {
-          // Last step — go to settings or show completion
-          window.location.href = 'settings.html';
+          // Last step — show completion state
+          // Hide current step content
+          panels.forEach(function(panel) { panel.classList.remove('active'); });
+          // Hide stepper
+          document.querySelector('.stepper').style.display = 'none';
+          // Hide footer buttons
+          document.querySelector('.wizard-footer').style.display = 'none';
+          // Show completion step
+          document.querySelector('[data-step-content="complete"]').style.display = 'block';
         }
       });
 

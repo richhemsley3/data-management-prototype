@@ -26,6 +26,13 @@
       color: var(--sds-text-tertiary);
     }
     .icon-sm { font-size: 16px; }
+    .filter-btn-wrap { position: relative; display: inline-block; }
+    .filter-dropdown { position:absolute; top:100%; left:0; background:white; border:1px solid var(--sds-border-default); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:var(--sds-space-100) 0; z-index:50; min-width:160px; display:none; }
+    .filter-dropdown.open { display:block; }
+    .filter-dropdown-item { padding:var(--sds-space-200) var(--sds-space-400); font-size:var(--sds-type-label); cursor:pointer; color:var(--sds-text-primary); }
+    .filter-dropdown-item:hover { background:var(--sds-bg-subtle); }
+    .filter-dropdown-item.active { color:var(--sds-interactive-primary); font-weight:var(--sds-weight-semibold); }
+    .no-results-row td { text-align:center; padding:var(--sds-space-800) !important; color:var(--sds-text-tertiary); font-size:var(--sds-type-body); }
   </style>
 </head>
 <body>
@@ -114,13 +121,49 @@
 
       <!-- Filter Bar -->
       <div class="filter-bar">
-        <button class="btn btn-secondary btn-sm">All Users <span class="material-symbols-outlined icon-sm">expand_more</span></button>
-        <button class="btn btn-secondary btn-sm">All Actions <span class="material-symbols-outlined icon-sm">expand_more</span></button>
-        <button class="btn btn-secondary btn-sm">Last 7 days <span class="material-symbols-outlined icon-sm">expand_more</span></button>
+        <div class="filter-btn-wrap" id="filter-users-wrap">
+          <button class="btn btn-secondary btn-sm" id="filter-users-btn">All Users <span class="material-symbols-outlined icon-sm">expand_more</span></button>
+          <div class="filter-dropdown" id="filter-users-dropdown">
+            <div class="filter-dropdown-item active" data-value="All Users">All Users</div>
+            <div class="filter-dropdown-item" data-value="Anika Kim">Anika Kim</div>
+            <div class="filter-dropdown-item" data-value="Jordan Lee">Jordan Lee</div>
+            <div class="filter-dropdown-item" data-value="Marcus Chen">Marcus Chen</div>
+            <div class="filter-dropdown-item" data-value="Priya Shah">Priya Shah</div>
+            <div class="filter-dropdown-item" data-value="Sam Taylor">Sam Taylor</div>
+            <div class="filter-dropdown-item" data-value="System">System</div>
+          </div>
+        </div>
+        <div class="filter-btn-wrap" id="filter-actions-wrap">
+          <button class="btn btn-secondary btn-sm" id="filter-actions-btn">All Actions <span class="material-symbols-outlined icon-sm">expand_more</span></button>
+          <div class="filter-dropdown" id="filter-actions-dropdown">
+            <div class="filter-dropdown-item active" data-value="All Actions">All Actions</div>
+            <div class="filter-dropdown-item" data-value="Approved">Approved</div>
+            <div class="filter-dropdown-item" data-value="Alert">Alert</div>
+            <div class="filter-dropdown-item" data-value="Bookmarked">Bookmarked</div>
+            <div class="filter-dropdown-item" data-value="Classified">Classified</div>
+            <div class="filter-dropdown-item" data-value="Created">Created</div>
+            <div class="filter-dropdown-item" data-value="Deleted">Deleted</div>
+            <div class="filter-dropdown-item" data-value="Exported">Exported</div>
+            <div class="filter-dropdown-item" data-value="Modified">Modified</div>
+            <div class="filter-dropdown-item" data-value="Revoked">Revoked</div>
+            <div class="filter-dropdown-item" data-value="Scanned">Scanned</div>
+            <div class="filter-dropdown-item" data-value="Searched">Searched</div>
+            <div class="filter-dropdown-item" data-value="Viewed">Viewed</div>
+          </div>
+        </div>
+        <div class="filter-btn-wrap" id="filter-time-wrap">
+          <button class="btn btn-secondary btn-sm" id="filter-time-btn">Last 7 days <span class="material-symbols-outlined icon-sm">expand_more</span></button>
+          <div class="filter-dropdown" id="filter-time-dropdown">
+            <div class="filter-dropdown-item" data-value="Last 24 hours">Last 24 hours</div>
+            <div class="filter-dropdown-item active" data-value="Last 7 days">Last 7 days</div>
+            <div class="filter-dropdown-item" data-value="Last 30 days">Last 30 days</div>
+            <div class="filter-dropdown-item" data-value="All time">All time</div>
+          </div>
+        </div>
         <div class="filter-search">
           <div class="sds-header-search">
             <span class="material-symbols-outlined">search</span>
-            <input type="text" placeholder="Search events..." aria-label="Search events">
+            <input type="text" id="audit-search" placeholder="Search events..." aria-label="Search events">
           </div>
         </div>
       </div>
@@ -281,6 +324,188 @@
 
     </main>
   </div>
+
+  <script>
+  (function() {
+    var table = document.querySelector('.sds-table');
+    var tbody = table.querySelector('tbody');
+    var allRows = Array.from(tbody.querySelectorAll('tr'));
+
+    // ===== Fix 5: Sort functionality =====
+    var sortableHeaders = table.querySelectorAll('th.sortable');
+    sortableHeaders.forEach(function(th) {
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', function() {
+        var colIndex = Array.from(th.parentNode.children).indexOf(th);
+        var currentDir = th.classList.contains('sort-desc') ? 'desc' : th.classList.contains('sort-asc') ? 'asc' : 'none';
+        var newDir = (currentDir === 'none' || currentDir === 'asc') ? 'desc' : 'asc';
+
+        // Remove sort classes from all headers
+        sortableHeaders.forEach(function(h) { h.classList.remove('sort-asc', 'sort-desc'); });
+        th.classList.add('sort-' + newDir);
+
+        // Get visible rows only
+        var visibleRows = allRows.filter(function(r) { return r.style.display !== 'none'; });
+        visibleRows.sort(function(a, b) {
+          var aText = a.children[colIndex].textContent.trim().toLowerCase();
+          var bText = b.children[colIndex].textContent.trim().toLowerCase();
+          if (aText < bText) return newDir === 'asc' ? -1 : 1;
+          if (aText > bText) return newDir === 'asc' ? 1 : -1;
+          return 0;
+        });
+        visibleRows.forEach(function(row) { tbody.appendChild(row); });
+      });
+    });
+
+    // ===== Fix 6: Filter dropdowns =====
+    var activeUserFilter = 'All Users';
+    var activeActionFilter = 'All Actions';
+
+    function applyFilters() {
+      var searchText = document.getElementById('audit-search').value.toLowerCase();
+      var visibleCount = 0;
+
+      // Remove existing no-results row
+      var noResults = tbody.querySelector('.no-results-row');
+      if (noResults) noResults.remove();
+
+      allRows.forEach(function(row) {
+        var userCell = row.children[1].textContent.trim();
+        var actionCell = row.children[2].textContent.trim();
+        var matchUser = (activeUserFilter === 'All Users') || userCell === activeUserFilter;
+        var matchAction = (activeActionFilter === 'All Actions') || actionCell === activeActionFilter;
+
+        var matchSearch = true;
+        if (searchText) {
+          matchSearch = false;
+          for (var i = 0; i < row.children.length; i++) {
+            if (row.children[i].textContent.toLowerCase().indexOf(searchText) !== -1) {
+              matchSearch = true;
+              break;
+            }
+          }
+        }
+
+        if (matchUser && matchAction && matchSearch) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Show empty state if no matches
+      if (visibleCount === 0) {
+        var noRow = document.createElement('tr');
+        noRow.className = 'no-results-row';
+        noRow.innerHTML = '<td colspan="6">No matching events found.</td>';
+        tbody.appendChild(noRow);
+      }
+
+      // Update pagination text
+      var paginationText = document.querySelector('.pagination-controls span:last-child');
+      if (paginationText) {
+        paginationText.textContent = 'Showing 1-' + visibleCount + ' of ' + visibleCount + ' events';
+      }
+    }
+
+    function setupDropdown(btnId, dropdownId, callback) {
+      var btn = document.getElementById(btnId);
+      var dropdown = document.getElementById(dropdownId);
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Close other dropdowns
+        document.querySelectorAll('.filter-dropdown.open').forEach(function(d) {
+          if (d !== dropdown) d.classList.remove('open');
+        });
+        dropdown.classList.toggle('open');
+      });
+      dropdown.querySelectorAll('.filter-dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.querySelectorAll('.filter-dropdown-item').forEach(function(i) { i.classList.remove('active'); });
+          item.classList.add('active');
+          var value = item.getAttribute('data-value');
+          btn.innerHTML = value + ' <span class="material-symbols-outlined icon-sm">expand_more</span>';
+          dropdown.classList.remove('open');
+          callback(value);
+        });
+      });
+    }
+
+    setupDropdown('filter-users-btn', 'filter-users-dropdown', function(value) {
+      activeUserFilter = value;
+      applyFilters();
+    });
+
+    setupDropdown('filter-actions-btn', 'filter-actions-dropdown', function(value) {
+      activeActionFilter = value;
+      applyFilters();
+    });
+
+    setupDropdown('filter-time-btn', 'filter-time-dropdown', function(value) {
+      // Time filter is cosmetic only in this prototype - just changes button label
+    });
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.filter-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+    });
+
+    // ===== Fix 7: Pagination =====
+    var paginationBtns = document.querySelectorAll('.pagination-pages .pagination-btn');
+    paginationBtns.forEach(function(btn) {
+      if (btn.disabled) return;
+      btn.addEventListener('click', function() {
+        var pageNum = btn.textContent.trim();
+        // Update active state
+        paginationBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        // Enable/disable prev/next
+        var prevBtn = document.querySelector('.pagination-pages .pagination-btn:first-child');
+        var nextBtn = document.querySelector('.pagination-pages .pagination-btn:last-child');
+
+        if (pageNum === '1') {
+          // Show the actual rows
+          allRows.forEach(function(r) { r.style.display = ''; });
+          var noResults = tbody.querySelector('.no-results-row');
+          if (noResults) noResults.remove();
+          prevBtn.disabled = true;
+          nextBtn.disabled = false;
+          var paginationText = document.querySelector('.pagination-controls span:last-child');
+          if (paginationText) paginationText.textContent = 'Showing 1-12 of 1,847 events';
+        } else if (!isNaN(parseInt(pageNum))) {
+          // Hide all rows and show placeholder
+          allRows.forEach(function(r) { r.style.display = 'none'; });
+          var noResults = tbody.querySelector('.no-results-row');
+          if (noResults) noResults.remove();
+          var placeholder = document.createElement('tr');
+          placeholder.className = 'no-results-row';
+          placeholder.innerHTML = '<td colspan="6" style="text-align:center; padding:var(--sds-space-800); color:var(--sds-text-tertiary);">Additional audit log entries would appear here.</td>';
+          tbody.appendChild(placeholder);
+          prevBtn.disabled = false;
+          nextBtn.disabled = (pageNum === '3');
+          var start = (parseInt(pageNum) - 1) * 12 + 1;
+          var end = Math.min(parseInt(pageNum) * 12, 1847);
+          var paginationText = document.querySelector('.pagination-controls span:last-child');
+          if (paginationText) paginationText.textContent = 'Showing ' + start + '-' + end + ' of 1,847 events';
+        }
+      });
+    });
+
+    // ===== Fix 8: Search functionality =====
+    var searchInput = document.getElementById('audit-search');
+    searchInput.addEventListener('input', function() {
+      // Reset to page 1 view
+      paginationBtns.forEach(function(b) { b.classList.remove('active'); });
+      var page1Btn = document.querySelector('.pagination-pages .pagination-btn:nth-child(2)');
+      if (page1Btn) page1Btn.classList.add('active');
+      allRows.forEach(function(r) { r.style.display = ''; });
+      applyFilters();
+    });
+  })();
+  </script>
 
 </body>
 </html>

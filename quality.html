@@ -254,6 +254,13 @@
                 </button>
               </td>
             </tr>
+            <tr id="empty-state-row" style="display:none">
+              <td colspan="6" style="text-align:center;padding:var(--sds-space-800) var(--sds-space-400)">
+                <span class="material-symbols-outlined" style="font-size:48px;color:var(--sds-text-tertiary);display:block;margin-bottom:var(--sds-space-200)">search_off</span>
+                <div style="font-weight:var(--sds-weight-semibold);color:var(--sds-text-primary);margin-bottom:var(--sds-space-100)">No disabled rules</div>
+                <div style="font-size:var(--sds-type-caption);color:var(--sds-text-tertiary)">Rules you disable will appear here.</div>
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -275,7 +282,25 @@
   <script>
   (function() {
     var tabs = document.querySelectorAll('.sds-tabs .sds-tab[data-tab]');
-    var rows = document.querySelectorAll('.sds-table--hoverable tbody tr');
+    var dataRows = document.querySelectorAll('.sds-table--hoverable tbody tr[data-status]');
+    var emptyRow = document.getElementById('empty-state-row');
+    var paginationText = document.querySelector('.pagination > span');
+    var paginationPages = document.querySelector('.pagination-pages');
+    var paginationBtns = document.querySelectorAll('.pagination-btn');
+
+    function updatePagination(filter, visibleCount) {
+      if (filter === 'all') {
+        paginationText.textContent = 'Showing 1-8 of 156 rules';
+        paginationPages.style.display = '';
+        paginationBtns.forEach(function(b, i) {
+          b.classList.toggle('active', i === 0);
+        });
+      } else {
+        var label = filter.charAt(0).toUpperCase() + filter.slice(1);
+        paginationText.textContent = 'Showing ' + visibleCount + ' of ' + visibleCount + ' ' + label.toLowerCase() + ' rules';
+        paginationPages.style.display = 'none';
+      }
+    }
 
     tabs.forEach(function(tab) {
       tab.addEventListener('click', function() {
@@ -287,14 +312,36 @@
         tab.setAttribute('aria-selected', 'true');
 
         var filter = tab.getAttribute('data-tab');
-        rows.forEach(function(row) {
+        var visibleCount = 0;
+        dataRows.forEach(function(row) {
           var status = row.getAttribute('data-status');
           if (filter === 'all' || status === filter) {
             row.style.display = '';
+            visibleCount++;
           } else {
             row.style.display = 'none';
           }
         });
+
+        // Show/hide empty state
+        if (visibleCount === 0) {
+          emptyRow.style.display = '';
+        } else {
+          emptyRow.style.display = 'none';
+        }
+
+        // Update pagination
+        updatePagination(filter, visibleCount);
+      });
+    });
+
+    // Pagination button handlers
+    var pageRanges = ['1-8', '9-16', '17-24'];
+    paginationBtns.forEach(function(btn, index) {
+      btn.addEventListener('click', function() {
+        paginationBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        paginationText.textContent = 'Showing ' + pageRanges[index] + ' of 156 rules';
       });
     });
   })();

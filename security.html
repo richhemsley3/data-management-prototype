@@ -439,5 +439,35 @@
     </main>
   </div>
 
+  <script>
+  (function() {
+    // Auto-Fix button handler
+    var autoFixBtn = document.querySelector('button[aria-label="Auto-fix this risk"]');
+    if (autoFixBtn) {
+      autoFixBtn.addEventListener('click', function() {
+        this.textContent = 'Fixed \u2713';
+        this.classList.remove('btn-primary');
+        this.classList.add('btn-secondary');
+        this.style.color = 'var(--sds-status-success-text)';
+        this.disabled = true;
+      });
+    }
+
+    // Classify button handler
+    var classifyBtns = document.querySelectorAll('.btn.btn-tertiary.btn-sm');
+    classifyBtns.forEach(function(btn) {
+      if (btn.textContent.trim() === 'Classify') {
+        btn.addEventListener('click', function() {
+          this.textContent = 'Classified \u2713';
+          this.classList.remove('btn-tertiary');
+          this.classList.add('btn-secondary');
+          this.style.color = 'var(--sds-status-success-text)';
+          this.disabled = true;
+        });
+      }
+    });
+  })();
+  </script>
+
 </body>
 </html>

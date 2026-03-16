@@ -312,6 +312,15 @@
         </table>
       </div>
 
+      <!-- Invite User Modal -->
+      <div class="modal-overlay" id="inviteModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:12px; padding:var(--sds-space-800); width:400px; max-width:90vw;">
+          <h3 style="margin-bottom:var(--sds-space-400);">Invite User</h3>
+          <p style="color:var(--sds-text-secondary); font-size:var(--sds-type-label); margin-bottom:var(--sds-space-400);">Invite functionality is not available in this prototype.</p>
+          <button class="btn btn-primary" onclick="this.closest('.modal-overlay').style.display='none'">Close</button>
+        </div>
+      </div>
+
       <!-- Pagination -->
       <div class="pagination">
         <div class="pagination-per-page">
@@ -337,21 +346,31 @@
     </main>
   </div>
 
-  <!-- JavaScript: Tab switching + checkbox select-all -->
+  <!-- JavaScript: Tab switching + checkbox select-all + pagination + invite modal -->
   <script>
     (function () {
       var selectAll = document.getElementById('selectAll');
       var rowCheckboxes = document.querySelectorAll('.row-checkbox');
+      var userRows = document.querySelectorAll('tbody tr[data-role]');
+      var tbody = document.querySelector('tbody');
 
-      function updateSelectAll() {
-        var checked = document.querySelectorAll('.row-checkbox:checked');
-        var count = checked.length;
-        selectAll.checked = count === rowCheckboxes.length && count > 0;
-        selectAll.indeterminate = count > 0 && count < rowCheckboxes.length;
+      // Fix 7: Helper to get only visible checkboxes
+      function getVisibleCheckboxes() {
+        return Array.from(rowCheckboxes).filter(function (cb) {
+          return cb.closest('tr').style.display !== 'none';
+        });
       }
 
+      function updateSelectAll() {
+        var visibleCbs = getVisibleCheckboxes();
+        var visibleChecked = visibleCbs.filter(function (cb) { return cb.checked; }).length;
+        selectAll.checked = visibleChecked === visibleCbs.length && visibleCbs.length > 0;
+        selectAll.indeterminate = visibleChecked > 0 && visibleChecked < visibleCbs.length;
+      }
+
+      // Fix 7: Select-all only toggles visible rows
       selectAll.addEventListener('change', function () {
-        rowCheckboxes.forEach(function (cb) {
+        getVisibleCheckboxes().forEach(function (cb) {
           cb.checked = selectAll.checked;
         });
       });
@@ -360,12 +379,10 @@
         cb.addEventListener('change', updateSelectAll);
       });
 
-      // Initialize select-all state
       updateSelectAll();
 
       // Tab switching + role filtering
       var tabs = document.querySelectorAll('.sds-tab');
-      var userRows = document.querySelectorAll('tbody tr[data-role]');
       var roleMap = { 'all': 'all', 'admins': 'admin', 'stewards': 'steward', 'analysts': 'analyst', 'engineers': 'engineer' };
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
@@ -383,10 +400,11 @@
               row.style.display = 'none';
             }
           });
+          updateSelectAll();
         });
       });
 
-      // Pagination controls
+      // Fix 5: Pagination that actually shows/hides rows
       var prevBtn = document.querySelector('.pagination-controls .btn:first-child');
       var nextBtn = document.querySelector('.pagination-controls .btn:last-child');
       var pageLabel = document.querySelector('.pagination-controls span');
@@ -394,17 +412,49 @@
       var currentPage = 1;
       var totalPages = 3;
 
+      // Create empty state row for pages 2+
+      var emptyRow = document.createElement('tr');
+      emptyRow.id = 'emptyPageRow';
+      emptyRow.style.display = 'none';
+      var emptyTd = document.createElement('td');
+      emptyTd.setAttribute('colspan', '7');
+      emptyTd.style.cssText = 'text-align:center; padding:48px 16px; color:var(--sds-text-secondary); font-size:var(--sds-type-label);';
+      emptyTd.textContent = 'Additional users would appear here in a production environment.';
+      emptyRow.appendChild(emptyTd);
+      tbody.appendChild(emptyRow);
+
       function updatePagination() {
         pageLabel.textContent = 'Page ' + currentPage + ' of ' + totalPages;
         prevBtn.disabled = currentPage === 1;
         nextBtn.disabled = currentPage === totalPages;
+
         if (currentPage === 1) {
           showingLabel.textContent = 'Showing 1-10 of 24 users';
+          // Show all data rows, hide empty state
+          userRows.forEach(function (row) { row.style.display = ''; });
+          emptyRow.style.display = 'none';
+          // Re-apply tab filter
+          var activeTab = document.querySelector('.sds-tab.active');
+          if (activeTab) {
+            var filter = roleMap[activeTab.getAttribute('data-tab')] || 'all';
+            userRows.forEach(function (row) {
+              if (filter === 'all' || row.getAttribute('data-role') === filter) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            });
+          }
         } else if (currentPage === 2) {
           showingLabel.textContent = 'Showing 11-20 of 24 users';
+          userRows.forEach(function (row) { row.style.display = 'none'; });
+          emptyRow.style.display = '';
         } else {
           showingLabel.textContent = 'Showing 21-24 of 24 users';
+          userRows.forEach(function (row) { row.style.display = 'none'; });
+          emptyRow.style.display = '';
         }
+        updateSelectAll();
       }
 
       prevBtn.addEventListener('click', function () {
@@ -413,6 +463,15 @@
       nextBtn.addEventListener('click', function () {
         if (currentPage < totalPages) { currentPage++; updatePagination(); }
       });
+
+      // Fix 6: Invite User button handler
+      var inviteBtn = document.querySelector('.page-header-actions .btn.btn-primary');
+      var inviteModal = document.getElementById('inviteModal');
+      if (inviteBtn && inviteModal) {
+        inviteBtn.addEventListener('click', function () {
+          inviteModal.style.display = 'flex';
+        });
+      }
     })();
   </script>
 

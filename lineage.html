@@ -354,7 +354,7 @@
 
       <div class="breadcrumbs">
         <a href="index.html">Home</a>
-        <span class="sep">/</span>
+        <span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span>
         <span>Lineage</span>
       </div>
 
@@ -530,6 +530,9 @@
               <button class="zoom-btn" aria-label="Toggle minimap">
                 <span class="material-symbols-outlined">map</span>
               </button>
+              <button class="zoom-btn" title="Toggle details panel" onclick="document.querySelector('.lineage-panel').style.display = document.querySelector('.lineage-panel').style.display === 'none' ? 'flex' : 'none'">
+                <span class="material-symbols-outlined">info</span>
+              </button>
             </div>
 
           </div>
@@ -659,6 +662,172 @@
 
     window.addEventListener('load', drawEdges);
     window.addEventListener('resize', drawEdges);
+
+    // Node data map for side panel
+    const nodeData = {
+      'node-raw_customers': {
+        name: 'raw_customers', icon: 'database', type: 'Source',
+        source: 'Shopify', columns: 8, classification: 'Sensitive - PII',
+        owner: 'A. Patel', access: '5 users, 1 group', compliance: 'GDPR mapped',
+        impact: ['4 downstream assets', '1 dashboard', '2 users'],
+        columnList: [
+          { name: 'customer_id', pii: true }, { name: 'email', pii: true },
+          { name: 'first_name', pii: true }, { name: 'last_name', pii: true },
+          { name: 'created_at', pii: false }
+        ]
+      },
+      'node-stripe_payments': {
+        name: 'stripe_payments', icon: 'database', type: 'Source',
+        source: 'Stripe API', columns: 12, classification: 'Internal',
+        owner: 'J. Smith', access: '8 users, 2 groups', compliance: 'SOC2 mapped',
+        impact: ['3 downstream assets', '1 dashboard', '2 users'],
+        columnList: [
+          { name: 'payment_id', pii: false }, { name: 'amount', pii: false },
+          { name: 'currency', pii: false }, { name: 'status', pii: false },
+          { name: 'created', pii: false }
+        ]
+      },
+      'node-stg_customers': {
+        name: 'stg_customers', icon: 'function', type: 'Transform',
+        source: 'dbt model', columns: 6, classification: 'Sensitive - PII',
+        owner: 'A. Patel', access: '6 users, 2 groups', compliance: 'GDPR mapped',
+        impact: ['5 downstream assets', '2 dashboards', '3 users'],
+        columnList: [
+          { name: 'customer_id', pii: true }, { name: 'email', pii: true },
+          { name: 'full_name', pii: true }, { name: 'created_at', pii: false }
+        ]
+      },
+      'node-stg_payments': {
+        name: 'stg_payments', icon: 'function', type: 'Transform',
+        source: 'dbt model', columns: 8, classification: 'Internal',
+        owner: 'A. Patel', access: '6 users, 2 groups', compliance: 'SOC2 mapped',
+        impact: ['3 downstream assets', '1 dashboard', '2 users'],
+        columnList: [
+          { name: 'payment_id', pii: false }, { name: 'order_id', pii: false },
+          { name: 'amount', pii: false }, { name: 'method', pii: false },
+          { name: 'status', pii: false }
+        ]
+      },
+      'node-customer_orders': {
+        name: 'customer_orders', icon: 'table_chart', type: 'Core Table',
+        source: 'Snowflake', columns: 42, classification: 'Sensitive - PII',
+        owner: 'J. Smith', access: '12 users, 3 groups', compliance: 'GDPR mapped',
+        impact: ['8 downstream assets', '2 dashboards', '3 users'],
+        columnList: [
+          { name: 'order_id', pii: false }, { name: 'customer_id', pii: true },
+          { name: 'email', pii: true }, { name: 'total_amount', pii: false },
+          { name: 'order_date', pii: false }
+        ]
+      },
+      'node-revenue_metrics': {
+        name: 'revenue_metrics', icon: 'table_chart', type: 'Downstream Table',
+        source: 'Snowflake', columns: 15, classification: 'Internal',
+        owner: 'S. Wong', access: '10 users, 2 groups', compliance: 'SOC2 mapped',
+        impact: ['2 downstream assets', '1 dashboard', '3 users'],
+        columnList: [
+          { name: 'metric_date', pii: false }, { name: 'total_revenue', pii: false },
+          { name: 'order_count', pii: false }, { name: 'avg_order_value', pii: false }
+        ]
+      },
+      'node-customer_segments': {
+        name: 'customer_segments', icon: 'table_chart', type: 'Downstream Table',
+        source: 'Snowflake', columns: 10, classification: 'Internal',
+        owner: 'M. Chen', access: '8 users, 2 groups', compliance: 'GDPR mapped',
+        impact: ['3 downstream assets', '1 dashboard', '2 users'],
+        columnList: [
+          { name: 'segment_id', pii: false }, { name: 'segment_name', pii: false },
+          { name: 'customer_count', pii: false }, { name: 'avg_ltv', pii: false }
+        ]
+      },
+      'node-revenue_dashboard': {
+        name: 'Revenue Dashboard', icon: 'bar_chart', type: 'Dashboard',
+        source: 'Looker', columns: 0, classification: 'Internal',
+        owner: 'S. Wong', access: '15 users, 4 groups', compliance: 'N/A',
+        impact: ['0 downstream assets', '0 dashboards', '8 users'],
+        columnList: []
+      },
+      'node-marketing_report': {
+        name: 'Marketing Report', icon: 'bar_chart', type: 'Report',
+        source: 'Tableau', columns: 0, classification: 'Internal',
+        owner: 'M. Chen', access: '10 users, 3 groups', compliance: 'N/A',
+        impact: ['0 downstream assets', '0 dashboards', '5 users'],
+        columnList: []
+      },
+      'node-anika_kim': {
+        name: 'Anika Kim', icon: 'person', type: 'User',
+        source: 'Direct access', columns: 0, classification: 'N/A',
+        owner: 'N/A', access: 'N/A', compliance: 'N/A',
+        impact: ['0 downstream assets', '0 dashboards', '0 users'],
+        columnList: []
+      }
+    };
+
+    // Update panel with node data
+    function updatePanel(nodeId) {
+      const data = nodeData[nodeId];
+      if (!data) return;
+      const panel = document.getElementById('sidePanel');
+
+      // Update header
+      panel.querySelector('.lineage-panel-header-left .material-symbols-outlined').textContent = data.icon;
+      panel.querySelector('.lineage-panel-title').textContent = data.name;
+
+      // Build columns section
+      let columnsHtml = '';
+      if (data.columnList.length > 0) {
+        columnsHtml = '<div class="panel-section"><div class="panel-section-label">Columns Involved</div>';
+        data.columnList.forEach(function(col) {
+          columnsHtml += '<div class="panel-col-item"><span>' + col.name + '</span>';
+          if (col.pii) columnsHtml += '<span class="sds-tag sds-tag--error" style="font-size:10px">PII</span>';
+          columnsHtml += '</div>';
+        });
+        columnsHtml += '</div>';
+      }
+
+      // Build security section
+      const classTag = data.classification.indexOf('PII') !== -1 ? 'sds-tag--error' :
+                        data.classification === 'Internal' ? 'sds-tag--info' : 'sds-tag--neutral';
+      const compTag = data.compliance.indexOf('GDPR') !== -1 ? 'sds-tag--success' :
+                       data.compliance === 'N/A' ? 'sds-tag--neutral' : 'sds-tag--info';
+
+      const securityHtml = '<div class="panel-section"><div class="panel-section-label">Security</div>' +
+        '<div class="panel-row"><span class="panel-row-label">Classification</span><span class="sds-tag ' + classTag + '">' + data.classification + '</span></div>' +
+        '<div class="panel-row"><span class="panel-row-label">Access</span><span class="panel-row-value">' + data.access + '</span></div>' +
+        '<div class="panel-row"><span class="panel-row-label">Compliance</span><span class="sds-tag ' + compTag + '">' + data.compliance + '</span></div>' +
+        '</div>';
+
+      // Build impact section
+      let impactHtml = '<div class="panel-section"><div class="panel-section-label">Impact Summary</div>';
+      data.impact.forEach(function(item) {
+        impactHtml += '<div class="panel-impact-item">' + item + '</div>';
+      });
+      impactHtml += '</div>';
+
+      // Actions
+      const actionsHtml = '<div class="panel-actions">' +
+        '<button class="btn btn-primary" style="justify-content:center">Expand Blast Radius</button>' +
+        '<a href="asset.html" class="btn btn-secondary" style="justify-content:center">Open Detail</a>' +
+        '<button class="btn btn-tertiary" style="justify-content:center">Notify Dependents</button>' +
+        '</div>';
+
+      panel.querySelector('.lineage-panel-body').innerHTML = columnsHtml + securityHtml + impactHtml + actionsHtml;
+    }
+
+    // Node click handling
+    document.querySelectorAll('.dag-node').forEach(function(node) {
+      node.addEventListener('click', function() {
+        // Remove selected from current
+        const current = document.querySelector('.dag-node.selected');
+        if (current) current.classList.remove('selected');
+        // Add selected to clicked
+        node.classList.add('selected');
+        // Show panel if hidden
+        const panel = document.getElementById('sidePanel');
+        panel.style.display = 'flex';
+        // Update panel content
+        updatePanel(node.id);
+      });
+    });
   </script>
 
 </body>

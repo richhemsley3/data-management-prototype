@@ -119,16 +119,16 @@
           </div>
         </div>
         <div class="page-header-actions">
-          <button class="btn btn-secondary" aria-label="Bookmark">
-            <span class="material-symbols-outlined">bookmark</span>
+          <button class="btn btn-secondary" id="bookmarkBtn" aria-label="Bookmark" onclick="toggleBookmark()">
+            <span class="material-symbols-outlined">bookmark_border</span>
           </button>
-          <button class="btn btn-secondary" aria-label="Share">
+          <button class="btn btn-secondary" id="shareBtn" aria-label="Share" onclick="shareAsset(this)">
             <span class="material-symbols-outlined">share</span>
-            Share
+            <span class="share-label">Share</span>
           </button>
-          <button class="btn btn-primary" aria-label="Edit asset">
+          <button class="btn btn-primary" id="editBtn" aria-label="Edit asset" onclick="handleEdit(this)">
             <span class="material-symbols-outlined">edit</span>
-            Edit
+            <span class="edit-label">Edit</span>
           </button>
         </div>
       </div>
@@ -400,7 +400,7 @@
           </table>
           <div class="pagination" style="justify-content: space-between; align-items: center;">
             <span>Showing 10 of 42 columns</span>
-            <button class="btn btn-tertiary" onclick="/* prototype placeholder */">Show all</button>
+            <button class="btn btn-tertiary" id="showAllBtn" onclick="handleShowAll(this)">Show all</button>
           </div>
         </div>
       </div>
@@ -475,7 +475,7 @@
             </table>
           </div>
           <div class="mt-400">
-            <button class="btn btn-secondary" aria-label="Request access review">Request Access Review</button>
+            <button class="btn btn-secondary" id="requestAccessBtn" aria-label="Request access review" onclick="handleRequestAccess(this)">Request Access Review</button>
           </div>
         </div>
 
@@ -695,6 +695,84 @@
         });
       }
     });
+
+    // Fix 4: Edit button handler
+    function handleEdit(btn) {
+      var toast = document.createElement('div');
+      toast.textContent = 'Edit mode is not available in this prototype';
+      toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--sds-bg-card);border:1px solid var(--sds-border-default);border-radius:8px;padding:12px 24px;font-size:var(--sds-type-label);color:var(--sds-text-primary);box-shadow:0 4px 12px rgba(0,0,0,0.12);z-index:1000;transition:opacity 0.3s;';
+      document.body.appendChild(toast);
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3000);
+    }
+
+    // Fix 5: Bookmark button handler
+    function toggleBookmark() {
+      var btn = document.getElementById('bookmarkBtn');
+      var icon = btn.querySelector('.material-symbols-outlined');
+      if (icon.textContent.trim() === 'bookmark_border') {
+        icon.textContent = 'bookmark';
+        icon.style.fontVariationSettings = "'FILL' 1";
+      } else {
+        icon.textContent = 'bookmark_border';
+        icon.style.fontVariationSettings = "'FILL' 0";
+      }
+    }
+
+    // Fix 6: Share button handler
+    function shareAsset(btn) {
+      var label = btn.querySelector('.share-label');
+      navigator.clipboard.writeText(window.location.href).catch(function() {});
+      label.textContent = 'Link copied!';
+      setTimeout(function() { label.textContent = 'Share'; }, 2000);
+    }
+
+    // Fix 7: Schema select-all checkbox
+    (function() {
+      var selectAll = document.querySelector('#tab-schema thead .checkbox');
+      var rowCheckboxes = document.querySelectorAll('#tab-schema tbody .checkbox');
+      if (selectAll) {
+        selectAll.addEventListener('change', function() {
+          rowCheckboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
+        });
+        rowCheckboxes.forEach(function(cb) {
+          cb.addEventListener('change', function() {
+            var checked = document.querySelectorAll('#tab-schema tbody .checkbox:checked').length;
+            var total = rowCheckboxes.length;
+            if (checked === 0) {
+              selectAll.checked = false;
+              selectAll.indeterminate = false;
+            } else if (checked === total) {
+              selectAll.checked = true;
+              selectAll.indeterminate = false;
+            } else {
+              selectAll.checked = false;
+              selectAll.indeterminate = true;
+            }
+          });
+        });
+      }
+    })();
+
+    // Fix 8: Show all button handler
+    function handleShowAll(btn) {
+      btn.textContent = 'Loading...';
+      btn.disabled = true;
+      setTimeout(function() {
+        btn.textContent = 'Showing all 42 columns';
+      }, 600);
+    }
+
+    // Fix 9: Request Access Review button handler
+    function handleRequestAccess(btn) {
+      btn.textContent = 'Request Sent \u2713';
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-secondary');
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+    }
   </script>
 
 </body>

@@ -402,22 +402,38 @@
       const bulkToolbar = document.getElementById('bulkToolbar');
       const selectedCount = document.getElementById('selectedCount');
 
+      function getVisibleCheckboxes() {
+        return Array.from(rowCheckboxes).filter(function (cb) {
+          return cb.closest('tr').style.display !== 'none';
+        });
+      }
+
+      function uncheckAllAndHide() {
+        rowCheckboxes.forEach(function (cb) { cb.checked = false; });
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+        bulkToolbar.classList.remove('visible');
+      }
+
       function updateToolbar() {
         const checked = document.querySelectorAll('.row-checkbox:checked');
         const count = checked.length;
+        const visibleCbs = getVisibleCheckboxes();
         if (count > 0) {
           bulkToolbar.classList.add('visible');
           selectedCount.textContent = count + ' selected';
         } else {
           bulkToolbar.classList.remove('visible');
         }
-        // Update select-all state
-        selectAll.checked = count === rowCheckboxes.length && count > 0;
-        selectAll.indeterminate = count > 0 && count < rowCheckboxes.length;
+        // Update select-all state based on visible rows
+        const visibleCheckedCount = visibleCbs.filter(function (cb) { return cb.checked; }).length;
+        selectAll.checked = visibleCheckedCount === visibleCbs.length && visibleCbs.length > 0;
+        selectAll.indeterminate = visibleCheckedCount > 0 && visibleCheckedCount < visibleCbs.length;
       }
 
+      // Fix 2: Select-all only toggles visible rows
       selectAll.addEventListener('change', function () {
-        rowCheckboxes.forEach(function (cb) {
+        getVisibleCheckboxes().forEach(function (cb) {
           cb.checked = selectAll.checked;
         });
         updateToolbar();
@@ -425,6 +441,46 @@
 
       rowCheckboxes.forEach(function (cb) {
         cb.addEventListener('change', updateToolbar);
+      });
+
+      // Fix 1: Bulk action button handlers
+      var bulkButtons = bulkToolbar.querySelectorAll('.bulk-actions .btn');
+      bulkButtons.forEach(function (btn) {
+        var originalText = btn.textContent.trim();
+        if (originalText === 'Delete') {
+          var confirmState = false;
+          var confirmTimer = null;
+          btn.addEventListener('click', function () {
+            if (confirmState) {
+              clearTimeout(confirmTimer);
+              confirmState = false;
+              btn.textContent = 'Delete';
+              btn.style.color = '';
+              uncheckAllAndHide();
+            } else {
+              confirmState = true;
+              btn.textContent = 'Confirm Delete?';
+              btn.style.color = 'var(--sds-status-error-text)';
+              confirmTimer = setTimeout(function () {
+                confirmState = false;
+                btn.textContent = 'Delete';
+                btn.style.color = '';
+              }, 3000);
+            }
+          });
+        } else {
+          // Pause, Resume, Re-Sync
+          btn.addEventListener('click', function () {
+            var orig = btn.textContent.trim();
+            btn.textContent = 'Done \u2713';
+            btn.disabled = true;
+            setTimeout(function () {
+              btn.textContent = orig;
+              btn.disabled = false;
+            }, 2000);
+            uncheckAllAndHide();
+          });
+        }
       });
 
       // Tab switching + row filtering
@@ -446,6 +502,8 @@
               row.style.display = 'none';
             }
           });
+          // Reset checkboxes when switching tabs
+          updateToolbar();
         });
       });
     })();
