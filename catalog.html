@@ -111,14 +111,14 @@
     </div>
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -286,6 +286,7 @@
           <!-- Results Header -->
           <div class="results-header">
             <span>Showing 24 of 1,847 assets</span>
+            <span class="sds-tag sds-tag--info" style="margin-left: var(--sds-space-200);">1 filter applied</span>
             <span class="sort-control">Sort by: Relevance</span>
           </div>
 
@@ -294,11 +295,11 @@
             <table class="sds-table sds-table--hoverable">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Source</th>
-                  <th>Domain</th>
+                  <th class="sortable sort-desc">Name</th>
+                  <th class="sortable">Source</th>
+                  <th class="sortable">Domain</th>
                   <th>Trust Signals</th>
-                  <th>Owner</th>
+                  <th class="sortable">Owner</th>
                 </tr>
               </thead>
               <tbody>
@@ -481,7 +482,18 @@
 
             <!-- Pagination -->
             <div class="pagination">
-              <span>Showing 1-8 of 24 results</span>
+              <div class="pagination-controls">
+                <div class="pagination-per-page">
+                  <span>Rows per page:</span>
+                  <select>
+                    <option>10</option>
+                    <option selected>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                  </select>
+                </div>
+                <span>Showing 1-8 of 24 results</span>
+              </div>
               <div class="pagination-pages">
                 <button class="pagination-btn active">1</button>
                 <button class="pagination-btn">2</button>

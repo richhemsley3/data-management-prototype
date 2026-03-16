@@ -36,11 +36,8 @@
     .toggle-row:last-of-type {
       border-bottom: none;
     }
-    .toggle-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--sds-interactive-primary);
-      cursor: pointer;
+    .toggle-row .sds-toggle {
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -56,14 +53,14 @@
     </div>
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -223,26 +220,41 @@
             Notification Preferences
           </div>
           <div style="padding-top: var(--sds-space-200);">
-            <label class="toggle-row">
-              Quality rule failures
-              <input type="checkbox" checked>
-            </label>
-            <label class="toggle-row">
-              SLA breaches
-              <input type="checkbox" checked>
-            </label>
-            <label class="toggle-row">
-              New asset discovery
-              <input type="checkbox" checked>
-            </label>
-            <label class="toggle-row">
-              Classification changes
-              <input type="checkbox">
-            </label>
-            <label class="toggle-row">
-              Access requests
-              <input type="checkbox" checked>
-            </label>
+            <div class="toggle-row">
+              <span>Quality rule failures</span>
+              <label class="sds-toggle">
+                <input type="checkbox" checked>
+                <span class="sds-toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>SLA breaches</span>
+              <label class="sds-toggle">
+                <input type="checkbox" checked>
+                <span class="sds-toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>New asset discovery</span>
+              <label class="sds-toggle">
+                <input type="checkbox" checked>
+                <span class="sds-toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>Classification changes</span>
+              <label class="sds-toggle">
+                <input type="checkbox">
+                <span class="sds-toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span>Access requests</span>
+              <label class="sds-toggle">
+                <input type="checkbox" checked>
+                <span class="sds-toggle-track"></span>
+              </label>
+            </div>
           </div>
           <div class="mt-400 flex justify-between">
             <span></span>

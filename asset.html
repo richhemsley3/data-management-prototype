@@ -47,15 +47,15 @@
 
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
 
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -140,8 +140,16 @@
         <button class="sds-tab" role="tab" aria-selected="false" data-tab="access" id="tab-btn-access" aria-controls="tab-access" aria-label="Access and Security tab">Access &amp; Security <span class="tab-badge">3</span></button>
         <button class="sds-tab" role="tab" aria-selected="false" data-tab="lineage" id="tab-btn-lineage" aria-controls="tab-lineage" aria-label="Lineage tab">Lineage</button>
         <button class="sds-tab" role="tab" aria-selected="false" data-tab="quality" id="tab-btn-quality" aria-controls="tab-quality" aria-label="Quality tab">Quality <span class="tab-badge">98%</span></button>
-        <button class="sds-tab" role="tab" aria-selected="false" data-tab="usage" id="tab-btn-usage" aria-controls="tab-usage" aria-label="Usage tab">Usage</button>
-        <button class="sds-tab" role="tab" aria-selected="false" data-tab="activity" id="tab-btn-activity" aria-controls="tab-activity" aria-label="Activity tab">Activity</button>
+        <div class="sds-tab-more" style="position: relative;">
+          <button class="sds-tab" aria-haspopup="true" aria-expanded="false">
+            More
+            <span class="material-symbols-outlined" style="font-size: 16px; margin-left: 2px;">expand_more</span>
+          </button>
+          <div class="sds-tab-more-menu" style="display: none; position: absolute; top: 100%; right: 0; background: var(--sds-bg-card); border: 1px solid var(--sds-border-default); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: var(--sds-space-100) 0; min-width: 160px; z-index: 10;">
+            <button class="sds-tab" role="tab" aria-selected="false" data-tab="usage" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Usage</button>
+            <button class="sds-tab" role="tab" aria-selected="false" data-tab="activity" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Activity</button>
+          </div>
+        </div>
       </div>
 
       <!-- ============================================================
@@ -659,8 +667,29 @@
           if (target) {
             target.classList.add('active');
           }
+          // Close More menu after selecting a dropdown item
+          var moreMenu = document.querySelector('.sds-tab-more-menu');
+          if (moreMenu) moreMenu.style.display = 'none';
+          var moreBtn = document.querySelector('.sds-tab-more > .sds-tab');
+          if (moreBtn) moreBtn.setAttribute('aria-expanded', 'false');
         });
       });
+
+      // More dropdown toggle
+      var moreBtn = document.querySelector('.sds-tab-more > .sds-tab');
+      var moreMenu = document.querySelector('.sds-tab-more-menu');
+      if (moreBtn && moreMenu) {
+        moreBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var isOpen = moreMenu.style.display === 'block';
+          moreMenu.style.display = isOpen ? 'none' : 'block';
+          moreBtn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        });
+        document.addEventListener('click', function () {
+          moreMenu.style.display = 'none';
+          moreBtn.setAttribute('aria-expanded', 'false');
+        });
+      }
     });
   </script>
 

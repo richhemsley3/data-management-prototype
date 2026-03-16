@@ -29,15 +29,15 @@
 
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
 
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -149,11 +149,11 @@
         <table class="sds-table sds-table--hoverable">
           <thead>
             <tr>
-              <th>Rule Name</th>
-              <th>Type</th>
-              <th>Assets</th>
-              <th>Status</th>
-              <th>Last Checked</th>
+              <th class="sortable">Rule Name</th>
+              <th class="sortable">Type</th>
+              <th class="sortable">Assets</th>
+              <th class="sortable">Status</th>
+              <th class="sortable sort-desc">Last Checked</th>
               <th>Actions</th>
             </tr>
           </thead>

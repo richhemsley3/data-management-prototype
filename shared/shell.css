@@ -391,6 +391,60 @@ a:hover { text-decoration: underline; }
 /* Table checkbox */
 .sds-table .checkbox { width: 16px; height: 16px; border: 1.5px solid var(--sds-border-strong); border-radius: 4px; cursor: pointer; accent-color: var(--sds-interactive-primary); }
 
+/* Inline monospace / code text */
+.code-inline {
+  font-family: var(--sds-font-mono);
+  font-size: var(--sds-type-caption);
+  background: var(--sds-color-warm-gray-050);
+  padding: var(--sds-space-050) var(--sds-space-150);
+  border-radius: 4px;
+}
+
+/* Table action button */
+.table-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--sds-text-tertiary);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.table-action-btn:hover {
+  background: var(--sds-color-warm-gray-075);
+  color: var(--sds-text-primary);
+}
+
+/* Sortable columns */
+.sds-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+.sds-table th.sortable:hover {
+  color: var(--sds-interactive-primary);
+}
+.sds-table th.sortable::after {
+  content: 'unfold_more';
+  font-family: 'Material Symbols Outlined';
+  font-size: 16px;
+  vertical-align: middle;
+  margin-left: var(--sds-space-100);
+  color: var(--sds-color-warm-gray-300);
+}
+.sds-table th.sortable.sort-asc::after {
+  content: 'arrow_upward';
+  color: var(--sds-interactive-primary);
+}
+.sds-table th.sortable.sort-desc::after {
+  content: 'arrow_downward';
+  color: var(--sds-interactive-primary);
+}
+
 /* ============================================================
    Tabs
    ============================================================ */
@@ -618,6 +672,45 @@ a:hover { text-decoration: underline; }
 .filter-pill-remove:hover { background: rgba(0,0,0,0.08); }
 .filter-pill-remove:focus-visible { outline: 2px solid var(--sds-interactive-primary); outline-offset: 2px; }
 
+/* Toggle switch */
+.sds-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.sds-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.sds-toggle-track {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--sds-color-warm-gray-200);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+.sds-toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.sds-toggle input:checked + .sds-toggle-track {
+  background: var(--sds-interactive-primary);
+}
+.sds-toggle input:checked + .sds-toggle-track::after {
+  transform: translateX(16px);
+}
+
 /* ============================================================
    Pagination
    ============================================================ */
@@ -637,3 +730,26 @@ a:hover { text-decoration: underline; }
 .pagination-btn.active { background: var(--sds-nav-item-active-bg); color: var(--sds-nav-item-active-text); font-weight: var(--sds-weight-semibold); }
 .pagination-btn:focus-visible { outline: 2px solid var(--sds-interactive-primary); outline-offset: 2px; }
 .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Pagination enhancements */
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sds-space-300);
+}
+.pagination-per-page {
+  display: flex;
+  align-items: center;
+  gap: var(--sds-space-150);
+  font-size: var(--sds-type-caption);
+  color: var(--sds-text-secondary);
+}
+.pagination-per-page select {
+  padding: var(--sds-space-100) var(--sds-space-200);
+  border: 1px solid var(--sds-border-default);
+  border-radius: 6px;
+  font-size: var(--sds-type-caption);
+  color: var(--sds-text-primary);
+  background: var(--sds-bg-card);
+  cursor: pointer;
+}

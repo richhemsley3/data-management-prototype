@@ -176,15 +176,15 @@
 
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
 
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -228,32 +228,32 @@
 
       <!-- Stepper -->
       <div class="stepper" aria-label="Wizard progress">
-        <div class="stepper-step active" data-step="0">
+        <div class="stepper-step active" data-step="0" id="stepper-btn-0">
           <span class="stepper-circle">1</span>
           Select Source
         </div>
         <div class="stepper-line"></div>
-        <div class="stepper-step" data-step="1">
+        <div class="stepper-step" data-step="1" id="stepper-btn-1">
           <span class="stepper-circle">2</span>
           Authenticate
         </div>
         <div class="stepper-line"></div>
-        <div class="stepper-step" data-step="2">
+        <div class="stepper-step" data-step="2" id="stepper-btn-2">
           <span class="stepper-circle">3</span>
           Discover
         </div>
         <div class="stepper-line"></div>
-        <div class="stepper-step" data-step="3">
+        <div class="stepper-step" data-step="3" id="stepper-btn-3">
           <span class="stepper-circle">4</span>
           Scan
         </div>
         <div class="stepper-line"></div>
-        <div class="stepper-step" data-step="4">
+        <div class="stepper-step" data-step="4" id="stepper-btn-4">
           <span class="stepper-circle">5</span>
           Review
         </div>
         <div class="stepper-line"></div>
-        <div class="stepper-step" data-step="5">
+        <div class="stepper-step" data-step="5" id="stepper-btn-5">
           <span class="stepper-circle">6</span>
           Invite Team
         </div>
@@ -263,7 +263,7 @@
       <div class="wizard-body">
 
         <!-- ======== Step 1: Select Source ======== -->
-        <div class="step-panel active" id="step-0" aria-label="Step 1: Select Source">
+        <div class="step-panel active" id="step-0" role="tabpanel" aria-labelledby="stepper-btn-0" aria-label="Step 1: Select Source">
           <div class="page-header">
             <div>
               <h1>Select a data source</h1>
@@ -336,7 +336,7 @@
         </div>
 
         <!-- ======== Step 2: Authenticate ======== -->
-        <div class="step-panel" id="step-1" aria-label="Step 2: Authenticate">
+        <div class="step-panel" id="step-1" role="tabpanel" aria-labelledby="stepper-btn-1" aria-label="Step 2: Authenticate">
           <div class="page-header">
             <div>
               <h1>Authenticate</h1>
@@ -364,7 +364,7 @@
         </div>
 
         <!-- ======== Step 3: Discover ======== -->
-        <div class="step-panel" id="step-2" aria-label="Step 3: Discover">
+        <div class="step-panel" id="step-2" role="tabpanel" aria-labelledby="stepper-btn-2" aria-label="Step 3: Discover">
           <div class="page-header">
             <div>
               <h1>Discover</h1>
@@ -424,7 +424,7 @@
         </div>
 
         <!-- ======== Step 4: Scan ======== -->
-        <div class="step-panel" id="step-3" aria-label="Step 4: Scan">
+        <div class="step-panel" id="step-3" role="tabpanel" aria-labelledby="stepper-btn-3" aria-label="Step 4: Scan">
           <div class="page-header">
             <div>
               <h1>Scan &amp; Classify</h1>
@@ -466,7 +466,7 @@
         </div>
 
         <!-- ======== Step 5: Review ======== -->
-        <div class="step-panel" id="step-4" aria-label="Step 5: Review">
+        <div class="step-panel" id="step-4" role="tabpanel" aria-labelledby="stepper-btn-4" aria-label="Step 5: Review">
           <div class="page-header">
             <div>
               <h1>Review</h1>
@@ -557,7 +557,7 @@
         </div>
 
         <!-- ======== Step 6: Invite Team ======== -->
-        <div class="step-panel" id="step-5" aria-label="Step 6: Invite Team">
+        <div class="step-panel" id="step-5" role="tabpanel" aria-labelledby="stepper-btn-5" aria-label="Step 6: Invite Team">
           <div class="page-header">
             <div>
               <h1>Invite your team</h1>

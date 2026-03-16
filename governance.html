@@ -71,15 +71,15 @@
 
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+      <input type="text" placeholder="Search datasets, tables, columns... (/)" aria-label="Search">
     </div>
 
     <div class="sds-header-actions">
-      <button class="sds-header-icon-btn" aria-label="Notifications">
+      <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
         <span class="badge">3</span>
       </button>
-      <button class="sds-header-icon-btn" aria-label="Help">
+      <button class="sds-header-icon-btn" aria-label="Help" title="Help & Documentation">
         <span class="material-symbols-outlined">help</span>
       </button>
       <div class="sds-header-divider"></div>
@@ -142,101 +142,114 @@
         </div>
       </div>
 
-      <!-- Maturity Score Hero Card -->
-      <div class="card hero-card mb-600">
-        <div class="hero-top">
-          <!-- SVG Gauge -->
-          <div class="hero-gauge">
-            <svg width="120" height="120" viewBox="0 0 120 120" class="gauge-svg" role="img" aria-label="Governance maturity score: 67 out of 100">
-              <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
-              <circle class="gauge-fill" cx="60" cy="60" r="52"
-                stroke-dasharray="218.9 326.7"
-                stroke-dashoffset="0"></circle>
-            </svg>
-          </div>
-
-          <!-- Center info -->
-          <div class="hero-center">
-            <div class="hero-score-label">Governance Maturity</div>
-            <div class="hero-score-value">67</div>
-            <div class="hero-score-message">Great progress! You're at Stage 3.</div>
-          </div>
-
-          <!-- Trend -->
-          <div class="hero-trend">
-            <span class="material-symbols-outlined">arrow_upward</span>
-            +12 this month
-          </div>
-        </div>
-
-        <!-- Stage Progress Bar -->
-        <div class="stage-progress">
-          <div class="stage-step">
-            <div class="stage-dot stage-dot--completed">
-              <span class="material-symbols-outlined" style="font-size:16px">check</span>
-            </div>
-            <span class="stage-label stage-label--completed">Search</span>
-          </div>
-          <div class="stage-line stage-line--completed"></div>
-          <div class="stage-step">
-            <div class="stage-dot stage-dot--completed">
-              <span class="material-symbols-outlined" style="font-size:16px">check</span>
-            </div>
-            <span class="stage-label stage-label--completed">Ownership</span>
-          </div>
-          <div class="stage-line stage-line--completed"></div>
-          <div class="stage-step">
-            <div class="stage-dot stage-dot--active">3</div>
-            <span class="stage-label stage-label--active">Classification</span>
-          </div>
-          <div class="stage-line"></div>
-          <div class="stage-step">
-            <div class="stage-dot">4</div>
-            <span class="stage-label">Compliance</span>
-          </div>
-          <div class="stage-line"></div>
-          <div class="stage-step">
-            <div class="stage-dot">5</div>
-            <span class="stage-label">Maturity</span>
-          </div>
-        </div>
+      <!-- Governance Tabs -->
+      <div class="sds-tabs" role="tablist" aria-label="Governance sections">
+        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="tasks">Priority Tasks</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="ai-readiness">AI Readiness</button>
       </div>
 
-      <!-- 4 Stat Cards Row -->
-      <div class="stat-row stat-row-4">
-        <div class="sds-stat-card sds-stat-card--success">
-          <span class="sds-stat-card__label">Ownership</span>
-          <span class="sds-stat-card__value">72%</span>
-          <span class="sds-stat-card__trend sds-stat-card__trend--up">
-            <span class="material-symbols-outlined">arrow_upward</span>
-            +8% this month
-          </span>
+      <!-- Tab: Overview -->
+      <div class="tab-content active" data-tab-content="overview">
+
+        <!-- Maturity Score Hero Card -->
+        <div class="card hero-card mb-600">
+          <div class="hero-top">
+            <!-- SVG Gauge -->
+            <div class="hero-gauge">
+              <svg width="120" height="120" viewBox="0 0 120 120" class="gauge-svg" role="img" aria-label="Governance maturity score: 67 out of 100">
+                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                <circle class="gauge-fill" cx="60" cy="60" r="52"
+                  stroke-dasharray="218.9 326.7"
+                  stroke-dashoffset="0"></circle>
+              </svg>
+            </div>
+
+            <!-- Center info -->
+            <div class="hero-center">
+              <div class="hero-score-label">Governance Maturity</div>
+              <div class="hero-score-value">67</div>
+              <div class="hero-score-message">Great progress! You're at Stage 3.</div>
+            </div>
+
+            <!-- Trend -->
+            <div class="hero-trend">
+              <span class="material-symbols-outlined">arrow_upward</span>
+              +12 this month
+            </div>
+          </div>
+
+          <!-- Stage Progress Bar -->
+          <div class="stage-progress">
+            <div class="stage-step">
+              <div class="stage-dot stage-dot--completed">
+                <span class="material-symbols-outlined" style="font-size:16px">check</span>
+              </div>
+              <span class="stage-label stage-label--completed">Search</span>
+            </div>
+            <div class="stage-line stage-line--completed"></div>
+            <div class="stage-step">
+              <div class="stage-dot stage-dot--completed">
+                <span class="material-symbols-outlined" style="font-size:16px">check</span>
+              </div>
+              <span class="stage-label stage-label--completed">Ownership</span>
+            </div>
+            <div class="stage-line stage-line--completed"></div>
+            <div class="stage-step">
+              <div class="stage-dot stage-dot--active">3</div>
+              <span class="stage-label stage-label--active">Classification</span>
+            </div>
+            <div class="stage-line"></div>
+            <div class="stage-step">
+              <div class="stage-dot">4</div>
+              <span class="stage-label">Compliance</span>
+            </div>
+            <div class="stage-line"></div>
+            <div class="stage-step">
+              <div class="stage-dot">5</div>
+              <span class="stage-label">Maturity</span>
+            </div>
+          </div>
         </div>
-        <div class="sds-stat-card sds-stat-card--highlighted">
-          <span class="sds-stat-card__label">Classification</span>
-          <span class="sds-stat-card__value">78%</span>
-          <span class="sds-stat-card__trend sds-stat-card__trend--up">
-            <span class="material-symbols-outlined">arrow_upward</span>
-            +12%
-          </span>
+
+        <!-- 4 Stat Cards Row -->
+        <div class="stat-row stat-row-4">
+          <div class="sds-stat-card sds-stat-card--success">
+            <span class="sds-stat-card__label">Ownership</span>
+            <span class="sds-stat-card__value">72%</span>
+            <span class="sds-stat-card__trend sds-stat-card__trend--up">
+              <span class="material-symbols-outlined">arrow_upward</span>
+              +8% this month
+            </span>
+          </div>
+          <div class="sds-stat-card sds-stat-card--highlighted">
+            <span class="sds-stat-card__label">Classification</span>
+            <span class="sds-stat-card__value">78%</span>
+            <span class="sds-stat-card__trend sds-stat-card__trend--up">
+              <span class="material-symbols-outlined">arrow_upward</span>
+              +12%
+            </span>
+          </div>
+          <div class="sds-stat-card sds-stat-card--warning">
+            <span class="sds-stat-card__label">Documentation</span>
+            <span class="sds-stat-card__value">45%</span>
+            <span class="sds-stat-card__trend sds-stat-card__trend--up">
+              <span class="material-symbols-outlined">arrow_upward</span>
+              +5%
+            </span>
+          </div>
+          <div class="sds-stat-card sds-stat-card--success">
+            <span class="sds-stat-card__label">Quality Rules</span>
+            <span class="sds-stat-card__value">89%</span>
+          </div>
         </div>
-        <div class="sds-stat-card sds-stat-card--warning">
-          <span class="sds-stat-card__label">Documentation</span>
-          <span class="sds-stat-card__value">45%</span>
-          <span class="sds-stat-card__trend sds-stat-card__trend--up">
-            <span class="material-symbols-outlined">arrow_upward</span>
-            +5%
-          </span>
-        </div>
-        <div class="sds-stat-card sds-stat-card--success">
-          <span class="sds-stat-card__label">Quality Rules</span>
-          <span class="sds-stat-card__value">89%</span>
-        </div>
+
       </div>
 
-      <!-- AI-Readiness Score -->
-      <div class="section">
-        <h2 class="section-title">AI-Readiness Score</h2>
+      <!-- Tab: AI Readiness -->
+      <div class="tab-content" data-tab-content="ai-readiness">
+        <div class="section">
+          <h2 class="section-title">AI-Readiness Score</h2>
         <div class="card">
           <div class="ai-grid">
             <!-- Classification -->
@@ -306,9 +319,11 @@
           </div>
         </div>
       </div>
+      </div>
 
-      <!-- Priority Tasks -->
-      <div class="section">
+      <!-- Tab: Priority Tasks -->
+      <div class="tab-content" data-tab-content="tasks">
+        <div class="section">
         <h2 class="section-title">Priority Tasks</h2>
         <div class="sds-table-container">
           <table class="sds-table sds-table--hoverable">
@@ -371,9 +386,29 @@
           </div>
         </div>
       </div>
+      </div>
 
     </main>
   </div>
+
+<script>
+document.querySelectorAll('.sds-tab[role="tab"]').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.sds-tab[role="tab"]').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    this.classList.add('active');
+    this.setAttribute('aria-selected', 'true');
+    document.querySelectorAll('.tab-content').forEach(function(content) {
+      content.classList.remove('active');
+    });
+    var tabId = this.getAttribute('data-tab');
+    var target = document.querySelector('[data-tab-content="' + tabId + '"]');
+    if (target) target.classList.add('active');
+  });
+});
+</script>
 
 </body>
 </html>
