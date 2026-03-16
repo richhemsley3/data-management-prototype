@@ -146,8 +146,8 @@
             <span class="material-symbols-outlined" style="font-size: 16px; margin-left: 2px;">expand_more</span>
           </button>
           <div class="sds-tab-more-menu" style="display: none; position: absolute; top: 100%; right: 0; background: var(--sds-bg-card); border: 1px solid var(--sds-border-default); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: var(--sds-space-100) 0; min-width: 160px; z-index: 10;">
-            <button class="sds-tab" role="tab" aria-selected="false" data-tab="usage" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Usage</button>
-            <button class="sds-tab" role="tab" aria-selected="false" data-tab="activity" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Activity</button>
+            <button class="sds-tab" role="tab" aria-selected="false" data-tab="usage" id="tab-btn-usage" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Usage</button>
+            <button class="sds-tab" role="tab" aria-selected="false" data-tab="activity" id="tab-btn-activity" style="display: block; width: 100%; text-align: left; padding: var(--sds-space-200) var(--sds-space-400); border: none; border-radius: 0;">Activity</button>
           </div>
         </div>
       </div>
@@ -215,7 +215,7 @@
                 </table>
               </div>
               <div class="mt-400">
-                <a href="#" class="btn btn-tertiary" aria-label="View all 42 columns" onclick="document.querySelector('[data-tab=schema]').click();return false;">View all 42 columns &rarr;</a>
+                <a href="javascript:void(0)" class="btn btn-tertiary" aria-label="View all 42 columns" onclick="document.querySelector('[data-tab=schema]').click();return false;">View all 42 columns &rarr;</a>
               </div>
             </div>
 
@@ -398,6 +398,10 @@
               </tr>
             </tbody>
           </table>
+          <div class="pagination" style="justify-content: space-between; align-items: center;">
+            <span>Showing 10 of 42 columns</span>
+            <button class="btn btn-tertiary" onclick="/* prototype placeholder */">Show all</button>
+          </div>
         </div>
       </div>
 

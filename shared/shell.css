@@ -39,7 +39,7 @@
 
   /* Color primitives */
   --sds-color-warm-gray-025: #FAF8F5; --sds-color-warm-gray-050: #F4F1EB;
-  --sds-color-warm-gray-100: #EBE6DD; --sds-color-warm-gray-150: #E0DCD3;
+  --sds-color-warm-gray-075: #EFECE5; --sds-color-warm-gray-100: #EBE6DD; --sds-color-warm-gray-150: #E0DCD3;
   --sds-color-warm-gray-200: #D0CBC3; --sds-color-warm-gray-250: #BFBAB2;
   --sds-color-warm-gray-300: #B0ABA2; --sds-color-warm-gray-350: #A39E96;
   --sds-color-warm-gray-400: #948E85; --sds-color-warm-gray-450: #858079;
@@ -118,6 +118,8 @@ body {
 }
 a { color: var(--sds-text-link); text-decoration: none; }
 a:hover { text-decoration: underline; }
+.btn:hover { text-decoration: none; }
+.breadcrumbs a:hover { text-decoration: none; }
 
 /* ============================================================
    Header
@@ -354,7 +356,7 @@ a:hover { text-decoration: underline; }
   transition: box-shadow 0.15s ease;
 }
 .card--clickable { cursor: pointer; }
-.card--clickable:hover { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.card--clickable:hover { box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-decoration: none; }
 .card--clickable:focus-visible { outline: 2px solid var(--sds-interactive-primary); outline-offset: 2px; }
 .card-title {
   font-size: var(--sds-type-title); font-weight: var(--sds-weight-semibold);

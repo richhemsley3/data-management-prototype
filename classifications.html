@@ -126,14 +126,14 @@
 
       <!-- Tabs -->
       <div class="sds-tabs" role="tablist" aria-label="Classification filters">
-        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="all">All<span class="tab-badge">24</span></button>
-        <button class="sds-tab" role="tab" aria-selected="false" data-tab="sensitivity">Sensitivity Levels</button>
-        <button class="sds-tab" role="tab" aria-selected="false" data-tab="pii">PII Types</button>
-        <button class="sds-tab" role="tab" aria-selected="false" data-tab="custom">Custom</button>
+        <button class="sds-tab active" role="tab" aria-selected="true" aria-controls="classifications-table" data-tab="all">All<span class="tab-badge">24</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" aria-controls="classifications-table" data-tab="sensitivity">Sensitivity Levels</button>
+        <button class="sds-tab" role="tab" aria-selected="false" aria-controls="classifications-table" data-tab="pii">PII Types</button>
+        <button class="sds-tab" role="tab" aria-selected="false" aria-controls="classifications-table" data-tab="custom">Custom</button>
       </div>
 
       <!-- Table -->
-      <div class="tab-content active" data-tab-content="all">
+      <div class="tab-content active" id="classifications-table" data-tab-content="all">
         <div class="sds-table-container">
           <table class="sds-table sds-table--hoverable">
             <thead>
@@ -148,8 +148,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Email Address</a></td>
+              <tr data-category="pii">
+                <td><a href="catalog.html" class="cell-link">Email Address</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>234</td>
                 <td>198</td>
@@ -157,8 +157,8 @@
                 <td>Priya Shah</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Phone Number</a></td>
+              <tr data-category="pii">
+                <td><a href="catalog.html" class="cell-link">Phone Number</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>156</td>
                 <td>142</td>
@@ -166,8 +166,8 @@
                 <td>Priya Shah</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Social Security Number</a></td>
+              <tr data-category="sensitivity">
+                <td><a href="catalog.html" class="cell-link">Social Security Number</a></td>
                 <td><span class="sds-tag sds-tag--error">Restricted</span></td>
                 <td>89</td>
                 <td>87</td>
@@ -175,8 +175,8 @@
                 <td>Priya Shah</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Credit Card</a></td>
+              <tr data-category="sensitivity">
+                <td><a href="catalog.html" class="cell-link">Credit Card</a></td>
                 <td><span class="sds-tag sds-tag--error">Restricted</span></td>
                 <td>45</td>
                 <td>43</td>
@@ -184,8 +184,8 @@
                 <td>Priya Shah</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Full Name</a></td>
+              <tr data-category="pii">
+                <td><a href="catalog.html" class="cell-link">Full Name</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>312</td>
                 <td>290</td>
@@ -193,8 +193,8 @@
                 <td>Jordan Lee</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Date of Birth</a></td>
+              <tr data-category="pii">
+                <td><a href="catalog.html" class="cell-link">Date of Birth</a></td>
                 <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>178</td>
                 <td>165</td>
@@ -202,8 +202,8 @@
                 <td>Jordan Lee</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">IP Address</a></td>
+              <tr data-category="sensitivity">
+                <td><a href="catalog.html" class="cell-link">IP Address</a></td>
                 <td><span class="sds-tag sds-tag--warning">Sensitive</span></td>
                 <td>67</td>
                 <td>62</td>
@@ -211,8 +211,8 @@
                 <td>Priya Shah</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Revenue Data</a></td>
+              <tr data-category="custom">
+                <td><a href="catalog.html" class="cell-link">Revenue Data</a></td>
                 <td><span class="sds-tag sds-tag--info">Confidential</span></td>
                 <td>34</td>
                 <td>12</td>
@@ -220,8 +220,8 @@
                 <td>Marcus Chen</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Product Catalog</a></td>
+              <tr data-category="sensitivity">
+                <td><a href="catalog.html" class="cell-link">Product Catalog</a></td>
                 <td><span class="sds-tag sds-tag--neutral">Internal</span></td>
                 <td>89</td>
                 <td>45</td>
@@ -229,8 +229,8 @@
                 <td>Sam Taylor</td>
                 <td><button class="table-action-btn" aria-label="More actions"><span class="material-symbols-outlined">more_vert</span></button></td>
               </tr>
-              <tr>
-                <td><a href="asset.html" class="cell-link">Marketing Copy</a></td>
+              <tr data-category="sensitivity">
+                <td><a href="catalog.html" class="cell-link">Marketing Copy</a></td>
                 <td><span class="sds-tag sds-tag--success">Public</span></td>
                 <td>23</td>
                 <td>8</td>
@@ -259,31 +259,6 @@
         </div>
       </div>
 
-      <!-- Placeholder tab contents -->
-      <div class="tab-content" data-tab-content="sensitivity">
-        <div class="empty-state">
-          <div class="empty-state-icon"><span class="material-symbols-outlined">tune</span></div>
-          <h3>Sensitivity Levels</h3>
-          <p>No sensitivity level classifications match the current filters.</p>
-          <button class="btn btn-primary btn-sm">Create Sensitivity Level</button>
-        </div>
-      </div>
-      <div class="tab-content" data-tab-content="pii">
-        <div class="empty-state">
-          <div class="empty-state-icon"><span class="material-symbols-outlined">fingerprint</span></div>
-          <h3>PII Types</h3>
-          <p>No PII type classifications match the current filters.</p>
-          <button class="btn btn-primary btn-sm">Create PII Type</button>
-        </div>
-      </div>
-      <div class="tab-content" data-tab-content="custom">
-        <div class="empty-state">
-          <div class="empty-state-icon"><span class="material-symbols-outlined">edit_note</span></div>
-          <h3>Custom Classifications</h3>
-          <p>You haven't created any custom classifications yet. Custom classifications let you tag assets with your organization's unique taxonomy.</p>
-          <button class="btn btn-primary btn-sm">Create Custom Classification</button>
-        </div>
-      </div>
 
     </main>
   </div>
@@ -300,16 +275,17 @@
         // Activate clicked tab
         this.classList.add('active');
         this.setAttribute('aria-selected', 'true');
-        // Hide all tab content
-        document.querySelectorAll('.tab-content').forEach(function(content) {
-          content.classList.remove('active');
+
+        // Filter table rows by category
+        var category = this.getAttribute('data-tab');
+        var rows = document.querySelectorAll('tbody tr[data-category]');
+        rows.forEach(function(row) {
+          if (category === 'all' || row.getAttribute('data-category') === category) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
         });
-        // Show matching tab content
-        var tabId = this.getAttribute('data-tab');
-        var target = document.querySelector('[data-tab-content="' + tabId + '"]');
-        if (target) {
-          target.classList.add('active');
-        }
       });
     });
   </script>

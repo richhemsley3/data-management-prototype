@@ -261,6 +261,8 @@
     .main-content.lineage-page {
       padding: 0; display: flex; flex-direction: column; overflow: hidden;
     }
+    .lineage-page .breadcrumbs { padding: var(--sds-space-400) var(--sds-space-500) 0; }
+    .lineage-page .page-header { padding: 0 var(--sds-space-500) var(--sds-space-400); }
 
     /* ============================================================
        Edge Drawing: SVG-based connections
@@ -540,7 +542,7 @@
               <span class="material-symbols-outlined">table_chart</span>
               <span class="lineage-panel-title">customer_orders</span>
             </div>
-            <button class="panel-close-btn" aria-label="Close panel">&times;</button>
+            <button class="panel-close-btn" aria-label="Close panel" onclick="this.closest('.lineage-panel').style.display='none'">&times;</button>
           </div>
 
           <div class="lineage-panel-body">
@@ -595,7 +597,7 @@
             <!-- Actions -->
             <div class="panel-actions">
               <button class="btn btn-primary" style="justify-content:center">Expand Blast Radius</button>
-              <a href="asset.html" class="btn btn-secondary" style="justify-content:center;text-decoration:none">Open Detail</a>
+              <a href="asset.html" class="btn btn-secondary" style="justify-content:center">Open Detail</a>
               <button class="btn btn-tertiary" style="justify-content:center">Notify Dependents</button>
             </div>
           </div>

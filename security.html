@@ -104,6 +104,7 @@
       border-radius: 4px;
       background: var(--sds-status-error-text);
     }
+    .card--clickable:hover { text-decoration: none; }
   </style>
 </head>
 <body>
@@ -179,7 +180,7 @@
         <span>New scan completed: 24 new assets classified, 12 PII fields detected. <a href="classifications.html">View results &rarr;</a></span>
       </div>
 
-      <div class="breadcrumbs"><span>Security Posture</span></div>
+      <div class="breadcrumbs"><a href="index.html">Home</a><span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span><span>Security Posture</span></div>
 
       <!-- Page Header -->
       <div class="page-header">
@@ -214,7 +215,7 @@
             <text x="60" y="65" text-anchor="middle"
               font-size="28" font-weight="700"
               fill="var(--sds-text-primary)"
-              font-family="var(--sds-font-sans)">73</text>
+              style="font-family: var(--sds-font-sans)">73</text>
           </svg>
         </div>
 
@@ -264,7 +265,7 @@
         <h2 class="section-title">Security Browse Paths</h2>
         <div class="card-grid card-grid-3">
 
-          <a href="classifications.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="classifications.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">help</span>
               Unclassified Assets
@@ -276,7 +277,7 @@
             </div>
           </a>
 
-          <a href="catalog.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="catalog.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">fingerprint</span>
               PII Inventory
@@ -288,7 +289,7 @@
             </div>
           </a>
 
-          <a href="catalog.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="catalog.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">lock_open</span>
               Over-Permissioned
@@ -300,7 +301,7 @@
             </div>
           </a>
 
-          <a href="governance.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="governance.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">gavel</span>
               Compliance Gaps
@@ -312,7 +313,7 @@
             </div>
           </a>
 
-          <a href="catalog.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="catalog.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">warning</span>
               High-Risk Assets
@@ -324,7 +325,7 @@
             </div>
           </a>
 
-          <a href="audit-log.html" class="card card--clickable" style="text-decoration:none" tabindex="0">
+          <a href="audit-log.html" class="card card--clickable" tabindex="0">
             <div class="card-title">
               <span class="material-symbols-outlined">history</span>
               Recently Changed
@@ -367,7 +368,7 @@
                   <span class="sds-tag sds-tag--warning">Over-Permissioned</span>
                 </td>
                 <td>
-                  <button class="btn btn-tertiary btn-sm">View Details</button>
+                  <a href="asset.html" class="btn btn-secondary btn-sm">View Details</a>
                   <button class="btn btn-primary btn-sm" aria-label="Auto-fix this risk">Auto-Fix</button>
                 </td>
               </tr>
@@ -383,7 +384,7 @@
                   <span class="sds-tag sds-tag--error">PII</span>
                   <span class="sds-tag sds-tag--warning">Broad Access</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
+                <td><a href="asset.html" class="btn btn-secondary btn-sm">View Details</a></td>
               </tr>
               <tr>
                 <td><a href="asset.html" class="cell-link">financial_records</a></td>
@@ -411,7 +412,7 @@
                   <span class="sds-tag sds-tag--error">PII</span>
                   <span class="sds-tag sds-tag--warning">HIPAA Gap</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
+                <td><a href="asset.html" class="btn btn-secondary btn-sm">View Details</a></td>
               </tr>
               <tr>
                 <td><a href="asset.html" class="cell-link">user_passwords</a></td>
@@ -425,7 +426,7 @@
                   <span class="sds-tag sds-tag--warning">Sensitive</span>
                   <span class="sds-tag sds-tag--error">Unencrypted</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
+                <td><a href="asset.html" class="btn btn-secondary btn-sm">View Details</a></td>
               </tr>
             </tbody>
           </table>

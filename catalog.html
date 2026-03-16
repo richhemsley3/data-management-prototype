@@ -173,11 +173,11 @@
 
         <!-- Scope Tabs -->
         <div class="sds-tabs" role="tablist" aria-label="Asset type filter">
-          <button class="sds-tab active" role="tab" aria-selected="true">All</button>
-          <button class="sds-tab" role="tab" aria-selected="false">Tables</button>
-          <button class="sds-tab" role="tab" aria-selected="false">Views</button>
-          <button class="sds-tab" role="tab" aria-selected="false">Dashboards</button>
-          <button class="sds-tab" role="tab" aria-selected="false">Columns</button>
+          <button class="sds-tab active" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables</button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="view">Views</button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="dashboard">Dashboards</button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="column">Columns</button>
         </div>
       </div>
 
@@ -285,7 +285,7 @@
         <div class="catalog-results">
           <!-- Results Header -->
           <div class="results-header">
-            <span>Showing 24 of 1,847 assets</span>
+            <span class="results-count">Showing 8 of 1,847 assets</span>
             <span class="sds-tag sds-tag--info" style="margin-left: var(--sds-space-200);">1 filter applied</span>
             <span class="sort-control">Sort by: Relevance</span>
           </div>
@@ -304,7 +304,7 @@
               </thead>
               <tbody>
                 <!-- Row 1 -->
-                <tr>
+                <tr data-type="table">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">customer_orders</a></div>
                     <div class="table-desc">Customer purchase transactions from...</div>
@@ -326,7 +326,7 @@
                   </td>
                 </tr>
                 <!-- Row 2 -->
-                <tr>
+                <tr data-type="table">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">campaign_metrics</a></div>
                     <div class="table-desc">Marketing campaign performance...</div>
@@ -348,7 +348,7 @@
                   </td>
                 </tr>
                 <!-- Row 3 -->
-                <tr>
+                <tr data-type="table">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">email_subscribers</a></div>
                     <div class="table-desc">Email subscriber list with...</div>
@@ -370,7 +370,7 @@
                   </td>
                 </tr>
                 <!-- Row 4 -->
-                <tr>
+                <tr data-type="view">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">ad_spend_daily</a></div>
                     <div class="table-desc">Daily advertising spend across...</div>
@@ -391,7 +391,7 @@
                   </td>
                 </tr>
                 <!-- Row 5 -->
-                <tr>
+                <tr data-type="table">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">social_engagement</a></div>
                     <div class="table-desc">Social media engagement metrics...</div>
@@ -413,7 +413,7 @@
                   </td>
                 </tr>
                 <!-- Row 6 -->
-                <tr>
+                <tr data-type="dashboard">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">lead_pipeline</a></div>
                     <div class="table-desc">Sales lead pipeline with...</div>
@@ -435,7 +435,7 @@
                   </td>
                 </tr>
                 <!-- Row 7 -->
-                <tr>
+                <tr data-type="column">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">content_performance</a></div>
                     <div class="table-desc">Content marketing performance...</div>
@@ -456,7 +456,7 @@
                   </td>
                 </tr>
                 <!-- Row 8 -->
-                <tr>
+                <tr data-type="view">
                   <td>
                     <div class="table-name"><a href="asset.html" class="cell-link">customer_segments</a></div>
                     <div class="table-desc">Customer segmentation model...</div>
@@ -492,13 +492,14 @@
                     <option>100</option>
                   </select>
                 </div>
-                <span>Showing 1-8 of 24 results</span>
+                <span class="pagination-info">Showing 1-8 of 1,847 results</span>
               </div>
               <div class="pagination-pages">
                 <button class="btn btn-tertiary btn-sm" disabled aria-label="Previous page"><span class="material-symbols-outlined">chevron_left</span></button>
                 <button class="pagination-btn active">1</button>
                 <button class="pagination-btn">2</button>
                 <button class="pagination-btn">3</button>
+                <span class="pagination-page-count">Page 1 of 185</span>
                 <button class="btn btn-tertiary btn-sm" aria-label="Next page"><span class="material-symbols-outlined">chevron_right</span></button>
               </div>
             </div>
@@ -509,5 +510,231 @@
     </main>
   </div>
 
+  <!-- Catalog JS: Tab switching, filter checkboxes, pagination -->
+  <script>
+  (function() {
+    // === Fix 1: Tab switching ===
+    var tabs = document.querySelectorAll('.sds-tabs .sds-tab[data-filter]');
+    var rows = document.querySelectorAll('.sds-table--hoverable tbody tr');
+    var resultsCount = document.querySelector('.results-count');
+    var activeFilter = 'all';
+
+    function updateVisibleRows() {
+      var count = 0;
+      rows.forEach(function(row) {
+        var type = row.getAttribute('data-type');
+        var matchesTab = (activeFilter === 'all' || type === activeFilter);
+        var matchesCheckbox = checkRowMatchesFilters(row);
+        if (matchesTab && matchesCheckbox) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      if (resultsCount) {
+        resultsCount.textContent = 'Showing ' + count + ' of 1,847 assets';
+      }
+      var paginationInfo = document.querySelector('.pagination-info');
+      if (paginationInfo) {
+        paginationInfo.textContent = 'Showing 1-' + count + ' of 1,847 results';
+      }
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        activeFilter = tab.getAttribute('data-filter');
+        updateVisibleRows();
+      });
+    });
+
+    // === Fix 2: Filter checkbox functionality ===
+    var filterSidebar = document.querySelector('.filter-sidebar');
+    var checkboxes = filterSidebar.querySelectorAll('input[type="checkbox"]');
+    var activeFiltersContainer = document.querySelector('.active-filters');
+    var clearAllBtn = activeFiltersContainer.querySelector('.btn-tertiary');
+
+    function getFilterGroupLabel(checkbox) {
+      var group = checkbox.closest('.filter-group');
+      if (!group) return '';
+      var label = group.querySelector('.filter-group-label');
+      return label ? label.textContent.trim() : '';
+    }
+
+    function getFilterValue(checkbox) {
+      var label = checkbox.closest('label');
+      if (!label) return '';
+      return label.textContent.trim();
+    }
+
+    function checkRowMatchesFilters(row) {
+      // Gather checked values per group
+      var groups = filterSidebar.querySelectorAll('.filter-group');
+      var anyGroupHasChecked = false;
+      var allGroupsMatch = true;
+
+      groups.forEach(function(group) {
+        var cbs = group.querySelectorAll('input[type="checkbox"]');
+        var checkedVals = [];
+        cbs.forEach(function(cb) {
+          if (cb.checked) checkedVals.push(getFilterValue(cb).toLowerCase());
+        });
+        if (checkedVals.length > 0) {
+          anyGroupHasChecked = true;
+          // For prototype: domain filter checks domain column, others are visual only
+          var groupLabel = group.querySelector('.filter-group-label').textContent.trim();
+          if (groupLabel === 'Domain') {
+            var domainCell = row.querySelector('td:nth-child(3)');
+            var domainText = domainCell ? domainCell.textContent.trim().toLowerCase() : '';
+            var match = checkedVals.some(function(v) { return domainText.indexOf(v) !== -1; });
+            if (!match) allGroupsMatch = false;
+          }
+          // Other filter groups are prototype placeholders - don't actually filter
+        }
+      });
+
+      return !anyGroupHasChecked || allGroupsMatch;
+    }
+
+    function updatePills() {
+      // Remove existing pills (but keep clearAll button)
+      var existingPills = activeFiltersContainer.querySelectorAll('.filter-pill');
+      existingPills.forEach(function(p) { p.remove(); });
+
+      var anyChecked = false;
+      checkboxes.forEach(function(cb) {
+        if (cb.checked) {
+          anyChecked = true;
+          var groupLabel = getFilterGroupLabel(cb);
+          var value = getFilterValue(cb);
+          var pill = document.createElement('div');
+          pill.className = 'filter-pill';
+          pill.textContent = groupLabel + ': ' + value + ' ';
+          var removeBtn = document.createElement('button');
+          removeBtn.className = 'filter-pill-remove';
+          removeBtn.setAttribute('aria-label', 'Remove ' + value + ' filter');
+          removeBtn.innerHTML = '&times;';
+          removeBtn.addEventListener('click', function() {
+            cb.checked = false;
+            updatePills();
+            updateVisibleRows();
+          });
+          pill.appendChild(removeBtn);
+          activeFiltersContainer.insertBefore(pill, clearAllBtn);
+        }
+      });
+
+      // Update filter tag count
+      var filterTag = document.querySelector('.sds-tag--info');
+      if (filterTag) {
+        var checkedCount = 0;
+        checkboxes.forEach(function(cb) { if (cb.checked) checkedCount++; });
+        if (checkedCount > 0) {
+          filterTag.textContent = checkedCount + ' filter' + (checkedCount > 1 ? 's' : '') + ' applied';
+          filterTag.style.display = '';
+        } else {
+          filterTag.style.display = 'none';
+        }
+      }
+
+      activeFiltersContainer.style.display = anyChecked ? '' : 'none';
+    }
+
+    checkboxes.forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        updatePills();
+        updateVisibleRows();
+      });
+    });
+
+    // Clear all
+    clearAllBtn.addEventListener('click', function() {
+      checkboxes.forEach(function(cb) { cb.checked = false; });
+      updatePills();
+      updateVisibleRows();
+    });
+
+    // Initialize pills on load
+    updatePills();
+
+    // === Fix 4: Pagination interactivity ===
+    var pageBtns = document.querySelectorAll('.pagination-btn');
+    var prevBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Previous page"]');
+    var nextBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Next page"]');
+    var pageCountEl = document.querySelector('.pagination-page-count');
+    var perPageSelect = document.querySelector('.pagination-per-page select');
+    var currentPage = 1;
+    var totalPages = 185;
+
+    function updatePaginationState() {
+      pageBtns.forEach(function(btn) {
+        btn.classList.remove('active');
+        if (parseInt(btn.textContent) === currentPage) btn.classList.add('active');
+      });
+      if (prevBtn) prevBtn.disabled = (currentPage === 1);
+      if (nextBtn) nextBtn.disabled = (currentPage === totalPages);
+      if (pageCountEl) pageCountEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+
+      var perPage = parseInt(perPageSelect ? perPageSelect.value : 10);
+      var start = (currentPage - 1) * perPage + 1;
+      var end = Math.min(currentPage * perPage, 1847);
+      var paginationInfo = document.querySelector('.pagination-info');
+      if (paginationInfo) {
+        paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 1,847 results';
+      }
+    }
+
+    pageBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currentPage = parseInt(btn.textContent);
+        updatePaginationState();
+      });
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          updatePaginationState();
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          // Update page button labels for pages beyond 3
+          pageBtns.forEach(function(btn, i) {
+            var pageNum = currentPage - 1 + i;
+            if (pageNum < 1) pageNum = 1;
+            if (pageNum > totalPages) pageNum = totalPages;
+            btn.textContent = pageNum;
+          });
+          updatePaginationState();
+        }
+      });
+    }
+
+    if (perPageSelect) {
+      perPageSelect.addEventListener('change', function() {
+        var perPage = parseInt(perPageSelect.value);
+        totalPages = Math.ceil(1847 / perPage);
+        currentPage = 1;
+        if (pageCountEl) pageCountEl.textContent = 'Page 1 of ' + totalPages;
+        pageBtns.forEach(function(btn, i) {
+          btn.textContent = i + 1;
+        });
+        updatePaginationState();
+      });
+    }
+  })();
+  </script>
 </body>
 </html>

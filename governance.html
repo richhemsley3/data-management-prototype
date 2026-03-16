@@ -127,12 +127,13 @@
         <span>Stage 2 complete! You've assigned owners to 72% of assets. Next: Classification.</span>
       </div>
 
-      <div class="breadcrumbs"><span>Governance</span></div>
+      <div class="breadcrumbs"><a href="index.html">Home</a><span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">chevron_right</span><span>Governance</span></div>
 
       <!-- Page Header -->
       <div class="page-header">
         <div>
           <h1>Governance</h1>
+          <p class="page-subtitle">Track governance maturity, manage tasks, and measure AI readiness across your data estate.</p>
         </div>
         <div class="page-header-actions">
           <button class="btn btn-secondary">
@@ -162,13 +163,17 @@
                 <circle class="gauge-fill" cx="60" cy="60" r="52"
                   stroke-dasharray="218.9 326.7"
                   stroke-dashoffset="0"></circle>
+                <text x="60" y="65" text-anchor="middle"
+                  font-size="28" font-weight="700"
+                  fill="var(--sds-text-primary)"
+                  style="font-family: var(--sds-font-sans)"
+                  transform="rotate(90 60 60)">67</text>
               </svg>
             </div>
 
             <!-- Center info -->
             <div class="hero-center">
               <div class="hero-score-label">Governance Maturity</div>
-              <div class="hero-score-value">67</div>
               <div class="hero-score-message">Great progress! You're at Stage 3.</div>
             </div>
 
@@ -382,7 +387,7 @@
             </tbody>
           </table>
           <div class="table-footer">
-            <a href="governance.html">View all 12 tasks &rarr;</a>
+            <a href="javascript:void(0)" onclick="document.querySelector('[data-tab=tasks]').click()">View all 12 tasks &rarr;</a>
           </div>
         </div>
       </div>

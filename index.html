@@ -29,7 +29,7 @@
     }
     .home-alert--warning {
       background: var(--sds-status-warning-bg);
-      border: 1px solid var(--sds-status-warning-border);
+      border: 1px solid var(--sds-color-yellow-200);
     }
     .home-alert .material-symbols-outlined { font-size: 20px; color: var(--sds-status-warning-text); }
     .home-alert a { color: var(--sds-interactive-primary); font-weight: var(--sds-weight-medium); text-decoration: none; margin-left: auto; white-space: nowrap; }
@@ -57,6 +57,7 @@
     .attention-card:hover {
       border-color: var(--sds-border-strong);
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      text-decoration: none;
     }
     .attention-icon {
       display: flex;
@@ -69,8 +70,8 @@
     }
     .attention-icon .material-symbols-outlined { font-size: 22px; }
     .attention-icon--red { background: var(--sds-color-red-050); color: var(--sds-color-red-550); }
-    .attention-icon--amber { background: var(--sds-color-yellow-050); color: var(--sds-color-yellow-650); }
-    .attention-icon--blue { background: var(--sds-color-blue-050); color: var(--sds-color-blue-550); }
+    .attention-icon--amber { background: var(--sds-color-yellow-025); color: var(--sds-color-yellow-550); }
+    .attention-icon--blue { background: var(--sds-color-blue-050); color: var(--sds-color-blue-450); }
     .attention-icon--green { background: var(--sds-color-green-025); color: var(--sds-color-green-500); }
     .attention-body { flex: 1; min-width: 0; }
     .attention-title {
@@ -92,7 +93,7 @@
       white-space: nowrap;
     }
     .attention-badge--red { background: var(--sds-color-red-050); color: var(--sds-color-red-550); }
-    .attention-badge--amber { background: var(--sds-color-yellow-050); color: var(--sds-color-yellow-650); }
+    .attention-badge--amber { background: var(--sds-color-yellow-025); color: var(--sds-color-yellow-550); }
 
     /* ---- Activity feed ---- */
     .activity-feed { display: flex; flex-direction: column; gap: 0; }
@@ -119,7 +120,7 @@
     }
     .activity-avatar--system {
       background: var(--sds-color-blue-050);
-      color: var(--sds-color-blue-550);
+      color: var(--sds-color-blue-450);
     }
     .activity-avatar--system .material-symbols-outlined { font-size: 16px; }
     .activity-text {
@@ -236,7 +237,7 @@
       font-weight: var(--sds-weight-medium);
       transition: background 0.15s ease;
     }
-    .quick-action:hover { background: var(--sds-color-warm-gray-050); }
+    .quick-action:hover { background: var(--sds-color-warm-gray-050); text-decoration: none; }
     .quick-action .material-symbols-outlined {
       font-size: 20px;
       width: 32px;
@@ -437,7 +438,7 @@
             <a href="catalog.html" class="health-card-link">View catalog &rarr;</a>
           </div>
           <div class="sds-table-container" style="margin-bottom: var(--sds-space-600);">
-            <table class="sds-table sds-table--hoverable">
+            <table class="sds-table">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -454,7 +455,7 @@
                   <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td class="cell-tags">
                     <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2h</span>
-                    <span class="sds-tag sds-tag--info" data-tooltip="Data quality score">Quality:High</span>
+                    <span class="sds-tag sds-tag--success" data-tooltip="Data quality score">Quality:High</span>
                     <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
                   </td>
                   <td>J. Smith</td>
@@ -560,7 +561,7 @@
             <div class="score-ring">
               <svg width="64" height="64" viewBox="0 0 64 64">
                 <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-warm-gray-100)" stroke-width="5"/>
-                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-blue-550)" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="47.5" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-blue-450)" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="47.5" stroke-linecap="round" transform="rotate(-90 32 32)"/>
                 <text x="32" y="36" text-anchor="middle" font-size="16" font-weight="600" fill="var(--sds-text-primary)">73</text>
               </svg>
               <div class="score-ring-details">
@@ -574,7 +575,7 @@
             <div class="health-bars">
               <div class="health-bar-row">
                 <span class="health-bar-label">Classified</span>
-                <div class="health-bar-track"><div class="health-bar-fill" style="width:78%; background: var(--sds-color-blue-550);"></div></div>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:78%; background: var(--sds-color-blue-450);"></div></div>
                 <span class="health-bar-value">78%</span>
               </div>
               <div class="health-bar-row">
@@ -623,7 +624,7 @@
               </div>
               <div class="health-bar-row">
                 <span class="health-bar-label">Glossary</span>
-                <div class="health-bar-track"><div class="health-bar-fill" style="width:45%; background: var(--sds-color-yellow-400);"></div></div>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:45%; background: var(--sds-color-yellow-200);"></div></div>
                 <span class="health-bar-value">45%</span>
               </div>
             </div>

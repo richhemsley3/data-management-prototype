@@ -159,7 +159,7 @@
           </thead>
           <tbody>
             <!-- 1. Anika Kim -->
-            <tr>
+            <tr data-role="analyst">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Anika Kim"></td>
               <td>
                 <div class="user-name-cell">
@@ -174,7 +174,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Anika Kim"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 2. Jordan Lee -->
-            <tr>
+            <tr data-role="engineer">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Jordan Lee"></td>
               <td>
                 <div class="user-name-cell">
@@ -189,7 +189,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Jordan Lee"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 3. Priya Shah -->
-            <tr>
+            <tr data-role="steward">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Priya Shah"></td>
               <td>
                 <div class="user-name-cell">
@@ -204,7 +204,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Priya Shah"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 4. Marcus Chen -->
-            <tr>
+            <tr data-role="admin">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Marcus Chen"></td>
               <td>
                 <div class="user-name-cell">
@@ -219,7 +219,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Marcus Chen"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 5. Sam Taylor -->
-            <tr>
+            <tr data-role="analyst">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Sam Taylor"></td>
               <td>
                 <div class="user-name-cell">
@@ -234,7 +234,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Sam Taylor"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 6. Rachel Liu -->
-            <tr>
+            <tr data-role="engineer">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Rachel Liu"></td>
               <td>
                 <div class="user-name-cell">
@@ -249,7 +249,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Rachel Liu"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 7. David Kumar -->
-            <tr>
+            <tr data-role="steward">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select David Kumar"></td>
               <td>
                 <div class="user-name-cell">
@@ -264,7 +264,7 @@
               <td><button class="table-action-btn" aria-label="More actions for David Kumar"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 8. Emily Wang -->
-            <tr>
+            <tr data-role="analyst">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Emily Wang"></td>
               <td>
                 <div class="user-name-cell">
@@ -279,7 +279,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Emily Wang"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 9. Tom Nguyen -->
-            <tr>
+            <tr data-role="engineer">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Tom Nguyen"></td>
               <td>
                 <div class="user-name-cell">
@@ -294,7 +294,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Tom Nguyen"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 10. Lisa Martinez -->
-            <tr>
+            <tr data-role="admin">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Lisa Martinez"></td>
               <td>
                 <div class="user-name-cell">
@@ -360,11 +360,13 @@
         cb.addEventListener('change', updateSelectAll);
       });
 
-      // Initialize select-all state (Anika is pre-checked)
+      // Initialize select-all state
       updateSelectAll();
 
-      // Tab switching
+      // Tab switching + role filtering
       var tabs = document.querySelectorAll('.sds-tab');
+      var userRows = document.querySelectorAll('tbody tr[data-role]');
+      var roleMap = { 'all': 'all', 'admins': 'admin', 'stewards': 'steward', 'analysts': 'analyst', 'engineers': 'engineer' };
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
           tabs.forEach(function (t) {
@@ -373,7 +375,43 @@
           });
           tab.classList.add('active');
           tab.setAttribute('aria-selected', 'true');
+          var filter = roleMap[tab.getAttribute('data-tab')] || 'all';
+          userRows.forEach(function (row) {
+            if (filter === 'all' || row.getAttribute('data-role') === filter) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
         });
+      });
+
+      // Pagination controls
+      var prevBtn = document.querySelector('.pagination-controls .btn:first-child');
+      var nextBtn = document.querySelector('.pagination-controls .btn:last-child');
+      var pageLabel = document.querySelector('.pagination-controls span');
+      var showingLabel = document.querySelector('.pagination > span');
+      var currentPage = 1;
+      var totalPages = 3;
+
+      function updatePagination() {
+        pageLabel.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+        if (currentPage === 1) {
+          showingLabel.textContent = 'Showing 1-10 of 24 users';
+        } else if (currentPage === 2) {
+          showingLabel.textContent = 'Showing 11-20 of 24 users';
+        } else {
+          showingLabel.textContent = 'Showing 21-24 of 24 users';
+        }
+      }
+
+      prevBtn.addEventListener('click', function () {
+        if (currentPage > 1) { currentPage--; updatePagination(); }
+      });
+      nextBtn.addEventListener('click', function () {
+        if (currentPage < totalPages) { currentPage++; updatePagination(); }
       });
     })();
   </script>

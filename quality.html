@@ -80,7 +80,7 @@
       <!-- Alert Banner -->
       <div class="alert alert--info">
         <span class="material-symbols-outlined">info</span>
-        <span>3 new quality rule failures detected in the last 24 hours. <a href="quality.html">Review failing rules &rarr;</a></span>
+        <span>3 new quality rule failures detected in the last 24 hours. <a href="javascript:void(0)" onclick="document.querySelector('[data-tab=failing]').click()">Review failing rules &rarr;</a></span>
       </div>
 
       <!-- Breadcrumbs -->
@@ -121,7 +121,7 @@
         <div class="sds-stat-card sds-stat-card--error">
           <span class="sds-stat-card__label">Failing Assets</span>
           <span class="sds-stat-card__value">12</span>
-          <span class="sds-stat-card__trend sds-stat-card__trend--up trend-down-good">
+          <span class="sds-stat-card__trend sds-stat-card__trend--down trend-down-good">
             <span class="material-symbols-outlined">arrow_downward</span>
             -3 this week
           </span>
@@ -138,10 +138,10 @@
 
       <!-- Tabs -->
       <div class="sds-tabs" role="tablist" aria-label="Quality rule filters">
-        <button class="sds-tab active" role="tab" aria-selected="true">All Rules</button>
-        <button class="sds-tab" role="tab" aria-selected="false">Failing <span class="tab-badge">8</span></button>
-        <button class="sds-tab" role="tab" aria-selected="false">Passing <span class="tab-badge">148</span></button>
-        <button class="sds-tab" role="tab" aria-selected="false">Disabled</button>
+        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="all">All Rules</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="failing">Failing <span class="tab-badge">8</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="passing">Passing <span class="tab-badge">148</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="disabled">Disabled</button>
       </div>
 
       <!-- Rules Table -->
@@ -158,98 +158,98 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-status="passing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Freshness: customer_orders</a></td>
               <td><span class="sds-tag sds-tag--neutral">Freshness</span></td>
               <td>1 asset</td>
               <td><span class="sds-tag sds-tag--success">Passing</span></td>
               <td>2 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="failing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Completeness: email field</a></td>
               <td><span class="sds-tag sds-tag--neutral">Completeness</span></td>
               <td>3 assets</td>
               <td><span class="sds-tag sds-tag--error">Failing</span></td>
               <td>5 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="passing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Uniqueness: customer_id</a></td>
               <td><span class="sds-tag sds-tag--neutral">Uniqueness</span></td>
               <td>1 asset</td>
               <td><span class="sds-tag sds-tag--success">Passing</span></td>
               <td>10 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="failing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Schema: revenue_metrics</a></td>
               <td><span class="sds-tag sds-tag--neutral">Schema</span></td>
               <td>1 asset</td>
               <td><span class="sds-tag sds-tag--error">Failing</span></td>
               <td>15 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="passing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Freshness: stripe_payments</a></td>
               <td><span class="sds-tag sds-tag--neutral">Freshness</span></td>
               <td>2 assets</td>
               <td><span class="sds-tag sds-tag--success">Passing</span></td>
               <td>20 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="passing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Volume: daily_transactions</a></td>
               <td><span class="sds-tag sds-tag--neutral">Volume</span></td>
               <td>1 asset</td>
               <td><span class="sds-tag sds-tag--success">Passing</span></td>
               <td>30 min ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="failing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Completeness: address fields</a></td>
               <td><span class="sds-tag sds-tag--neutral">Completeness</span></td>
               <td>5 assets</td>
               <td><span class="sds-tag sds-tag--error">Failing</span></td>
               <td>1 hour ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
             </tr>
-            <tr>
+            <tr data-status="passing">
               <td class="cell-primary"><a href="asset.html" class="cell-link">Custom: revenue > 0</a></td>
               <td><span class="sds-tag sds-tag--neutral">Custom</span></td>
               <td>1 asset</td>
               <td><span class="sds-tag sds-tag--success">Passing</span></td>
               <td>2 hours ago</td>
               <td>
-                <button class="sds-header-icon-btn" aria-label="More actions">
+                <button class="table-action-btn" aria-label="More actions">
                   <span class="material-symbols-outlined">more_vert</span>
                 </button>
               </td>
@@ -273,16 +273,31 @@
 
   <!-- Tab Switching JS -->
   <script>
-    document.querySelectorAll('.sds-tabs .sds-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.sds-tabs .sds-tab').forEach(t => {
+  (function() {
+    var tabs = document.querySelectorAll('.sds-tabs .sds-tab[data-tab]');
+    var rows = document.querySelectorAll('.sds-table--hoverable tbody tr');
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        tabs.forEach(function(t) {
           t.classList.remove('active');
           t.setAttribute('aria-selected', 'false');
         });
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
+
+        var filter = tab.getAttribute('data-tab');
+        rows.forEach(function(row) {
+          var status = row.getAttribute('data-status');
+          if (filter === 'all' || status === filter) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
       });
     });
+  })();
   </script>
 
 </body>

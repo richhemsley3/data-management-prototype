@@ -130,7 +130,7 @@
 
       <!-- Breadcrumbs -->
       <div class="breadcrumbs">
-        <a href="index.html">Home</a>
+        <span>Settings</span>
         <span class="sep">/</span>
         <span>Sources</span>
       </div>
@@ -152,7 +152,7 @@
       <!-- Alert Banner -->
       <div class="alert alert--warning">
         <span class="material-symbols-outlined">warning</span>
-        <span>1 source has breached its sync SLA. Databricks last synced 3 days ago. <a href="settings.html">View details &rarr;</a></span>
+        <span>1 source has breached its sync SLA. Databricks last synced 3 days ago. <a href="javascript:void(0)" onclick="document.querySelector('tr[data-env][style]').scrollIntoView({behavior:'smooth',block:'center'})">View details &rarr;</a></span>
       </div>
 
       <!-- Stat Cards -->
@@ -207,7 +207,7 @@
           </thead>
           <tbody>
             <!-- 1. Snowflake -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Snowflake"></td>
               <td>
                 <div class="source-name-cell">
@@ -223,7 +223,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Snowflake"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 2. BigQuery -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select BigQuery"></td>
               <td>
                 <div class="source-name-cell">
@@ -239,7 +239,7 @@
               <td><button class="table-action-btn" aria-label="More actions for BigQuery"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 3. PostgreSQL -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select PostgreSQL"></td>
               <td>
                 <div class="source-name-cell">
@@ -255,7 +255,7 @@
               <td><button class="table-action-btn" aria-label="More actions for PostgreSQL"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 4. Salesforce -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Salesforce"></td>
               <td>
                 <div class="source-name-cell">
@@ -271,7 +271,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Salesforce"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 5. Tableau -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Tableau"></td>
               <td>
                 <div class="source-name-cell">
@@ -287,7 +287,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Tableau"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 6. MySQL -->
-            <tr>
+            <tr data-env="staging">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select MySQL"></td>
               <td>
                 <div class="source-name-cell">
@@ -303,7 +303,7 @@
               <td><button class="table-action-btn" aria-label="More actions for MySQL"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 7. Databricks (breached) -->
-            <tr style="background: var(--sds-status-error-bg);">
+            <tr data-env="production" style="background: var(--sds-status-error-bg);">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Databricks"></td>
               <td>
                 <div class="source-name-cell">
@@ -319,7 +319,7 @@
               <td><button class="btn btn-primary btn-sm" aria-label="Re-sync Databricks">Re-Sync</button></td>
             </tr>
             <!-- 8. MongoDB -->
-            <tr>
+            <tr data-env="development">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select MongoDB"></td>
               <td>
                 <div class="source-name-cell">
@@ -335,7 +335,7 @@
               <td><button class="table-action-btn" aria-label="More actions for MongoDB"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 9. dbt -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select dbt"></td>
               <td>
                 <div class="source-name-cell">
@@ -351,7 +351,7 @@
               <td><button class="table-action-btn" aria-label="More actions for dbt"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 10. Redshift -->
-            <tr>
+            <tr data-env="staging">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Redshift"></td>
               <td>
                 <div class="source-name-cell">
@@ -367,7 +367,7 @@
               <td><button class="table-action-btn" aria-label="More actions for Redshift"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 11. Looker -->
-            <tr>
+            <tr data-env="production">
               <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Looker"></td>
               <td>
                 <div class="source-name-cell">
@@ -427,8 +427,9 @@
         cb.addEventListener('change', updateToolbar);
       });
 
-      // Tab switching
+      // Tab switching + row filtering
       const tabs = document.querySelectorAll('.sds-tab');
+      const tableRows = document.querySelectorAll('tbody tr[data-env]');
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
           tabs.forEach(function (t) {
@@ -437,6 +438,14 @@
           });
           tab.classList.add('active');
           tab.setAttribute('aria-selected', 'true');
+          var filter = tab.getAttribute('data-tab');
+          tableRows.forEach(function (row) {
+            if (filter === 'all' || row.getAttribute('data-env') === filter) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
         });
       });
     })();
