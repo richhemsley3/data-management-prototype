@@ -157,6 +157,16 @@
 
     /* Large progress bar for scan */
     .progress-bar--lg { height: 8px; }
+
+    /* Extracted utility classes */
+    .wizard-section-title { font-size: var(--sds-type-label); font-weight: var(--sds-weight-semibold); color: var(--sds-text-secondary); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: var(--sds-space-300); }
+    .wizard-centered { max-width: 600px; margin: 0 auto; }
+    .wizard-centered-wide { max-width: 600px; margin: var(--sds-space-600) auto 0; }
+    .mt-600 { margin-top: var(--sds-space-600); }
+    .mt-500 { margin-top: var(--sds-space-500); }
+    .mt-300 { margin-top: var(--sds-space-300); }
+    .icon-check { font-size: 18px; }
+    .icon-folder { font-size: 18px; color: var(--sds-text-tertiary); }
   </style>
 </head>
 <body>
@@ -364,7 +374,7 @@
             </button>
             <button class="btn btn-tertiary" id="btn-test-connection" aria-label="Test connection">Test Connection</button>
             <div class="connection-status" id="connection-status" aria-live="polite">
-              <span class="material-symbols-outlined" style="font-size:18px">check_circle</span>
+              <span class="material-symbols-outlined icon-check">check_circle</span>
               Connection successful
             </div>
           </div>
@@ -401,29 +411,29 @@
             </div>
           </div>
 
-          <h3 class="section-title" style="margin-top:var(--sds-space-600)">Schemas</h3>
+          <h3 class="section-title mt-600">Schemas</h3>
           <ul class="schema-tree">
             <li>
               <input type="checkbox" checked aria-label="Select analytics schema">
-              <span class="material-symbols-outlined" style="font-size:18px;color:var(--sds-text-tertiary)">folder</span>
+              <span class="material-symbols-outlined icon-folder">folder</span>
               analytics
               <span class="schema-count">45 tables</span>
             </li>
             <li>
               <input type="checkbox" checked aria-label="Select marketing schema">
-              <span class="material-symbols-outlined" style="font-size:18px;color:var(--sds-text-tertiary)">folder</span>
+              <span class="material-symbols-outlined icon-folder">folder</span>
               marketing
               <span class="schema-count">32 tables</span>
             </li>
             <li>
               <input type="checkbox" checked aria-label="Select finance schema">
-              <span class="material-symbols-outlined" style="font-size:18px;color:var(--sds-text-tertiary)">folder</span>
+              <span class="material-symbols-outlined icon-folder">folder</span>
               finance
               <span class="schema-count">28 tables</span>
             </li>
             <li>
               <input type="checkbox" aria-label="Select staging schema">
-              <span class="material-symbols-outlined" style="font-size:18px;color:var(--sds-text-tertiary)">folder</span>
+              <span class="material-symbols-outlined icon-folder">folder</span>
               staging
               <span class="schema-count">37 tables</span>
             </li>
@@ -440,13 +450,13 @@
           </div>
 
           <div class="scan-center">
-            <div class="progress-bar progress-bar--lg" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="max-width:600px;margin:0 auto">
+            <div class="progress-bar progress-bar--lg wizard-centered" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100">
               <div class="progress-bar__fill" style="width:73%"></div>
             </div>
-            <p style="margin-top:var(--sds-space-300)">Scanning and classifying... 73% complete</p>
+            <p class="mt-300">Scanning and classifying... 73% complete</p>
           </div>
 
-          <div class="stat-row stat-row-3" style="max-width:600px;margin:var(--sds-space-600) auto 0">
+          <div class="stat-row stat-row-3 wizard-centered-wide">
             <div class="sds-stat-card sds-stat-card--highlighted">
               <span class="sds-stat-card__label">Tables Scanned</span>
               <span class="sds-stat-card__value">105/142</span>
@@ -461,7 +471,7 @@
             </div>
           </div>
 
-          <p class="scan-elapsed" style="text-align:center;margin-top:var(--sds-space-600)">Elapsed time: 4m 32s</p>
+          <p class="scan-elapsed mt-600" style="text-align:center">Elapsed time: 4m 32s</p>
 
           <div style="display: flex; gap: var(--sds-space-300); margin-top: var(--sds-space-400); justify-content: center;">
             <button class="btn btn-secondary btn-sm">Cancel Scan</button>
@@ -483,7 +493,7 @@
 
           <div class="review-layout">
             <div class="review-sidebar">
-              <h3 class="section-title" style="font-size:var(--sds-type-label)">Tables</h3>
+              <h3 class="section-title wizard-section-title">Tables</h3>
               <ul class="review-list">
                 <li class="active">
                   <input type="checkbox" checked aria-label="customer_orders reviewed">
@@ -516,7 +526,7 @@
                 </div>
                 <p>Contains customer purchase records including order IDs, customer references, product SKUs, quantities, pricing, and fulfillment status. Updated daily from the e-commerce transaction system via the ETL pipeline.</p>
 
-                <table class="mini-table" style="margin-top:var(--sds-space-500)">
+                <table class="mini-table mt-500">
                   <thead>
                     <tr>
                       <th>Column</th>
@@ -589,7 +599,7 @@
             </a>
 
             <div class="invited-list">
-              <h3 class="section-title" style="font-size:var(--sds-type-label)">Added Members</h3>
+              <h3 class="section-title wizard-section-title">Added Members</h3>
               <div class="invited-person">
                 <div class="avatar avatar-md" style="background:var(--sds-interactive-primary)">JS</div>
                 <div>
@@ -608,7 +618,7 @@
               </div>
             </div>
 
-            <a href="javascript:void(0)" class="btn btn-tertiary" style="margin-top:var(--sds-space-600)">Skip this step</a>
+            <a href="javascript:void(0)" class="btn btn-tertiary mt-600">Skip this step</a>
           </div>
         </div>
 
