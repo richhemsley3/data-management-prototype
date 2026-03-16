@@ -139,6 +139,7 @@
       <div class="page-header">
         <div>
           <h1>Source Management</h1>
+          <p>Monitor connected sources, sync health, and data freshness</p>
         </div>
         <div class="page-header-actions">
           <a href="connect.html" class="btn btn-primary">
@@ -151,7 +152,7 @@
       <!-- Alert Banner -->
       <div class="alert alert--warning">
         <span class="material-symbols-outlined">warning</span>
-        <span>1 source has breached its sync SLA. Databricks last synced 3 days ago. <a href="#">View details &rarr;</a></span>
+        <span>1 source has breached its sync SLA. Databricks last synced 3 days ago. <a href="settings.html">View details &rarr;</a></span>
       </div>
 
       <!-- Stat Cards -->
@@ -219,7 +220,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>2h ago</td>
               <td>In 30 min</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for Snowflake"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for Snowflake"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 2. BigQuery -->
             <tr>
@@ -235,7 +236,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>1h ago</td>
               <td>In 1h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for BigQuery"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for BigQuery"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 3. PostgreSQL -->
             <tr>
@@ -251,7 +252,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> At-Risk</div></td>
               <td>18h ago</td>
               <td>Overdue</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for PostgreSQL"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for PostgreSQL"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 4. Salesforce -->
             <tr>
@@ -267,7 +268,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>6h ago</td>
               <td>In 6h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for Salesforce"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for Salesforce"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 5. Tableau -->
             <tr>
@@ -283,7 +284,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>12h ago</td>
               <td>In 12h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for Tableau"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for Tableau"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 6. MySQL -->
             <tr>
@@ -299,7 +300,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>4h ago</td>
               <td>In 2h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for MySQL"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for MySQL"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 7. Databricks (breached) -->
             <tr style="background: var(--sds-status-error-bg);">
@@ -331,7 +332,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>30m ago</td>
               <td>In 30m</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for MongoDB"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for MongoDB"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 9. dbt -->
             <tr>
@@ -347,7 +348,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>1h ago</td>
               <td>In 1h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for dbt"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for dbt"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 10. Redshift -->
             <tr>
@@ -363,7 +364,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> At-Risk</div></td>
               <td>20h ago</td>
               <td>In 4h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for Redshift"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for Redshift"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
             <!-- 11. Looker -->
             <tr>
@@ -379,7 +380,7 @@
               <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
               <td>8h ago</td>
               <td>In 4h</td>
-              <td><button class="sds-header-icon-btn" aria-label="More actions for Looker"><span class="material-symbols-outlined">more_vert</span></button></td>
+              <td><button class="table-action-btn" aria-label="More actions for Looker"><span class="material-symbols-outlined">more_vert</span></button></td>
             </tr>
           </tbody>
         </table>

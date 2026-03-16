@@ -358,7 +358,7 @@
                   <td>
                     <div class="cell-tags">
                       <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:6h</span>
-                      <span class="sds-tag sds-tag--warning" data-tooltip="Contains personally identifiable information">PII</span>
+                      <span class="sds-tag sds-tag--error" data-tooltip="Contains personally identifiable information">PII</span>
                       <span class="sds-tag sds-tag--error">Over-Permissioned</span>
                     </div>
                   </td>
@@ -423,7 +423,7 @@
                   <td>
                     <div class="cell-tags">
                       <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1h</span>
-                      <span class="sds-tag sds-tag--warning" data-tooltip="Contains personally identifiable information">PII</span>
+                      <span class="sds-tag sds-tag--error" data-tooltip="Contains personally identifiable information">PII</span>
                       <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
                     </div>
                   </td>
@@ -485,9 +485,9 @@
               <div class="pagination-controls">
                 <div class="pagination-per-page">
                   <span>Rows per page:</span>
-                  <select>
-                    <option>10</option>
-                    <option selected>25</option>
+                  <select aria-label="Rows per page">
+                    <option selected>10</option>
+                    <option>25</option>
                     <option>50</option>
                     <option>100</option>
                   </select>
@@ -495,9 +495,11 @@
                 <span>Showing 1-8 of 24 results</span>
               </div>
               <div class="pagination-pages">
+                <button class="btn btn-tertiary btn-sm" disabled aria-label="Previous page"><span class="material-symbols-outlined">chevron_left</span></button>
                 <button class="pagination-btn active">1</button>
                 <button class="pagination-btn">2</button>
                 <button class="pagination-btn">3</button>
+                <button class="btn btn-tertiary btn-sm" aria-label="Next page"><span class="material-symbols-outlined">chevron_right</span></button>
               </div>
             </div>
           </div>
