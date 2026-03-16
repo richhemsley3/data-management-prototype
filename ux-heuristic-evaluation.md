@@ -1,9 +1,9 @@
 # UX Heuristic Evaluation Report
-## DataShield Data Management Platform (15-Page Prototype)
+## DataPlatform Data Management Platform (15-Page Prototype)
 
 **Evaluator:** Claude (UX Heuristic Evaluation)
 **Date:** March 16, 2026
-**Scope:** All 15 pages of the DataShield static HTML prototype
+**Scope:** All 15 pages of the DataPlatform static HTML prototype
 **Frameworks:** Nielsen's 10 Usability Heuristics, Laws of UX
 
 ---
@@ -17,7 +17,7 @@
 | Minor | 15 |
 | **Total Issues** | **31** |
 
-The DataShield prototype demonstrates strong foundational design work: a coherent design system with well-structured tokens, consistent shell layout across all 15 pages, thoughtful information architecture, and good use of progressive disclosure. The prototype is well above average for this stage of product development. The issues identified below are opportunities to elevate the design from good to excellent, particularly around destructive action safeguards, confirmation dialogs, keyboard navigation, and information density management.
+The DataPlatform prototype demonstrates strong foundational design work: a coherent design system with well-structured tokens, consistent shell layout across all 15 pages, thoughtful information architecture, and good use of progressive disclosure. The prototype is well above average for this stage of product development. The issues identified below are opportunities to elevate the design from good to excellent, particularly around destructive action safeguards, confirmation dialogs, keyboard navigation, and information density management.
 
 ---
 
