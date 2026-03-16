@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quality — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* Fewer-failures trend: arrow down but green */
+    .trend-down-good {
+      color: var(--sds-status-success-text) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
+      <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
+      <a href="security.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>Security Posture</a>
+      <a href="lineage.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>Lineage</a>
+      <a href="quality.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>Quality</a>
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="classifications.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>Classifications</a>
+      <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
+      <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
+      <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
+      <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
+      <a href="api-keys.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">key</span></span>API Keys</a>
+      <a href="audit-log.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">history</span></span>Audit Log</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Alert Banner -->
+      <div class="alert alert--info">
+        <span class="material-symbols-outlined">info</span>
+        <span>3 new quality rule failures detected in the last 24 hours. <a href="#">Review failing rules &rarr;</a></span>
+      </div>
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs"><span>Quality</span></div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Data Quality</h1>
+          <p class="page-subtitle">Monitor and enforce data quality standards across your data estate</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary">
+            <span class="material-symbols-outlined">add</span>
+            Create Rule
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-row stat-row-4">
+        <div class="sds-stat-card sds-stat-card--highlighted">
+          <span class="sds-stat-card__label">Rules Active</span>
+          <span class="sds-stat-card__value">156</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +12 this month
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Pass Rate</span>
+          <span class="sds-stat-card__value">98.2%</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +0.8% this week
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--error">
+          <span class="sds-stat-card__label">Failing Assets</span>
+          <span class="sds-stat-card__value">12</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up trend-down-good">
+            <span class="material-symbols-outlined">arrow_downward</span>
+            -3 this week
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--warning">
+          <span class="sds-stat-card__label">Coverage</span>
+          <span class="sds-stat-card__value">84%</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +6% this month
+          </span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sds-tabs" role="tablist" aria-label="Quality rule filters">
+        <button class="sds-tab active" role="tab" aria-selected="true">All Rules</button>
+        <button class="sds-tab" role="tab" aria-selected="false">Failing <span class="sds-tab-badge">8</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false">Passing <span class="sds-tab-badge">148</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false">Disabled</button>
+      </div>
+
+      <!-- Rules Table -->
+      <div class="sds-table-container">
+        <table class="sds-table sds-table--hoverable">
+          <thead>
+            <tr>
+              <th>Rule Name</th>
+              <th>Type</th>
+              <th>Assets</th>
+              <th>Status</th>
+              <th>Last Checked</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Freshness: customer_orders</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Freshness</span></td>
+              <td>1 asset</td>
+              <td><span class="sds-tag sds-tag--success">Passing</span></td>
+              <td>2 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Completeness: email field</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Completeness</span></td>
+              <td>3 assets</td>
+              <td><span class="sds-tag sds-tag--error">Failing</span></td>
+              <td>5 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Uniqueness: customer_id</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Uniqueness</span></td>
+              <td>1 asset</td>
+              <td><span class="sds-tag sds-tag--success">Passing</span></td>
+              <td>10 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Schema: revenue_metrics</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Schema</span></td>
+              <td>1 asset</td>
+              <td><span class="sds-tag sds-tag--error">Failing</span></td>
+              <td>15 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Freshness: stripe_payments</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Freshness</span></td>
+              <td>2 assets</td>
+              <td><span class="sds-tag sds-tag--success">Passing</span></td>
+              <td>20 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Volume: daily_transactions</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Volume</span></td>
+              <td>1 asset</td>
+              <td><span class="sds-tag sds-tag--success">Passing</span></td>
+              <td>30 min ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Completeness: address fields</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Completeness</span></td>
+              <td>5 assets</td>
+              <td><span class="sds-tag sds-tag--error">Failing</span></td>
+              <td>1 hour ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-primary"><a href="#" class="cell-link">Custom: revenue > 0</a></td>
+              <td><span class="sds-tag sds-tag--neutral">Custom</span></td>
+              <td>1 asset</td>
+              <td><span class="sds-tag sds-tag--success">Passing</span></td>
+              <td>2 hours ago</td>
+              <td>
+                <button class="sds-header-icon-btn" aria-label="More actions">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span>Showing 1-8 of 156 rules</span>
+          <div class="pagination-pages">
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Tab Switching JS -->
+  <script>
+    document.querySelectorAll('.sds-tabs .sds-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.sds-tabs .sds-tab').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+      });
+    });
+  </script>
+
+</body>
+</html>

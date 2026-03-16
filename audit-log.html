@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-300);
+      margin-bottom: var(--sds-space-400);
+    }
+    .filter-bar .filter-search {
+      margin-left: auto;
+    }
+    .filter-bar .sds-header-search {
+      width: 240px;
+    }
+    .sds-table td.cell-mono {
+      font-family: var(--sds-font-mono);
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-tertiary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
+      <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
+      <a href="security.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>Security Posture</a>
+      <a href="lineage.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>Lineage</a>
+      <a href="quality.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>Quality</a>
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="classifications.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>Classifications</a>
+      <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
+      <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
+      <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
+      <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
+      <a href="api-keys.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">key</span></span>API Keys</a>
+      <a href="audit-log.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">history</span></span>Audit Log</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="#">Settings</a>
+        <span class="sep">/</span>
+        <span>Audit Log</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Audit Log</h1>
+          <p>Track all platform activity and changes for compliance</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">
+            <span class="material-symbols-outlined">download</span>
+            Export
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <button class="btn btn-secondary btn-sm">All Users &#9662;</button>
+        <button class="btn btn-secondary btn-sm">All Actions &#9662;</button>
+        <button class="btn btn-secondary btn-sm">Last 7 days &#9662;</button>
+        <div class="filter-search">
+          <div class="sds-header-search">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Search events..." aria-label="Search events">
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="sds-table-container">
+        <table class="sds-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Resource</th>
+              <th>Details</th>
+              <th>IP Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td>Mar 16, 2026 09:42</td>
+              <td class="cell-primary">Anika Kim</td>
+              <td><span class="sds-tag sds-tag--neutral">Viewed</span></td>
+              <td><a class="cell-link">customer_orders</a></td>
+              <td>Viewed asset detail page</td>
+              <td class="cell-mono">10.0.1.42</td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td>Mar 16, 2026 09:38</td>
+              <td class="cell-primary">Jordan Lee</td>
+              <td><span class="sds-tag sds-tag--info">Modified</span></td>
+              <td><a class="cell-link">Snowflake connector</a></td>
+              <td>Updated sync schedule to hourly</td>
+              <td class="cell-mono">10.0.1.15</td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td>Mar 16, 2026 09:35</td>
+              <td class="cell-primary">System</td>
+              <td><span class="sds-tag sds-tag--purple">Classified</span></td>
+              <td><a class="cell-link">revenue_metrics</a></td>
+              <td>Auto-classified 12 columns as PII</td>
+              <td class="cell-mono">&mdash;</td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td>Mar 16, 2026 09:30</td>
+              <td class="cell-primary">Priya Shah</td>
+              <td><span class="sds-tag sds-tag--success">Approved</span></td>
+              <td><a class="cell-link">"Customer" term</a></td>
+              <td>Approved glossary term</td>
+              <td class="cell-mono">10.0.1.88</td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td>Mar 16, 2026 09:25</td>
+              <td class="cell-primary">Jordan Lee</td>
+              <td><span class="sds-tag sds-tag--success">Created</span></td>
+              <td class="cell-mono">dsk_ci_...9k2m</td>
+              <td>Generated new API key</td>
+              <td class="cell-mono">10.0.1.15</td>
+            </tr>
+            <!-- Row 6 -->
+            <tr>
+              <td>Mar 16, 2026 09:20</td>
+              <td class="cell-primary">Marcus Chen</td>
+              <td><span class="sds-tag sds-tag--neutral">Exported</span></td>
+              <td><a class="cell-link">Security Report</a></td>
+              <td>Exported security posture PDF</td>
+              <td class="cell-mono">10.0.1.67</td>
+            </tr>
+            <!-- Row 7 -->
+            <tr>
+              <td>Mar 16, 2026 09:15</td>
+              <td class="cell-primary">System</td>
+              <td><span class="sds-tag sds-tag--info">Scanned</span></td>
+              <td><a class="cell-link">BigQuery source</a></td>
+              <td>Discovery scan completed: 42 new tables</td>
+              <td class="cell-mono">&mdash;</td>
+            </tr>
+            <!-- Row 8 -->
+            <tr>
+              <td>Mar 16, 2026 09:10</td>
+              <td class="cell-primary">Anika Kim</td>
+              <td><span class="sds-tag sds-tag--neutral">Bookmarked</span></td>
+              <td><a class="cell-link">stripe_payments</a></td>
+              <td>Added to bookmarks</td>
+              <td class="cell-mono">10.0.1.42</td>
+            </tr>
+            <!-- Row 9 -->
+            <tr>
+              <td>Mar 16, 2026 09:05</td>
+              <td class="cell-primary">Priya Shah</td>
+              <td><span class="sds-tag sds-tag--error">Revoked</span></td>
+              <td>David Kumar</td>
+              <td>Revoked write access to finance schema</td>
+              <td class="cell-mono">10.0.1.88</td>
+            </tr>
+            <!-- Row 10 -->
+            <tr>
+              <td>Mar 16, 2026 09:00</td>
+              <td class="cell-primary">Sam Taylor</td>
+              <td><span class="sds-tag sds-tag--neutral">Searched</span></td>
+              <td><a class="cell-link">Catalog</a></td>
+              <td>Searched: 'monthly revenue by region'</td>
+              <td class="cell-mono">10.0.1.33</td>
+            </tr>
+            <!-- Row 11 -->
+            <tr>
+              <td>Mar 16, 2026 08:55</td>
+              <td class="cell-primary">System</td>
+              <td><span class="sds-tag sds-tag--warning">Alert</span></td>
+              <td><a class="cell-link">Databricks source</a></td>
+              <td>SLA breach: sync overdue by 2 hours</td>
+              <td class="cell-mono">&mdash;</td>
+            </tr>
+            <!-- Row 12 -->
+            <tr>
+              <td>Mar 16, 2026 08:50</td>
+              <td class="cell-primary">Jordan Lee</td>
+              <td><span class="sds-tag sds-tag--error">Deleted</span></td>
+              <td><a class="cell-link">staging_temp_table</a></td>
+              <td>Deleted temporary staging table</td>
+              <td class="cell-mono">10.0.1.15</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span>Showing 1-12 of 1,847 events</span>
+        <div class="pagination-pages">
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <button class="pagination-btn" disabled>...</button>
+          <button class="pagination-btn">
+            <span class="material-symbols-outlined" style="font-size:16px;">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

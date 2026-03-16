@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Keys — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* Best practices list */
+    .best-practices-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--sds-space-300) 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sds-space-300);
+    }
+    .best-practices-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-secondary);
+    }
+    .best-practices-list li .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--sds-status-success-text);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
+      <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
+      <a href="security.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>Security Posture</a>
+      <a href="lineage.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>Lineage</a>
+      <a href="quality.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>Quality</a>
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="classifications.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>Classifications</a>
+      <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
+      <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
+      <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
+      <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
+      <a href="api-keys.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">key</span></span>API Keys</a>
+      <a href="audit-log.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">history</span></span>Audit Log</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumbs">
+        <a href="#">Settings</a>
+        <span class="sep">/</span>
+        <span>API Keys</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>API Keys</h1>
+          <p>Manage API keys for programmatic access to the platform</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary">
+            <span class="material-symbols-outlined">add</span>
+            Generate Key
+          </button>
+        </div>
+      </div>
+
+      <!-- Warning Alert -->
+      <div class="alert alert--warning">
+        <span class="material-symbols-outlined">warning</span>
+        <span>API keys grant full access to the platform API. Keep them secure and rotate regularly.</span>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-row stat-row-3">
+        <div class="sds-stat-card sds-stat-card--highlighted">
+          <span class="sds-stat-card__label">Active Keys</span>
+          <span class="sds-stat-card__value">5</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Total Requests (30d)</span>
+          <span class="sds-stat-card__value">12,847</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--highlighted">
+          <span class="sds-stat-card__label">Avg Response Time</span>
+          <span class="sds-stat-card__value">142ms</span>
+        </div>
+      </div>
+
+      <!-- API Keys Table -->
+      <div class="sds-table-container">
+        <table class="sds-table">
+          <thead>
+            <tr>
+              <th>Key Name</th>
+              <th>Key Prefix</th>
+              <th>Created By</th>
+              <th>Created</th>
+              <th>Last Used</th>
+              <th>Status</th>
+              <th>Scopes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-primary">Production Pipeline</td>
+              <td><code style="font-family: var(--sds-font-mono);">dsk_prod_...7x3f</code></td>
+              <td>Jordan Lee</td>
+              <td>Jan 15, 2025</td>
+              <td>2 min ago</td>
+              <td><span class="sds-tag sds-tag--success">Active</span></td>
+              <td class="cell-tags">
+                <span class="sds-tag sds-tag--neutral">Read</span>
+                <span class="sds-tag sds-tag--neutral">Write</span>
+              </td>
+              <td><button class="btn btn-danger btn-sm">Revoke</button></td>
+            </tr>
+            <tr>
+              <td class="cell-primary">CI/CD Integration</td>
+              <td><code style="font-family: var(--sds-font-mono);">dsk_ci_...9k2m</code></td>
+              <td>Jordan Lee</td>
+              <td>Feb 3, 2025</td>
+              <td>1 hour ago</td>
+              <td><span class="sds-tag sds-tag--success">Active</span></td>
+              <td class="cell-tags">
+                <span class="sds-tag sds-tag--neutral">Read</span>
+              </td>
+              <td><button class="btn btn-danger btn-sm">Revoke</button></td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Staging Environment</td>
+              <td><code style="font-family: var(--sds-font-mono);">dsk_stg_...4n8p</code></td>
+              <td>Rachel Liu</td>
+              <td>Mar 1, 2025</td>
+              <td>3 days ago</td>
+              <td><span class="sds-tag sds-tag--success">Active</span></td>
+              <td class="cell-tags">
+                <span class="sds-tag sds-tag--neutral">Read</span>
+                <span class="sds-tag sds-tag--neutral">Write</span>
+              </td>
+              <td><button class="btn btn-danger btn-sm">Revoke</button></td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Analytics Dashboard</td>
+              <td><code style="font-family: var(--sds-font-mono);">dsk_dash_...2j5r</code></td>
+              <td>Marcus Chen</td>
+              <td>Dec 10, 2024</td>
+              <td>15 days ago</td>
+              <td><span class="sds-tag sds-tag--success">Active</span></td>
+              <td class="cell-tags">
+                <span class="sds-tag sds-tag--neutral">Read</span>
+              </td>
+              <td><button class="btn btn-danger btn-sm">Revoke</button></td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Legacy Integration</td>
+              <td><code style="font-family: var(--sds-font-mono);">dsk_leg_...8h1w</code></td>
+              <td>Jordan Lee</td>
+              <td>Jun 5, 2024</td>
+              <td>90 days ago</td>
+              <td><span class="sds-tag sds-tag--warning">Inactive</span></td>
+              <td class="cell-tags">
+                <span class="sds-tag sds-tag--neutral">Read</span>
+                <span class="sds-tag sds-tag--neutral">Write</span>
+              </td>
+              <td><button class="btn btn-danger btn-sm">Revoke</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Best Practices Card -->
+      <div class="card mt-600">
+        <div class="card-title">
+          <span class="material-symbols-outlined">security</span>
+          Key Security Best Practices
+        </div>
+        <ul class="best-practices-list">
+          <li>
+            <span class="material-symbols-outlined">check_circle</span>
+            Rotate keys every 90 days
+          </li>
+          <li>
+            <span class="material-symbols-outlined">check_circle</span>
+            Use read-only scopes when possible
+          </li>
+          <li>
+            <span class="material-symbols-outlined">check_circle</span>
+            Never commit keys to source control
+          </li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

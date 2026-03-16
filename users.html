@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users &amp; Roles — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* User name cell */
+    .user-name-cell {
+      display: flex; align-items: center; gap: var(--sds-space-300);
+    }
+    .user-name-cell .cell-primary { white-space: nowrap; }
+
+    /* Status cell */
+    .status-cell {
+      display: flex; align-items: center; gap: var(--sds-space-200);
+    }
+
+    /* Checkbox column width */
+    .sds-table th:first-child,
+    .sds-table td:first-child {
+      width: 40px;
+      padding-right: 0;
+    }
+
+    /* Actions column */
+    .sds-table th:last-child,
+    .sds-table td:last-child {
+      width: 48px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
+      <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
+      <a href="security.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>Security Posture</a>
+      <a href="lineage.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>Lineage</a>
+      <a href="quality.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>Quality</a>
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="classifications.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>Classifications</a>
+      <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
+      <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
+      <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
+      <a href="users.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
+      <a href="api-keys.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">key</span></span>API Keys</a>
+      <a href="audit-log.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">history</span></span>Audit Log</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="#">Settings</a>
+        <span class="sep">/</span>
+        <span>Users</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Users &amp; Roles</h1>
+          <p>Manage team members and their access roles</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary">
+            <span class="material-symbols-outlined">person_add</span>
+            Invite User
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-row stat-row-3">
+        <div class="sds-stat-card sds-stat-card--highlighted">
+          <span class="sds-stat-card__label">Total Users</span>
+          <span class="sds-stat-card__value">24</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Active</span>
+          <span class="sds-stat-card__value">21</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--warning">
+          <span class="sds-stat-card__label">Pending Invites</span>
+          <span class="sds-stat-card__value">3</span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sds-tabs" role="tablist" aria-label="User role filter">
+        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="all">All <span class="tab-badge">24</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="admins">Admins <span class="tab-badge">2</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="stewards">Stewards <span class="tab-badge">4</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="analysts">Analysts <span class="tab-badge">10</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="engineers">Engineers <span class="tab-badge">8</span></button>
+      </div>
+
+      <!-- Users Table -->
+      <div class="sds-table-container">
+        <table class="sds-table sds-table--hoverable" aria-label="Users">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="checkbox" id="selectAll" aria-label="Select all users"></th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 1. Anika Kim -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" checked aria-label="Select Anika Kim"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-interactive-primary);">AK</div>
+                  <span class="cell-primary">Anika Kim</span>
+                </div>
+              </td>
+              <td>anika@acme.com</td>
+              <td><span class="sds-tag sds-tag--info">Analyst</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>2 min ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Anika Kim"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 2. Jordan Lee -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Jordan Lee"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-color-blue-450);">JL</div>
+                  <span class="cell-primary">Jordan Lee</span>
+                </div>
+              </td>
+              <td>jordan@acme.com</td>
+              <td><span class="sds-tag sds-tag--neutral">Engineer</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>15 min ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Jordan Lee"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 3. Priya Shah -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Priya Shah"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-color-purple-550);">PS</div>
+                  <span class="cell-primary">Priya Shah</span>
+                </div>
+              </td>
+              <td>priya@acme.com</td>
+              <td><span class="sds-tag sds-tag--purple">Steward</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>1 hour ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Priya Shah"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 4. Marcus Chen -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Marcus Chen"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-status-error-text);">MC</div>
+                  <span class="cell-primary">Marcus Chen</span>
+                </div>
+              </td>
+              <td>marcus@acme.com</td>
+              <td><span class="sds-tag sds-tag--error">Admin</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>3 hours ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Marcus Chen"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 5. Sam Taylor -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Sam Taylor"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-interactive-primary);">ST</div>
+                  <span class="cell-primary">Sam Taylor</span>
+                </div>
+              </td>
+              <td>sam@acme.com</td>
+              <td><span class="sds-tag sds-tag--info">Analyst</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>1 day ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Sam Taylor"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 6. Rachel Liu -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Rachel Liu"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-color-blue-450);">RL</div>
+                  <span class="cell-primary">Rachel Liu</span>
+                </div>
+              </td>
+              <td>rachel@acme.com</td>
+              <td><span class="sds-tag sds-tag--neutral">Engineer</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>2 days ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Rachel Liu"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 7. David Kumar -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select David Kumar"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-color-purple-550);">DK</div>
+                  <span class="cell-primary">David Kumar</span>
+                </div>
+              </td>
+              <td>david@acme.com</td>
+              <td><span class="sds-tag sds-tag--purple">Steward</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> Active</div></td>
+              <td>3 days ago</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for David Kumar"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 8. Emily Wang -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Emily Wang"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-interactive-primary);">EW</div>
+                  <span class="cell-primary">Emily Wang</span>
+                </div>
+              </td>
+              <td>emily@acme.com</td>
+              <td><span class="sds-tag sds-tag--info">Analyst</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> Pending</div></td>
+              <td>&mdash;</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Emily Wang"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 9. Tom Nguyen -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Tom Nguyen"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-color-blue-450);">TN</div>
+                  <span class="cell-primary">Tom Nguyen</span>
+                </div>
+              </td>
+              <td>tom@acme.com</td>
+              <td><span class="sds-tag sds-tag--neutral">Engineer</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> Pending</div></td>
+              <td>&mdash;</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Tom Nguyen"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 10. Lisa Martinez -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Lisa Martinez"></td>
+              <td>
+                <div class="user-name-cell">
+                  <div class="avatar avatar-sm" style="background: var(--sds-status-error-text);">LM</div>
+                  <span class="cell-primary">Lisa Martinez</span>
+                </div>
+              </td>
+              <td>lisa@acme.com</td>
+              <td><span class="sds-tag sds-tag--error">Admin</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> Pending</div></td>
+              <td>&mdash;</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Lisa Martinez"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span>Showing 1-10 of 24 users</span>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- JavaScript: Tab switching + checkbox select-all -->
+  <script>
+    (function () {
+      var selectAll = document.getElementById('selectAll');
+      var rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+      function updateSelectAll() {
+        var checked = document.querySelectorAll('.row-checkbox:checked');
+        var count = checked.length;
+        selectAll.checked = count === rowCheckboxes.length && count > 0;
+        selectAll.indeterminate = count > 0 && count < rowCheckboxes.length;
+      }
+
+      selectAll.addEventListener('change', function () {
+        rowCheckboxes.forEach(function (cb) {
+          cb.checked = selectAll.checked;
+        });
+      });
+
+      rowCheckboxes.forEach(function (cb) {
+        cb.addEventListener('change', updateSelectAll);
+      });
+
+      // Initialize select-all state (Anika is pre-checked)
+      updateSelectAll();
+
+      // Tab switching
+      var tabs = document.querySelectorAll('.sds-tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

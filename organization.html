@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organization Settings - Data Management Platform</title>
+  <link rel="stylesheet" href="shared/shell.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <style>
+    /* Page-specific styles */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: var(--sds-space-300) var(--sds-space-600);
+      padding: var(--sds-space-400) 0 var(--sds-space-200);
+    }
+    .info-grid dt {
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-secondary);
+      font-weight: var(--sds-weight-medium);
+    }
+    .info-grid dd {
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-primary);
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sds-space-300) 0;
+      border-bottom: 1px solid var(--sds-border-subtle);
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-primary);
+    }
+    .toggle-row:last-of-type {
+      border-bottom: none;
+    }
+    .toggle-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--sds-interactive-primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark"><span class="material-symbols-outlined">database</span></div>
+        <span class="sds-header-logo-text">DataGovern</span>
+      </a>
+      <div class="sds-header-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Search assets, policies, terms..." aria-label="Search">
+      </div>
+    </div>
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help_outline</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron"><span class="material-symbols-outlined">expand_more</span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
+      <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
+      <a href="security.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>Security Posture</a>
+      <a href="lineage.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>Lineage</a>
+      <a href="quality.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>Quality</a>
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="classifications.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>Classifications</a>
+      <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
+      <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
+      <a href="organization.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
+      <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
+      <a href="api-keys.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">key</span></span>API Keys</a>
+      <a href="audit-log.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">history</span></span>Audit Log</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="settings.html">Settings</a>
+        <span class="sep">/</span>
+        <span>Organization</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Organization Settings</h1>
+          <p>Manage your organization profile, domains, and preferences</p>
+        </div>
+      </div>
+
+      <!-- Card Stack -->
+      <div class="flex flex-col gap-400">
+
+        <!-- General Information -->
+        <div class="card">
+          <div class="card-title">
+            <span class="material-symbols-outlined">settings</span>
+            General Information
+          </div>
+          <dl class="info-grid">
+            <dt>Organization Name</dt>
+            <dd>Acme Data Corp</dd>
+            <dt>Industry</dt>
+            <dd>Financial Services</dd>
+            <dt>Plan</dt>
+            <dd><span class="sds-tag sds-tag--info">Enterprise</span></dd>
+            <dt>Created</dt>
+            <dd>January 15, 2025</dd>
+          </dl>
+          <div class="flex justify-between">
+            <span></span>
+            <button class="btn btn-secondary">Edit</button>
+          </div>
+        </div>
+
+        <!-- Data Domains -->
+        <div class="card">
+          <div class="card-title">
+            <span class="material-symbols-outlined">category</span>
+            Data Domains
+          </div>
+          <p class="mb-400">Organize assets by business domain</p>
+          <table class="sds-table">
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Members</th>
+                <th>Assets</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cell-primary">Marketing</td>
+                <td>12</td>
+                <td>456</td>
+                <td>Sam Taylor</td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Finance</td>
+                <td>8</td>
+                <td>312</td>
+                <td>Marcus Chen</td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Engineering</td>
+                <td>15</td>
+                <td>678</td>
+                <td>Jordan Lee</td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Product</td>
+                <td>6</td>
+                <td>189</td>
+                <td>Anika Kim</td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Compliance</td>
+                <td>4</td>
+                <td>234</td>
+                <td>Priya Shah</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-400">
+            <button class="btn btn-tertiary">
+              <span class="material-symbols-outlined">add</span>
+              Add Domain
+            </button>
+          </div>
+        </div>
+
+        <!-- Data Retention -->
+        <div class="card">
+          <div class="card-title">
+            <span class="material-symbols-outlined">delete_sweep</span>
+            Data Retention
+          </div>
+          <dl class="info-grid">
+            <dt>Default retention period</dt>
+            <dd>90 days</dd>
+            <dt>Audit log retention</dt>
+            <dd>1 year</dd>
+          </dl>
+          <div class="flex justify-between">
+            <span></span>
+            <button class="btn btn-secondary">Edit Policy</button>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="card">
+          <div class="card-title">
+            <span class="material-symbols-outlined">notifications</span>
+            Notification Preferences
+          </div>
+          <div style="padding-top: var(--sds-space-200);">
+            <label class="toggle-row">
+              Quality rule failures
+              <input type="checkbox" checked>
+            </label>
+            <label class="toggle-row">
+              SLA breaches
+              <input type="checkbox" checked>
+            </label>
+            <label class="toggle-row">
+              New asset discovery
+              <input type="checkbox" checked>
+            </label>
+            <label class="toggle-row">
+              Classification changes
+              <input type="checkbox">
+            </label>
+            <label class="toggle-row">
+              Access requests
+              <input type="checkbox" checked>
+            </label>
+          </div>
+          <div class="mt-400 flex justify-between">
+            <span></span>
+            <button class="btn btn-primary">Save Preferences</button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>
