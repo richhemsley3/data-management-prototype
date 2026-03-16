@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source Management — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* Bulk action toolbar */
+    .bulk-toolbar {
+      display: none;
+      align-items: center;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-200) var(--sds-space-400);
+      background: var(--sds-status-info-bg);
+      border: 1px solid var(--sds-color-blue-200);
+      border-radius: 8px 8px 0 0;
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-medium);
+      color: var(--sds-status-info-text);
+    }
+    .bulk-toolbar.visible { display: flex; }
+    .bulk-toolbar .bulk-actions { display: flex; gap: var(--sds-space-200); margin-left: auto; }
+
+    /* Source avatar */
+    .source-avatar {
+      width: 32px; height: 32px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: var(--sds-weight-bold);
+      color: var(--sds-color-white); flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
+
+    /* Source name cell */
+    .source-name-cell {
+      display: flex; align-items: center; gap: var(--sds-space-300);
+    }
+
+    /* Status cell */
+    .status-cell {
+      display: flex; align-items: center; gap: var(--sds-space-200);
+    }
+
+    /* Checkbox column width */
+    .sds-table th:first-child,
+    .sds-table td:first-child {
+      width: 40px;
+      padding-right: 0;
+    }
+
+    /* Actions column */
+    .sds-table th:last-child,
+    .sds-table td:last-child {
+      width: 48px;
+      text-align: center;
+    }
+
+    /* When bulk toolbar is visible, remove top border-radius from table container */
+    .bulk-toolbar.visible + .sds-table-container {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>
+        Home
+      </a>
+      <a href="catalog.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>
+        Catalog
+      </a>
+      <a href="security.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>
+        Security Posture
+      </a>
+      <a href="lineage.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>
+        Lineage
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>
+        Quality
+      </a>
+
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>
+        Classifications
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>
+        Glossary
+      </a>
+      <a href="governance.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>
+        Policies
+      </a>
+
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>
+        Connectors
+      </a>
+      <a href="settings.html" class="sds-sidenav-item active">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>
+        Sources
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="#">Settings</a>
+        <span class="sep">/</span>
+        <span>Sources</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Source Management</h1>
+        </div>
+        <div class="page-header-actions">
+          <a href="connect.html" class="btn btn-primary">
+            <span class="material-symbols-outlined">cable</span>
+            Add Source
+          </a>
+        </div>
+      </div>
+
+      <!-- Alert Banner -->
+      <div class="alert alert--warning">
+        <span class="material-symbols-outlined">warning</span>
+        <span>1 source has breached its sync SLA. Databricks last synced 3 days ago. <a href="#">View details &rarr;</a></span>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-row stat-row-3">
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">On-Time</span>
+          <span class="sds-stat-card__value" style="color: var(--sds-status-success-text);">8</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--warning">
+          <span class="sds-stat-card__label">At-Risk</span>
+          <span class="sds-stat-card__value" style="color: var(--sds-status-warning-text);">2</span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--error">
+          <span class="sds-stat-card__label">Breached</span>
+          <span class="sds-stat-card__value" style="color: var(--sds-status-error-text);">1</span>
+        </div>
+      </div>
+
+      <!-- Environment Tabs -->
+      <div class="sds-tabs" role="tablist" aria-label="Environment filter">
+        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="all">All</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="production">Production</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="staging">Staging</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="development">Development</button>
+      </div>
+
+      <!-- Bulk Action Toolbar -->
+      <div class="bulk-toolbar" id="bulkToolbar" aria-live="polite">
+        <span id="selectedCount">0 selected</span>
+        <div class="bulk-actions">
+          <button class="btn btn-secondary btn-sm" aria-label="Pause selected sources">Pause</button>
+          <button class="btn btn-secondary btn-sm" aria-label="Resume selected sources">Resume</button>
+          <button class="btn btn-primary btn-sm" aria-label="Re-sync selected sources">Re-Sync</button>
+          <button class="btn btn-sm btn-danger" aria-label="Delete selected sources">Delete</button>
+        </div>
+      </div>
+
+      <!-- Source Table -->
+      <div class="sds-table-container">
+        <table class="sds-table sds-table--hoverable" aria-label="Data sources">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="checkbox" id="selectAll" aria-label="Select all sources"></th>
+              <th>Source Name</th>
+              <th>Type</th>
+              <th>Environment</th>
+              <th>Status</th>
+              <th>Last Sync</th>
+              <th>Next Sync</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 1. Snowflake -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Snowflake"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">SF</div>
+                  <span class="cell-primary">Snowflake</span>
+                </div>
+              </td>
+              <td>Warehouse</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>2h ago</td>
+              <td>In 30 min</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Snowflake"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 2. BigQuery -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select BigQuery"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">BQ</div>
+                  <span class="cell-primary">BigQuery</span>
+                </div>
+              </td>
+              <td>Warehouse</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>1h ago</td>
+              <td>In 1h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for BigQuery"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 3. PostgreSQL -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select PostgreSQL"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">PG</div>
+                  <span class="cell-primary">PostgreSQL</span>
+                </div>
+              </td>
+              <td>Database</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> At-Risk</div></td>
+              <td>18h ago</td>
+              <td>Overdue</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for PostgreSQL"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 4. Salesforce -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Salesforce"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">SF</div>
+                  <span class="cell-primary">Salesforce</span>
+                </div>
+              </td>
+              <td>SaaS</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>6h ago</td>
+              <td>In 6h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Salesforce"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 5. Tableau -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Tableau"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">TB</div>
+                  <span class="cell-primary">Tableau</span>
+                </div>
+              </td>
+              <td>BI Tool</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>12h ago</td>
+              <td>In 12h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Tableau"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 6. MySQL -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select MySQL"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">MY</div>
+                  <span class="cell-primary">MySQL</span>
+                </div>
+              </td>
+              <td>Database</td>
+              <td><span class="sds-tag sds-tag--neutral">Staging</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>4h ago</td>
+              <td>In 2h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for MySQL"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 7. Databricks (breached) -->
+            <tr style="background: var(--sds-status-error-bg);">
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Databricks"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-status-error-text);">DB</div>
+                  <span class="cell-primary">Databricks</span>
+                </div>
+              </td>
+              <td>Lake</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--error" aria-hidden="true"></span> Breached</div></td>
+              <td>3d ago</td>
+              <td>Failed</td>
+              <td><button class="btn btn-primary btn-sm" aria-label="Re-sync Databricks">Re-Sync</button></td>
+            </tr>
+            <!-- 8. MongoDB -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select MongoDB"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-status-success-text);">MG</div>
+                  <span class="cell-primary">MongoDB</span>
+                </div>
+              </td>
+              <td>Database</td>
+              <td><span class="sds-tag sds-tag--neutral">Development</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>30m ago</td>
+              <td>In 30m</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for MongoDB"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 9. dbt -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select dbt"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-status-success-text);">dB</div>
+                  <span class="cell-primary">dbt</span>
+                </div>
+              </td>
+              <td>Transform</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>1h ago</td>
+              <td>In 1h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for dbt"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 10. Redshift -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Redshift"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">RS</div>
+                  <span class="cell-primary">Redshift</span>
+                </div>
+              </td>
+              <td>Warehouse</td>
+              <td><span class="sds-tag sds-tag--neutral">Staging</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--warning" aria-hidden="true"></span> At-Risk</div></td>
+              <td>20h ago</td>
+              <td>In 4h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Redshift"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+            <!-- 11. Looker -->
+            <tr>
+              <td><input type="checkbox" class="checkbox row-checkbox" aria-label="Select Looker"></td>
+              <td>
+                <div class="source-name-cell">
+                  <div class="source-avatar" style="background: var(--sds-interactive-primary);">LK</div>
+                  <span class="cell-primary">Looker</span>
+                </div>
+              </td>
+              <td>BI Tool</td>
+              <td><span class="sds-tag sds-tag--neutral">Production</span></td>
+              <td><div class="status-cell"><span class="status-dot status-dot--success" aria-hidden="true"></span> On-Time</div></td>
+              <td>8h ago</td>
+              <td>In 4h</td>
+              <td><button class="sds-header-icon-btn" aria-label="More actions for Looker"><span class="material-symbols-outlined">more_vert</span></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <span>Showing 1-11 of 11 sources</span>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- JavaScript: Checkbox selection + bulk toolbar -->
+  <script>
+    (function () {
+      const selectAll = document.getElementById('selectAll');
+      const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+      const bulkToolbar = document.getElementById('bulkToolbar');
+      const selectedCount = document.getElementById('selectedCount');
+
+      function updateToolbar() {
+        const checked = document.querySelectorAll('.row-checkbox:checked');
+        const count = checked.length;
+        if (count > 0) {
+          bulkToolbar.classList.add('visible');
+          selectedCount.textContent = count + ' selected';
+        } else {
+          bulkToolbar.classList.remove('visible');
+        }
+        // Update select-all state
+        selectAll.checked = count === rowCheckboxes.length && count > 0;
+        selectAll.indeterminate = count > 0 && count < rowCheckboxes.length;
+      }
+
+      selectAll.addEventListener('change', function () {
+        rowCheckboxes.forEach(function (cb) {
+          cb.checked = selectAll.checked;
+        });
+        updateToolbar();
+      });
+
+      rowCheckboxes.forEach(function (cb) {
+        cb.addEventListener('change', updateToolbar);
+      });
+
+      // Tab switching
+      const tabs = document.querySelectorAll('.sds-tab');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

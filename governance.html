@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governance — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* Score Gauge SVG */
+    .gauge-svg { transform: rotate(-90deg); }
+    .gauge-bg { fill: none; stroke: var(--sds-border-subtle); stroke-width: 8; }
+    .gauge-fill { fill: none; stroke: var(--sds-interactive-primary); stroke-width: 8; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+
+    /* Hero card layout */
+    .hero-card { padding: var(--sds-space-600); }
+    .hero-top { display: flex; align-items: center; gap: var(--sds-space-800); margin-bottom: var(--sds-space-600); }
+    .hero-gauge { flex-shrink: 0; }
+    .hero-center { flex: 1; }
+    .hero-score-label { font-size: var(--sds-type-caption); color: var(--sds-text-tertiary); text-transform: uppercase; letter-spacing: var(--sds-tracking-wide); font-weight: var(--sds-weight-semibold); }
+    .hero-score-value { font-size: 48px; font-weight: var(--sds-weight-bold); color: var(--sds-text-primary); line-height: 1.1; }
+    .hero-score-message { font-size: var(--sds-type-label); color: var(--sds-status-success-text); margin-top: var(--sds-space-100); }
+    .hero-trend { flex-shrink: 0; display: flex; align-items: center; gap: var(--sds-space-100); font-size: var(--sds-type-label); color: var(--sds-status-success-text); font-weight: var(--sds-weight-medium); }
+    .hero-trend .material-symbols-outlined { font-size: 18px; }
+
+    /* Stage progress */
+    .stage-progress { display: flex; align-items: center; padding-top: var(--sds-space-400); border-top: 1px solid var(--sds-border-subtle); }
+    .stage-step { display: flex; flex-direction: column; align-items: center; gap: var(--sds-space-150); position: relative; z-index: 1; }
+    .stage-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 2px solid var(--sds-border-strong); background: var(--sds-bg-card); color: var(--sds-text-tertiary); }
+    .stage-dot--completed { background: var(--sds-status-success-text); border-color: var(--sds-status-success-text); color: var(--sds-color-white); }
+    .stage-dot--active { background: var(--sds-interactive-primary); border-color: var(--sds-interactive-primary); color: var(--sds-color-white); }
+    .stage-label { font-size: var(--sds-type-overline); color: var(--sds-text-tertiary); white-space: nowrap; }
+    .stage-label--completed { color: var(--sds-status-success-text); }
+    .stage-label--active { color: var(--sds-interactive-primary); font-weight: var(--sds-weight-semibold); }
+    .stage-line { flex: 1; height: 2px; background: var(--sds-border-strong); min-width: 40px; }
+    .stage-line--completed { background: var(--sds-status-success-text); }
+
+    /* AI-Readiness grid */
+    .ai-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sds-space-400); margin-bottom: var(--sds-space-400); }
+    .ai-item { display: flex; flex-direction: column; gap: var(--sds-space-150); }
+    .ai-item-header { display: flex; justify-content: space-between; align-items: baseline; }
+    .ai-item-name { font-size: var(--sds-type-label); color: var(--sds-text-primary); font-weight: var(--sds-weight-medium); }
+    .ai-item-score { font-size: var(--sds-type-label); color: var(--sds-text-secondary); font-weight: var(--sds-weight-semibold); }
+    .ai-composite { display: flex; align-items: center; gap: var(--sds-space-300); padding-top: var(--sds-space-400); border-top: 1px solid var(--sds-border-subtle); }
+    .ai-composite-label { font-size: var(--sds-type-title); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); }
+    .ai-composite-score { font-size: var(--sds-type-heading); font-weight: var(--sds-weight-bold); color: var(--sds-interactive-primary); }
+
+    /* Progress bar height override for AI section */
+    .progress-bar--md { height: 6px; }
+
+    /* Table footer link */
+    .table-footer { padding: var(--sds-space-300) var(--sds-space-400); text-align: center; border-top: 1px solid var(--sds-border-subtle); }
+    .table-footer a { font-size: var(--sds-type-label); color: var(--sds-text-link); font-weight: var(--sds-weight-medium); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Body: Sidebar + Main
+       ============================================================ -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>
+        Home
+      </a>
+      <a href="catalog.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>
+        Catalog
+      </a>
+      <a href="security.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>
+        Security Posture
+      </a>
+      <a href="lineage.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>
+        Lineage
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>
+        Quality
+      </a>
+
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>
+        Classifications
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>
+        Glossary
+      </a>
+      <a href="governance.html" class="sds-sidenav-item active">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>
+        Policies
+      </a>
+
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>
+        Connectors
+      </a>
+      <a href="settings.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>
+        Sources
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Alert Banner -->
+      <div class="alert alert--success">
+        <span class="material-symbols-outlined">check_circle</span>
+        <span>Stage 2 complete! You've assigned owners to 72% of assets. Next: Classification.</span>
+      </div>
+
+      <div class="breadcrumbs"><span>Governance</span></div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>Governance</h1>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">
+            <span class="material-symbols-outlined">download</span>
+            Export Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Maturity Score Hero Card -->
+      <div class="card hero-card mb-600">
+        <div class="hero-top">
+          <!-- SVG Gauge -->
+          <div class="hero-gauge">
+            <svg width="120" height="120" viewBox="0 0 120 120" class="gauge-svg" role="img" aria-label="Governance maturity score: 67 out of 100">
+              <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+              <circle class="gauge-fill" cx="60" cy="60" r="52"
+                stroke-dasharray="218.9 326.7"
+                stroke-dashoffset="0"></circle>
+            </svg>
+          </div>
+
+          <!-- Center info -->
+          <div class="hero-center">
+            <div class="hero-score-label">Governance Maturity</div>
+            <div class="hero-score-value">67</div>
+            <div class="hero-score-message">Great progress! You're at Stage 3.</div>
+          </div>
+
+          <!-- Trend -->
+          <div class="hero-trend">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +12 this month
+          </div>
+        </div>
+
+        <!-- Stage Progress Bar -->
+        <div class="stage-progress">
+          <div class="stage-step">
+            <div class="stage-dot stage-dot--completed">
+              <span class="material-symbols-outlined" style="font-size:16px">check</span>
+            </div>
+            <span class="stage-label stage-label--completed">Search</span>
+          </div>
+          <div class="stage-line stage-line--completed"></div>
+          <div class="stage-step">
+            <div class="stage-dot stage-dot--completed">
+              <span class="material-symbols-outlined" style="font-size:16px">check</span>
+            </div>
+            <span class="stage-label stage-label--completed">Ownership</span>
+          </div>
+          <div class="stage-line stage-line--completed"></div>
+          <div class="stage-step">
+            <div class="stage-dot stage-dot--active">3</div>
+            <span class="stage-label stage-label--active">Classification</span>
+          </div>
+          <div class="stage-line"></div>
+          <div class="stage-step">
+            <div class="stage-dot">4</div>
+            <span class="stage-label">Compliance</span>
+          </div>
+          <div class="stage-line"></div>
+          <div class="stage-step">
+            <div class="stage-dot">5</div>
+            <span class="stage-label">Maturity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Stat Cards Row -->
+      <div class="stat-row stat-row-4">
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Ownership</span>
+          <span class="sds-stat-card__value">72%</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +8% this month
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--highlighted">
+          <span class="sds-stat-card__label">Classification</span>
+          <span class="sds-stat-card__value">78%</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +12%
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--warning">
+          <span class="sds-stat-card__label">Documentation</span>
+          <span class="sds-stat-card__value">45%</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +5%
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Quality Rules</span>
+          <span class="sds-stat-card__value">89%</span>
+        </div>
+      </div>
+
+      <!-- AI-Readiness Score -->
+      <div class="section">
+        <h2 class="section-title">AI-Readiness Score</h2>
+        <div class="card">
+          <div class="ai-grid">
+            <!-- Classification -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Classification</span>
+                <span class="ai-item-score">78/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:78%"></div>
+              </div>
+            </div>
+            <!-- Documentation -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Documentation</span>
+                <span class="ai-item-score">45/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:45%"></div>
+              </div>
+            </div>
+            <!-- Freshness -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Freshness</span>
+                <span class="ai-item-score">91/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:91%"></div>
+              </div>
+            </div>
+            <!-- Lineage -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Lineage</span>
+                <span class="ai-item-score">62/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:62%"></div>
+              </div>
+            </div>
+            <!-- Quality -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Quality</span>
+                <span class="ai-item-score">89/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:89%"></div>
+              </div>
+            </div>
+            <!-- Schema Stability -->
+            <div class="ai-item">
+              <div class="ai-item-header">
+                <span class="ai-item-name">Schema Stability</span>
+                <span class="ai-item-score">94/100</span>
+              </div>
+              <div class="progress-bar progress-bar--md" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar__fill" style="width:94%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-composite">
+            <span class="ai-composite-label">AI-Readiness:</span>
+            <span class="ai-composite-score">77/100</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority Tasks -->
+      <div class="section">
+        <h2 class="section-title">Priority Tasks</h2>
+        <div class="sds-table-container">
+          <table class="sds-table sds-table--hoverable">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Impact</th>
+                <th>Asset</th>
+                <th>Effort</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cell-primary">Classify 12 untagged columns</td>
+                <td><span class="sds-tag sds-tag--success">+8 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">customer_data</code></td>
+                <td>10 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Assign owner to finance schema</td>
+                <td><span class="sds-tag sds-tag--success">+6 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">finance.*</code></td>
+                <td>5 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Document revenue_metrics table</td>
+                <td><span class="sds-tag sds-tag--success">+5 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">revenue_metrics</code></td>
+                <td>15 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Review PII classification</td>
+                <td><span class="sds-tag sds-tag--neutral">+4 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">user_events</code></td>
+                <td>8 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Add quality rules for orders</td>
+                <td><span class="sds-tag sds-tag--neutral">+3 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">customer_orders</code></td>
+                <td>20 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+              <tr>
+                <td class="cell-primary">Map GDPR compliance</td>
+                <td><span class="sds-tag sds-tag--neutral">+2 pts</span></td>
+                <td><code style="font-family:var(--sds-font-mono);font-size:var(--sds-type-caption);color:var(--sds-text-secondary)">email_subscribers</code></td>
+                <td>30 min</td>
+                <td><button class="btn btn-primary btn-sm">Start</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <a href="#">View all 12 tasks &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

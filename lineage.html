@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lineage — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* ============================================================
+       Lineage-specific: Toolbar
+       ============================================================ */
+    .lineage-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sds-space-300) var(--sds-space-500);
+      border-bottom: 1px solid var(--sds-border-subtle);
+      background: var(--sds-bg-card);
+      flex-shrink: 0;
+    }
+    .lineage-toolbar-left { display: flex; align-items: center; gap: var(--sds-space-200); }
+    .lineage-toolbar-right { display: flex; align-items: center; gap: var(--sds-space-200); }
+    .lineage-search {
+      display: flex; align-items: center; gap: var(--sds-space-200);
+      background: var(--sds-bg-surface); border: 1px solid var(--sds-border-default);
+      border-radius: 6px; padding: 0 var(--sds-space-300); height: 32px; width: 240px;
+    }
+    .lineage-search .material-symbols-outlined { font-size: 16px; color: var(--sds-text-tertiary); font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20; }
+    .lineage-search input {
+      border: none; background: transparent; outline: none; font-family: var(--sds-font-sans);
+      font-size: var(--sds-type-caption); color: var(--sds-text-primary); flex: 1; width: 100%;
+    }
+    .lineage-search input::placeholder { color: var(--sds-text-tertiary); }
+    .toggle-group { display: flex; gap: 0; }
+    .toggle-group .btn { border-radius: 0; }
+    .toggle-group .btn:first-child { border-radius: 6px 0 0 6px; }
+    .toggle-group .btn:last-child { border-radius: 0 6px 6px 0; }
+    .toggle-group .btn-secondary { border-right: none; }
+    .toggle-group .btn:last-child.btn-secondary { border-right: 1px solid var(--sds-border-strong); }
+    .toggle-group .btn-primary + .btn-secondary { border-left: 1px solid var(--sds-border-strong); }
+
+    /* ============================================================
+       Content layout: graph + side panel
+       ============================================================ */
+    .lineage-content {
+      display: flex; flex: 1; overflow: hidden;
+    }
+    .lineage-main {
+      flex: 1; overflow: hidden; padding: 0;
+    }
+
+    /* ============================================================
+       Graph Area
+       ============================================================ */
+    .graph-area {
+      width: 100%; height: 100%; overflow: auto;
+      background-color: var(--sds-bg-surface);
+      background-image:
+        linear-gradient(var(--sds-color-warm-gray-100) 1px, transparent 1px),
+        linear-gradient(90deg, var(--sds-color-warm-gray-100) 1px, transparent 1px);
+      background-size: 24px 24px;
+      display: flex; align-items: center; justify-content: center;
+      padding: var(--sds-space-800) var(--sds-space-600);
+      position: relative;
+    }
+
+    /* ============================================================
+       DAG Layout
+       ============================================================ */
+    .dag {
+      display: flex; align-items: stretch; gap: 0;
+      position: relative;
+    }
+    .dag-layer {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: var(--sds-space-400);
+      position: relative; z-index: 2;
+    }
+    .dag-layer-label {
+      font-size: var(--sds-type-overline); font-weight: var(--sds-weight-semibold);
+      color: var(--sds-color-warm-gray-400); text-transform: uppercase;
+      letter-spacing: var(--sds-tracking-wide); margin-bottom: var(--sds-space-200);
+    }
+    .dag-connector {
+      display: flex; align-items: center; justify-content: center;
+      width: 56px; position: relative; z-index: 1;
+    }
+
+    /* ============================================================
+       Node Cards
+       ============================================================ */
+    .dag-node {
+      width: 164px; padding: var(--sds-space-300);
+      border-radius: 8px; border: 1.5px solid var(--sds-border-default);
+      background: var(--sds-bg-card);
+      display: flex; flex-direction: column; gap: var(--sds-space-150);
+      cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+    .dag-node:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .dag-node:focus-visible { outline: 2px solid var(--sds-interactive-primary); outline-offset: 2px; }
+    .dag-node.selected {
+      border: 2px solid var(--sds-interactive-primary);
+      background: var(--sds-color-blue-025);
+    }
+    .dag-node-header {
+      display: flex; align-items: center; gap: var(--sds-space-200);
+    }
+    .dag-node-header .material-symbols-outlined {
+      font-size: 16px; color: var(--sds-text-tertiary);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+    .dag-node-name {
+      font-size: var(--sds-type-label); font-weight: var(--sds-weight-medium);
+      color: var(--sds-text-primary); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .dag-node-badges {
+      display: flex; gap: 4px; justify-content: flex-end;
+    }
+    .dag-node-badge {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dag-node-badge--pii { background: var(--sds-status-error-text); }
+    .dag-node-badge--protected { background: var(--sds-status-success-text); }
+    .dag-node-badge--info { background: var(--sds-status-info-text); }
+
+    /* Node background variants */
+    .dag-node--info { background: var(--sds-status-info-bg); }
+    .dag-node--neutral { background: var(--sds-status-neutral-bg); }
+    .dag-node--purple { background: var(--sds-status-purple-bg); }
+
+    /* ============================================================
+       Connecting Lines (SVG overlay)
+       ============================================================ */
+    .dag-lines {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1;
+    }
+    .dag-lines line {
+      stroke: var(--sds-color-warm-gray-300);
+      stroke-width: 1.5;
+    }
+
+    /* CSS connector lines between layers */
+    .dag-edge-col {
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; width: 56px; gap: 0;
+      position: relative;
+    }
+    .dag-edge-line {
+      width: 100%; height: 1.5px;
+      background: var(--sds-color-warm-gray-300);
+    }
+    /* Vertical segments for fan-out / fan-in */
+    .dag-edge-col::before,
+    .dag-edge-col::after { display: none; }
+
+    /* Simple horizontal connectors between each layer pair */
+    .dag-edges {
+      display: flex; flex-direction: column; justify-content: center;
+      width: 56px; position: relative;
+    }
+    .dag-edges .h-line {
+      height: 1.5px; background: var(--sds-color-warm-gray-300); width: 100%;
+    }
+    .dag-edges .v-line {
+      width: 1.5px; background: var(--sds-color-warm-gray-300);
+      align-self: center;
+    }
+
+    /* ============================================================
+       Side Panel
+       ============================================================ */
+    .lineage-panel {
+      width: 320px; min-width: 320px; border-left: 1px solid var(--sds-border-default);
+      background: var(--sds-bg-card); overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+    .lineage-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sds-space-400) var(--sds-space-500);
+      border-bottom: 1px solid var(--sds-border-subtle);
+    }
+    .lineage-panel-header-left {
+      display: flex; align-items: center; gap: var(--sds-space-200);
+    }
+    .lineage-panel-header-left .material-symbols-outlined {
+      font-size: 18px; color: var(--sds-text-tertiary);
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+    .lineage-panel-title {
+      font-size: var(--sds-type-title); font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+    }
+    .panel-close-btn {
+      width: 28px; height: 28px; border-radius: 6px; border: none;
+      background: transparent; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; color: var(--sds-text-tertiary);
+      font-size: 18px; transition: background 0.12s;
+    }
+    .panel-close-btn:hover { background: var(--sds-bg-subtle); }
+    .lineage-panel-body {
+      padding: var(--sds-space-400) var(--sds-space-500);
+      display: flex; flex-direction: column; gap: var(--sds-space-500); flex: 1;
+    }
+    .panel-section-label {
+      font-size: var(--sds-type-overline); font-weight: var(--sds-weight-semibold);
+      text-transform: uppercase; letter-spacing: var(--sds-tracking-wide);
+      color: var(--sds-color-warm-gray-400); margin-bottom: var(--sds-space-200);
+    }
+    .panel-section { display: flex; flex-direction: column; }
+    .panel-col-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sds-space-150) 0;
+      font-size: var(--sds-type-label); color: var(--sds-text-primary);
+      border-bottom: 1px solid var(--sds-border-subtle);
+    }
+    .panel-col-item:last-child { border-bottom: none; }
+    .panel-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sds-space-150) 0;
+      font-size: var(--sds-type-label);
+    }
+    .panel-row-label { color: var(--sds-text-secondary); }
+    .panel-row-value { color: var(--sds-text-primary); font-weight: var(--sds-weight-medium); }
+    .panel-impact-item {
+      font-size: var(--sds-type-label); color: var(--sds-text-secondary);
+      padding: var(--sds-space-100) 0;
+    }
+    .panel-actions {
+      display: flex; flex-direction: column; gap: var(--sds-space-200);
+      padding-top: var(--sds-space-300);
+      border-top: 1px solid var(--sds-border-subtle);
+      margin-top: auto;
+    }
+
+    /* ============================================================
+       Zoom Controls
+       ============================================================ */
+    .zoom-controls {
+      position: absolute; bottom: var(--sds-space-500); right: var(--sds-space-500);
+      display: flex; flex-direction: column; gap: var(--sds-space-100);
+      z-index: 10;
+    }
+    .zoom-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--sds-border-default); background: var(--sds-bg-card);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--sds-text-secondary);
+      transition: background 0.12s, box-shadow 0.12s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .zoom-btn:hover { background: var(--sds-bg-subtle); }
+    .zoom-btn .material-symbols-outlined {
+      font-size: 18px;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    /* Override main-content padding for lineage full-bleed layout */
+    .main-content.lineage-page {
+      padding: 0; display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* ============================================================
+       Edge Drawing: SVG-based connections
+       ============================================================ */
+    .dag-wrapper {
+      position: relative; display: inline-flex;
+    }
+    .dag-wrapper svg.dag-svg {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 1;
+    }
+    .dag-wrapper .dag {
+      position: relative; z-index: 2;
+    }
+    .dag-svg path {
+      fill: none;
+      stroke: var(--sds-color-warm-gray-300);
+      stroke-width: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Body: Sidebar + Main
+       ============================================================ -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>
+        Home
+      </a>
+      <a href="catalog.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>
+        Catalog
+      </a>
+      <a href="security.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>
+        Security Posture
+      </a>
+      <a href="lineage.html" class="sds-sidenav-item active">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>
+        Lineage
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>
+        Quality
+      </a>
+
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>
+        Classifications
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>
+        Glossary
+      </a>
+      <a href="governance.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>
+        Policies
+      </a>
+
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>
+        Connectors
+      </a>
+      <a href="settings.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>
+        Sources
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content lineage-page">
+
+      <!-- Toolbar -->
+      <div class="lineage-toolbar">
+        <div class="lineage-toolbar-left">
+          <div class="lineage-search">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Search within lineage...">
+          </div>
+          <button class="btn btn-secondary btn-sm">Node Type</button>
+          <button class="btn btn-secondary btn-sm">Classification</button>
+          <button class="btn btn-secondary btn-sm">Owner</button>
+        </div>
+        <div class="lineage-toolbar-right">
+          <div class="toggle-group">
+            <button class="btn btn-secondary btn-sm">Upstream</button>
+            <button class="btn btn-primary btn-sm">Downstream</button>
+          </div>
+          <button class="btn btn-secondary btn-sm">Column Level</button>
+          <button class="btn btn-secondary btn-sm">
+            <span class="material-symbols-outlined">download</span>
+            Export
+          </button>
+        </div>
+      </div>
+
+      <!-- Graph + Side Panel -->
+      <div class="lineage-content">
+
+        <!-- Graph Area -->
+        <div class="lineage-main">
+          <div class="graph-area">
+
+            <div class="dag-wrapper" id="dagWrapper">
+              <svg class="dag-svg" id="dagSvg"></svg>
+
+              <div class="dag" id="dag">
+
+                <!-- Layer 1: Sources -->
+                <div class="dag-layer">
+                  <div class="dag-layer-label">Sources</div>
+                  <div class="dag-node dag-node--info" data-node="raw_customers" id="node-raw_customers" tabindex="0" role="button" aria-label="raw_customers source node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">database</span>
+                      <span class="dag-node-name">raw_customers</span>
+                    </div>
+                    <div class="dag-node-badges">
+                      <span class="dag-node-badge dag-node-badge--pii" title="PII"></span>
+                    </div>
+                  </div>
+                  <div class="dag-node dag-node--info" data-node="stripe_payments" id="node-stripe_payments" tabindex="0" role="button" aria-label="stripe_payments source node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">database</span>
+                      <span class="dag-node-name">stripe_payments</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                </div>
+
+                <!-- Spacer for edges -->
+                <div style="width:56px"></div>
+
+                <!-- Layer 2: Transforms -->
+                <div class="dag-layer">
+                  <div class="dag-layer-label">Transforms</div>
+                  <div class="dag-node dag-node--neutral" data-node="stg_customers" id="node-stg_customers" tabindex="0" role="button" aria-label="stg_customers transform node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">function</span>
+                      <span class="dag-node-name">stg_customers</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                  <div class="dag-node dag-node--neutral" data-node="stg_payments" id="node-stg_payments" tabindex="0" role="button" aria-label="stg_payments transform node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">function</span>
+                      <span class="dag-node-name">stg_payments</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                </div>
+
+                <!-- Spacer for edges -->
+                <div style="width:56px"></div>
+
+                <!-- Layer 3: Core (selected) -->
+                <div class="dag-layer">
+                  <div class="dag-layer-label">Core</div>
+                  <div class="dag-node selected" data-node="customer_orders" id="node-customer_orders" tabindex="0" role="button" aria-label="customer_orders core node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">table_chart</span>
+                      <span class="dag-node-name">customer_orders</span>
+                    </div>
+                    <div class="dag-node-badges">
+                      <span class="dag-node-badge dag-node-badge--pii" title="PII"></span>
+                      <span class="dag-node-badge dag-node-badge--protected" title="Protected"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Spacer for edges -->
+                <div style="width:56px"></div>
+
+                <!-- Layer 4: Downstream -->
+                <div class="dag-layer">
+                  <div class="dag-layer-label">Downstream</div>
+                  <div class="dag-node" data-node="revenue_metrics" id="node-revenue_metrics" tabindex="0" role="button" aria-label="revenue_metrics downstream node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">table_chart</span>
+                      <span class="dag-node-name">revenue_metrics</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                  <div class="dag-node" data-node="customer_segments" id="node-customer_segments" tabindex="0" role="button" aria-label="customer_segments downstream node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">table_chart</span>
+                      <span class="dag-node-name">customer_segments</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                </div>
+
+                <!-- Spacer for edges -->
+                <div style="width:56px"></div>
+
+                <!-- Layer 5: Consumers -->
+                <div class="dag-layer">
+                  <div class="dag-layer-label">Consumers</div>
+                  <div class="dag-node dag-node--purple" data-node="revenue_dashboard" id="node-revenue_dashboard" tabindex="0" role="button" aria-label="Revenue Dashboard consumer node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">bar_chart</span>
+                      <span class="dag-node-name">Revenue Dashboard</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                  <div class="dag-node dag-node--purple" data-node="marketing_report" id="node-marketing_report" tabindex="0" role="button" aria-label="Marketing Report consumer node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">bar_chart</span>
+                      <span class="dag-node-name">Marketing Report</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                  <div class="dag-node dag-node--neutral" data-node="anika_kim" id="node-anika_kim" tabindex="0" role="button" aria-label="Anika Kim consumer node">
+                    <div class="dag-node-header">
+                      <span class="material-symbols-outlined">person</span>
+                      <span class="dag-node-name">Anika Kim</span>
+                    </div>
+                    <div class="dag-node-badges"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Zoom Controls -->
+            <div class="zoom-controls">
+              <button class="zoom-btn" aria-label="Zoom in">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+              <button class="zoom-btn" aria-label="Zoom out">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <button class="zoom-btn" aria-label="Fit to view">
+                <span class="material-symbols-outlined">fit_screen</span>
+              </button>
+              <button class="zoom-btn" aria-label="Toggle minimap">
+                <span class="material-symbols-outlined">map</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="lineage-panel" id="sidePanel">
+          <div class="lineage-panel-header">
+            <div class="lineage-panel-header-left">
+              <span class="material-symbols-outlined">table_chart</span>
+              <span class="lineage-panel-title">customer_orders</span>
+            </div>
+            <button class="panel-close-btn" aria-label="Close panel">&times;</button>
+          </div>
+
+          <div class="lineage-panel-body">
+
+            <!-- Columns Involved -->
+            <div class="panel-section">
+              <div class="panel-section-label">Columns Involved</div>
+              <div class="panel-col-item">
+                <span>order_id</span>
+              </div>
+              <div class="panel-col-item">
+                <span>customer_id</span>
+                <span class="sds-tag sds-tag--error" style="font-size:10px">PII</span>
+              </div>
+              <div class="panel-col-item">
+                <span>email</span>
+                <span class="sds-tag sds-tag--error" style="font-size:10px">PII</span>
+              </div>
+              <div class="panel-col-item">
+                <span>total_amount</span>
+              </div>
+              <div class="panel-col-item">
+                <span>order_date</span>
+              </div>
+            </div>
+
+            <!-- Security -->
+            <div class="panel-section">
+              <div class="panel-section-label">Security</div>
+              <div class="panel-row">
+                <span class="panel-row-label">Classification</span>
+                <span class="sds-tag sds-tag--error">Sensitive - PII</span>
+              </div>
+              <div class="panel-row">
+                <span class="panel-row-label">Access</span>
+                <span class="panel-row-value">12 users, 3 groups</span>
+              </div>
+              <div class="panel-row">
+                <span class="panel-row-label">Compliance</span>
+                <span class="sds-tag sds-tag--success">GDPR mapped</span>
+              </div>
+            </div>
+
+            <!-- Impact Summary -->
+            <div class="panel-section">
+              <div class="panel-section-label">Impact Summary</div>
+              <div class="panel-impact-item">8 downstream assets</div>
+              <div class="panel-impact-item">2 dashboards</div>
+              <div class="panel-impact-item">3 users</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="panel-actions">
+              <button class="btn btn-primary" style="justify-content:center">Expand Blast Radius</button>
+              <a href="asset.html" class="btn btn-secondary" style="justify-content:center;text-decoration:none">Open Detail</a>
+              <button class="btn btn-tertiary" style="justify-content:center">Notify Dependents</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Draw SVG edge lines between connected nodes
+    function drawEdges() {
+      const svg = document.getElementById('dagSvg');
+      const wrapper = document.getElementById('dagWrapper');
+      if (!svg || !wrapper) return;
+
+      const wrapperRect = wrapper.getBoundingClientRect();
+      svg.setAttribute('width', wrapper.offsetWidth);
+      svg.setAttribute('height', wrapper.offsetHeight);
+      svg.innerHTML = '';
+
+      const edges = [
+        // Layer 1 → Layer 2
+        ['node-raw_customers', 'node-stg_customers'],
+        ['node-stripe_payments', 'node-stg_payments'],
+        // Layer 2 → Layer 3
+        ['node-stg_customers', 'node-customer_orders'],
+        ['node-stg_payments', 'node-customer_orders'],
+        // Layer 3 → Layer 4
+        ['node-customer_orders', 'node-revenue_metrics'],
+        ['node-customer_orders', 'node-customer_segments'],
+        // Layer 4 → Layer 5
+        ['node-revenue_metrics', 'node-revenue_dashboard'],
+        ['node-customer_segments', 'node-marketing_report'],
+        ['node-customer_segments', 'node-anika_kim'],
+      ];
+
+      edges.forEach(([fromId, toId]) => {
+        const fromEl = document.getElementById(fromId);
+        const toEl = document.getElementById(toId);
+        if (!fromEl || !toEl) return;
+
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+
+        const x1 = fromRect.right - wrapperRect.left;
+        const y1 = fromRect.top + fromRect.height / 2 - wrapperRect.top;
+        const x2 = toRect.left - wrapperRect.left;
+        const y2 = toRect.top + toRect.height / 2 - wrapperRect.top;
+
+        const midX = (x1 + x2) / 2;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M${x1},${y1} C${midX},${y1} ${midX},${y2} ${x2},${y2}`);
+        svg.appendChild(path);
+      });
+    }
+
+    window.addEventListener('load', drawEdges);
+    window.addEventListener('resize', drawEdges);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalog - DataShield</title>
+  <link rel="stylesheet" href="shared/shell.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <style>
+    /* Catalog-specific layout */
+    .catalog-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .catalog-results {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sds-space-400);
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-tertiary);
+    }
+    .sort-control {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-secondary);
+      background: none;
+      border: none;
+      font-family: var(--sds-font-sans);
+      cursor: pointer;
+    }
+    .table-name {
+      color: var(--sds-text-link);
+      font-weight: var(--sds-weight-medium);
+      font-size: var(--sds-type-label);
+      font-family: var(--sds-font-mono);
+    }
+    .table-desc {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-tertiary);
+      margin-top: 2px;
+    }
+    .owner-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+      white-space: nowrap;
+    }
+    /* Clickable table rows */
+    .sds-table--hoverable tbody tr td a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+    .catalog-row-link {
+      display: contents;
+      text-decoration: none;
+      color: inherit;
+    }
+    .catalog-row-link:hover {
+      text-decoration: none;
+    }
+    /* Asset count in page header */
+    .asset-count {
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-tertiary);
+      font-weight: var(--sds-weight-regular);
+    }
+    /* Override main-content padding for catalog layout */
+    .main-content--catalog {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .catalog-top {
+      padding: var(--sds-space-800) var(--sds-space-1000) 0;
+    }
+    .catalog-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .catalog-body .filter-sidebar {
+      border-right: 1px solid var(--sds-border-subtle);
+      height: 100%;
+      overflow-y: auto;
+    }
+    .catalog-body .catalog-results {
+      flex: 1;
+      padding: var(--sds-space-400) var(--sds-space-1000) var(--sds-space-1600);
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns...">
+    </div>
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron"><span class="material-symbols-outlined">expand_more</span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Body: Sidebar + Main -->
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>
+        Home
+      </a>
+      <a href="catalog.html" class="sds-sidenav-item active">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>
+        Catalog
+      </a>
+      <a href="security.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>
+        Security Posture
+      </a>
+      <a href="lineage.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>
+        Lineage
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>
+        Quality
+      </a>
+
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>
+        Classifications
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>
+        Glossary
+      </a>
+      <a href="governance.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>
+        Policies
+      </a>
+
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>
+        Connectors
+      </a>
+      <a href="settings.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>
+        Sources
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content main-content--catalog">
+
+      <!-- Top section: breadcrumbs, header, tabs -->
+      <div class="catalog-top">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+          <span>Catalog</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <h1>Catalog</h1>
+          <div class="page-header-actions">
+            <span class="asset-count">1,847 assets</span>
+          </div>
+        </div>
+
+        <!-- Scope Tabs -->
+        <div class="sds-tabs" role="tablist" aria-label="Asset type filter">
+          <button class="sds-tab active" role="tab" aria-selected="true">All</button>
+          <button class="sds-tab" role="tab" aria-selected="false">Tables</button>
+          <button class="sds-tab" role="tab" aria-selected="false">Views</button>
+          <button class="sds-tab" role="tab" aria-selected="false">Dashboards</button>
+          <button class="sds-tab" role="tab" aria-selected="false">Columns</button>
+        </div>
+      </div>
+
+      <!-- Catalog Body: Filter Sidebar + Results -->
+      <div class="catalog-body">
+
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar" aria-label="Filters">
+          <!-- Active Filters -->
+          <div class="active-filters">
+            <div class="filter-pill">
+              Domain: Marketing
+              <button class="filter-pill-remove" aria-label="Remove Marketing filter">&times;</button>
+            </div>
+            <button class="btn btn-tertiary btn-sm" style="margin-left:auto;font-size:var(--sds-type-caption)">Clear all</button>
+          </div>
+
+          <!-- Domain -->
+          <div class="filter-group">
+            <div class="filter-group-label">Domain</div>
+            <label class="filter-option">
+              <input type="checkbox" checked> Marketing
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Finance
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Engineering
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Commerce
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> HR
+            </label>
+          </div>
+
+          <!-- Source Type -->
+          <div class="filter-group">
+            <div class="filter-group-label">Source Type</div>
+            <label class="filter-option">
+              <input type="checkbox"> Warehouse
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Lake
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> BI Tool
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> SaaS
+            </label>
+          </div>
+
+          <!-- Classification -->
+          <div class="filter-group">
+            <div class="filter-group-label">Classification</div>
+            <label class="filter-option">
+              <input type="checkbox"> PII
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Sensitive
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Public
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Unclassified
+            </label>
+          </div>
+
+          <!-- Quality -->
+          <div class="filter-group">
+            <div class="filter-group-label">Quality</div>
+            <label class="filter-option">
+              <input type="checkbox"> High
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Medium
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Low
+            </label>
+          </div>
+
+          <!-- Freshness -->
+          <div class="filter-group">
+            <div class="filter-group-label">Freshness</div>
+            <label class="filter-option">
+              <input type="checkbox"> Last 24h
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Last 7d
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Last 30d
+            </label>
+            <label class="filter-option">
+              <input type="checkbox"> Stale
+            </label>
+          </div>
+        </aside>
+
+        <!-- Results -->
+        <div class="catalog-results">
+          <!-- Results Header -->
+          <div class="results-header">
+            <span>Showing 24 of 1,847 assets</span>
+            <span class="sort-control">Sort by: Relevance</span>
+          </div>
+
+          <!-- Results Table -->
+          <div class="sds-table-container">
+            <table class="sds-table sds-table--hoverable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Source</th>
+                  <th>Domain</th>
+                  <th>Trust Signals</th>
+                  <th>Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">customer_orders</a></div>
+                    <div class="table-desc">Customer purchase transactions from...</div>
+                  </td>
+                  <td>Snowflake</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:2h</span>
+                      <span class="sds-tag sds-tag--success">Quality:High</span>
+                      <span class="sds-tag sds-tag--purple">Certified</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>
+                      J. Smith
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">campaign_metrics</a></div>
+                    <div class="table-desc">Marketing campaign performance...</div>
+                  </td>
+                  <td>BigQuery</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:1d</span>
+                      <span class="sds-tag sds-tag--success">Quality:High</span>
+                      <span class="sds-tag sds-tag--neutral">AI Documented</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>
+                      A. Patel
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">email_subscribers</a></div>
+                    <div class="table-desc">Email subscriber list with...</div>
+                  </td>
+                  <td>Salesforce</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:6h</span>
+                      <span class="sds-tag sds-tag--warning">PII</span>
+                      <span class="sds-tag sds-tag--error">Over-Permissioned</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>
+                      L. Garcia
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 4 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">ad_spend_daily</a></div>
+                    <div class="table-desc">Daily advertising spend across...</div>
+                  </td>
+                  <td>Snowflake</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:12h</span>
+                      <span class="sds-tag sds-tag--warning">Quality:Med</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-yellow-500)">SW</div>
+                      S. Wong
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 5 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">social_engagement</a></div>
+                    <div class="table-desc">Social media engagement metrics...</div>
+                  </td>
+                  <td>BigQuery</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:3h</span>
+                      <span class="sds-tag sds-tag--purple">Certified</span>
+                      <span class="sds-tag sds-tag--info">Protected</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>
+                      M. Chen
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 6 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">lead_pipeline</a></div>
+                    <div class="table-desc">Sales lead pipeline with...</div>
+                  </td>
+                  <td>Salesforce</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:1h</span>
+                      <span class="sds-tag sds-tag--warning">PII</span>
+                      <span class="sds-tag sds-tag--success">Quality:High</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-blue-700)">RJ</div>
+                      R. Johnson
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 7 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">content_performance</a></div>
+                    <div class="table-desc">Content marketing performance...</div>
+                  </td>
+                  <td>PostgreSQL</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--error">Stale:8d</span>
+                      <span class="sds-tag sds-tag--error">Quality:Low</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>
+                      K. Davis
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 8 -->
+                <tr>
+                  <td>
+                    <div class="table-name"><a href="asset.html" class="cell-link">customer_segments</a></div>
+                    <div class="table-desc">Customer segmentation model...</div>
+                  </td>
+                  <td>Snowflake</td>
+                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td>
+                    <div class="cell-tags">
+                      <span class="sds-tag sds-tag--success">Fresh:2d</span>
+                      <span class="sds-tag sds-tag--neutral">AI Documented</span>
+                      <span class="sds-tag sds-tag--purple">Certified</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="owner-cell">
+                      <div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>
+                      T. Wilson
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+              <span>Showing 1-8 of 24 results</span>
+              <div class="pagination-pages">
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/data-management-prototype/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>customer_orders — DataShield</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+  <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    .asset-columns { display: flex; gap: var(--sds-space-600); }
+    .asset-col-main { flex: 6; min-width: 0; }
+    .asset-col-sidebar { flex: 4; min-width: 0; }
+    .trust-tags { display: flex; gap: var(--sds-space-200); flex-wrap: wrap; margin-top: var(--sds-space-300); }
+    .meta-row { display: flex; justify-content: space-between; align-items: center; padding: var(--sds-space-300) 0; border-bottom: 1px solid var(--sds-border-subtle); font-size: var(--sds-type-label); }
+    .meta-row:last-child { border-bottom: none; }
+    .meta-label { color: var(--sds-text-tertiary); font-weight: var(--sds-weight-medium); }
+    .meta-value { color: var(--sds-text-primary); display: flex; align-items: center; gap: var(--sds-space-200); }
+    .related-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sds-space-300); }
+    .related-card { padding: var(--sds-space-300) var(--sds-space-400); }
+    .related-card-label { font-size: var(--sds-type-overline); color: var(--sds-text-tertiary); text-transform: uppercase; letter-spacing: var(--sds-tracking-wide); margin-top: var(--sds-space-100); }
+    .lineage-flow { display: flex; align-items: center; justify-content: center; gap: var(--sds-space-400); padding: var(--sds-space-800) 0; }
+    .lineage-box { border: 1px solid var(--sds-border-default); border-radius: 8px; padding: var(--sds-space-300) var(--sds-space-500); font-size: var(--sds-type-label); font-weight: var(--sds-weight-medium); background: var(--sds-bg-card); text-align: center; }
+    .lineage-box--active { border-color: var(--sds-interactive-primary); background: var(--sds-color-blue-050); color: var(--sds-interactive-primary); }
+    .lineage-arrow { color: var(--sds-text-tertiary); font-size: var(--sds-type-heading); }
+    .timeline-item { display: flex; gap: var(--sds-space-300); padding: var(--sds-space-300) 0; border-bottom: 1px solid var(--sds-border-subtle); font-size: var(--sds-type-label); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-date { color: var(--sds-text-tertiary); min-width: 120px; flex-shrink: 0; }
+    .timeline-action { color: var(--sds-text-secondary); }
+    .timeline-user { color: var(--sds-text-primary); font-weight: var(--sds-weight-medium); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       Header
+       ============================================================ -->
+  <header class="sds-header">
+    <div class="sds-header-left">
+      <a href="index.html" class="sds-header-logo">
+        <div class="sds-header-logo-mark">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <span class="sds-header-logo-text">DataShield</span>
+      </a>
+    </div>
+
+    <div class="sds-header-search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
+    </div>
+
+    <div class="sds-header-actions">
+      <button class="sds-header-icon-btn" aria-label="Notifications">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="badge">3</span>
+      </button>
+      <button class="sds-header-icon-btn" aria-label="Help">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <div class="sds-header-divider"></div>
+      <button class="sds-header-profile" aria-label="User menu">
+        <div class="sds-header-avatar">AK</div>
+        <span class="sds-header-username">Anika Kim</span>
+        <span class="sds-header-chevron">
+          <span class="material-symbols-outlined">expand_more</span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       Body: Sidebar + Main
+       ============================================================ -->
+  <div class="app-body">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sds-sidenav" aria-label="Main navigation">
+      <a href="index.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>
+        Home
+      </a>
+      <a href="catalog.html" class="sds-sidenav-item active">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>
+        Catalog
+      </a>
+      <a href="security.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">shield</span></span>
+        Security Posture
+      </a>
+      <a href="lineage.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">account_tree</span></span>
+        Lineage
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">verified</span></span>
+        Quality
+      </a>
+
+      <div class="sds-sidenav-group-label">Governance</div>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">label</span></span>
+        Classifications
+      </a>
+      <a href="#" class="sds-sidenav-item" style="pointer-events:none;opacity:0.5">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>
+        Glossary
+      </a>
+      <a href="governance.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>
+        Policies
+      </a>
+
+      <div class="sds-sidenav-group-label">Settings</div>
+      <a href="connect.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>
+        Connectors
+      </a>
+      <a href="settings.html" class="sds-sidenav-item">
+        <span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>
+        Sources
+      </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="catalog.html">Catalog</a>
+        <span class="sep">/</span>
+        <span>Marketing</span>
+        <span class="sep">/</span>
+        <span>customer_orders</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>customer_orders</h1>
+          <p>Snowflake &middot; analytics.marketing.customer_orders</p>
+          <div class="trust-tags">
+            <span class="sds-tag sds-tag--success">Fresh:2h</span>
+            <span class="sds-tag sds-tag--success">Quality:High</span>
+            <span class="sds-tag sds-tag--success">Certified</span>
+            <span class="sds-tag sds-tag--info">Protected</span>
+          </div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary" aria-label="Bookmark">
+            <span class="material-symbols-outlined">bookmark</span>
+          </button>
+          <button class="btn btn-secondary" aria-label="Share">
+            <span class="material-symbols-outlined">share</span>
+            Share
+          </button>
+          <button class="btn btn-primary" aria-label="Edit asset">
+            <span class="material-symbols-outlined">edit</span>
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sds-tabs" role="tablist">
+        <button class="sds-tab active" role="tab" aria-selected="true" data-tab="overview" id="tab-btn-overview" aria-controls="tab-overview" aria-label="Overview tab">Overview</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="schema" id="tab-btn-schema" aria-controls="tab-schema" aria-label="Schema tab">Schema <span class="tab-badge">42</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="access" id="tab-btn-access" aria-controls="tab-access" aria-label="Access and Security tab">Access &amp; Security <span class="tab-badge">3</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="lineage" id="tab-btn-lineage" aria-controls="tab-lineage" aria-label="Lineage tab">Lineage</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="quality" id="tab-btn-quality" aria-controls="tab-quality" aria-label="Quality tab">Quality <span class="tab-badge">98%</span></button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="usage" id="tab-btn-usage" aria-controls="tab-usage" aria-label="Usage tab">Usage</button>
+        <button class="sds-tab" role="tab" aria-selected="false" data-tab="activity" id="tab-btn-activity" aria-controls="tab-activity" aria-label="Activity tab">Activity</button>
+      </div>
+
+      <!-- ============================================================
+           Tab: Overview
+           ============================================================ -->
+      <div class="tab-content active" id="tab-overview" role="tabpanel" aria-labelledby="tab-btn-overview">
+        <div class="asset-columns">
+
+          <!-- Left Column (60%) -->
+          <div class="asset-col-main">
+
+            <!-- Description -->
+            <div class="card mb-600">
+              <div class="card-title">
+                <span class="material-symbols-outlined">description</span>
+                Description
+              </div>
+              <p>Customer purchase transaction records from the Shopify and Stripe integrations. Includes order ID, customer ID, product details, amounts, timestamps, and fulfillment status. Updated every 2 hours via automated ETL pipeline.</p>
+              <div class="mt-400">
+                <span class="sds-tag sds-tag--purple">AI Documented</span>
+              </div>
+            </div>
+
+            <!-- Column Summary -->
+            <div class="section">
+              <h2 class="section-title">Column Summary</h2>
+              <div class="sds-table-container">
+                <table class="sds-table">
+                  <thead>
+                    <tr>
+                      <th>Column</th>
+                      <th>Type</th>
+                      <th>Classification</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="cell-primary">order_id</td>
+                      <td>VARCHAR</td>
+                      <td>&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-primary">customer_id</td>
+                      <td>VARCHAR</td>
+                      <td><span class="sds-tag sds-tag--error">PII</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-primary">email</td>
+                      <td>VARCHAR</td>
+                      <td><span class="sds-tag sds-tag--error">PII</span></td>
+                    </tr>
+                    <tr>
+                      <td class="cell-primary">total_amount</td>
+                      <td>DECIMAL</td>
+                      <td>&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td class="cell-primary">order_date</td>
+                      <td>TIMESTAMP</td>
+                      <td>&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-400">
+                <a href="#" class="btn btn-tertiary" aria-label="View all 42 columns" onclick="document.querySelector('[data-tab=schema]').click();return false;">View all 42 columns &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Related Assets -->
+            <div class="section">
+              <h2 class="section-title">Related Assets</h2>
+              <div class="related-cards">
+                <a href="#" class="card card--clickable related-card" aria-label="View customer_profiles asset">
+                  <div class="card-title">customer_profiles</div>
+                  <div class="related-card-label">Upstream</div>
+                </a>
+                <a href="#" class="card card--clickable related-card" aria-label="View revenue_dashboard asset">
+                  <div class="card-title">revenue_dashboard</div>
+                  <div class="related-card-label">Downstream</div>
+                </a>
+                <a href="#" class="card card--clickable related-card" aria-label="View order_fulfillment asset">
+                  <div class="card-title">order_fulfillment</div>
+                  <div class="related-card-label">Downstream</div>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column / Metadata Sidebar (40%) -->
+          <div class="asset-col-sidebar">
+            <div class="card">
+              <div class="card-title">
+                <span class="material-symbols-outlined">info</span>
+                Metadata
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Owner</span>
+                <span class="meta-value">
+                  <span class="avatar avatar-sm" style="background:var(--sds-interactive-primary)">JS</span>
+                  <a href="#">J. Smith</a>
+                </span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Domain</span>
+                <span class="meta-value"><span class="sds-tag sds-tag--neutral">Marketing</span></span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Source</span>
+                <span class="meta-value">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--sds-text-tertiary)">ac_unit</span>
+                  Snowflake
+                </span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Schema</span>
+                <span class="meta-value">analytics.marketing</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Last Updated</span>
+                <span class="meta-value">2 hours ago</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Created</span>
+                <span class="meta-value">Jan 15, 2026</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">AI-Readiness</span>
+                <span class="meta-value"><span class="sds-tag sds-tag--info">87/100</span></span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Classification</span>
+                <span class="meta-value"><span class="sds-tag sds-tag--error">Contains PII</span></span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Row Count</span>
+                <span class="meta-value">2.4M rows</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">Freshness SLA</span>
+                <span class="meta-value">Every 2 hours</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Tab: Schema
+           ============================================================ -->
+      <div class="tab-content" id="tab-schema" role="tabpanel" aria-labelledby="tab-btn-schema">
+        <div class="sds-table-container">
+          <table class="sds-table sds-table--hoverable">
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox" aria-label="Select all columns"></th>
+                <th>Column</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Classification</th>
+                <th>Nullable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select order_id"></td>
+                <td class="cell-primary">order_id</td>
+                <td>VARCHAR(36)</td>
+                <td>Unique order identifier</td>
+                <td>&mdash;</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select customer_id"></td>
+                <td class="cell-primary">customer_id</td>
+                <td>VARCHAR(36)</td>
+                <td>Customer identifier</td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select email"></td>
+                <td class="cell-primary">email</td>
+                <td>VARCHAR(255)</td>
+                <td>Customer email address</td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select first_name"></td>
+                <td class="cell-primary">first_name</td>
+                <td>VARCHAR(100)</td>
+                <td>Customer first name</td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select last_name"></td>
+                <td class="cell-primary">last_name</td>
+                <td>VARCHAR(100)</td>
+                <td>Customer last name</td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select product_id"></td>
+                <td class="cell-primary">product_id</td>
+                <td>VARCHAR(36)</td>
+                <td>Product identifier</td>
+                <td>&mdash;</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select product_name"></td>
+                <td class="cell-primary">product_name</td>
+                <td>VARCHAR(255)</td>
+                <td>Name of the purchased product</td>
+                <td>&mdash;</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select total_amount"></td>
+                <td class="cell-primary">total_amount</td>
+                <td>DECIMAL(12,2)</td>
+                <td>Total order amount in USD</td>
+                <td>&mdash;</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select order_date"></td>
+                <td class="cell-primary">order_date</td>
+                <td>TIMESTAMP</td>
+                <td>Date and time of order placement</td>
+                <td>&mdash;</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" aria-label="Select fulfillment_status"></td>
+                <td class="cell-primary">fulfillment_status</td>
+                <td>VARCHAR(20)</td>
+                <td>Current fulfillment status</td>
+                <td>&mdash;</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Tab: Access & Security
+           ============================================================ -->
+      <div class="tab-content" id="tab-access" role="tabpanel" aria-labelledby="tab-btn-access">
+
+        <!-- Warning Alert -->
+        <div class="alert alert--warning">
+          <span class="material-symbols-outlined">warning</span>
+          <div>This asset contains PII data (customer_id, email). 3 broad access grants detected.</div>
+        </div>
+
+        <!-- Classification Summary -->
+        <div class="section">
+          <h2 class="section-title">Classification Summary</h2>
+          <div class="card">
+            <div class="flex justify-between items-center">
+              <div>
+                <div class="meta-label mb-400">Classification Level</div>
+                <span class="sds-tag sds-tag--error">Sensitive - PII</span>
+              </div>
+              <div>
+                <div class="meta-label mb-400">PII Types Found</div>
+                <div class="flex gap-200">
+                  <span class="sds-tag sds-tag--error">email</span>
+                  <span class="sds-tag sds-tag--error">customer_id</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Access Grants -->
+        <div class="section">
+          <h2 class="section-title">Access Grants</h2>
+          <div class="sds-table-container">
+            <table class="sds-table">
+              <thead>
+                <tr>
+                  <th>User / Group</th>
+                  <th>Level</th>
+                  <th>Granted</th>
+                  <th>Granted By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-primary">marketing-analysts</td>
+                  <td>Read</td>
+                  <td>Dec 10, 2025</td>
+                  <td>J. Smith</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">data-engineering</td>
+                  <td>Read / Write</td>
+                  <td>Nov 3, 2025</td>
+                  <td>A. Patel</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">all-employees</td>
+                  <td>Read</td>
+                  <td>Sep 15, 2025</td>
+                  <td class="flex gap-200 items-center">
+                    M. Chen
+                    <span class="sds-tag sds-tag--warning">Over-Permissioned</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-400">
+            <button class="btn btn-secondary" aria-label="Request access review">Request Access Review</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================================
+           Tab: Lineage
+           ============================================================ -->
+      <div class="tab-content" id="tab-lineage" role="tabpanel" aria-labelledby="tab-btn-lineage">
+        <div class="card">
+          <p class="mb-400">View the full lineage graph for this asset.</p>
+          <a href="lineage.html" class="btn btn-tertiary" aria-label="Open in Lineage Explorer">Open in Lineage Explorer &rarr;</a>
+        </div>
+        <div class="lineage-flow">
+          <div class="lineage-box">
+            <div class="fw-medium">customer_profiles</div>
+            <div class="text-sm text-tertiary mt-400">Upstream</div>
+          </div>
+          <div class="lineage-arrow">&rarr;</div>
+          <div class="lineage-box lineage-box--active">
+            <div class="fw-medium">customer_orders</div>
+            <div class="text-sm text-tertiary mt-400">This Asset</div>
+          </div>
+          <div class="lineage-arrow">&rarr;</div>
+          <div class="lineage-box">
+            <div class="fw-medium">revenue_dashboard</div>
+            <div class="text-sm text-tertiary mt-400">Downstream</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Tab: Quality
+           ============================================================ -->
+      <div class="tab-content" id="tab-quality" role="tabpanel" aria-labelledby="tab-btn-quality">
+        <div class="stat-row stat-row-3">
+          <div class="sds-stat-card sds-stat-card--success">
+            <span class="sds-stat-card__label">Quality Score</span>
+            <span class="sds-stat-card__value">98%</span>
+          </div>
+          <div class="sds-stat-card">
+            <span class="sds-stat-card__label">Last Checked</span>
+            <span class="sds-stat-card__value">2 hours ago</span>
+          </div>
+          <div class="sds-stat-card">
+            <span class="sds-stat-card__label">Rules Passing</span>
+            <span class="sds-stat-card__value">3 / 3</span>
+          </div>
+        </div>
+        <div class="section">
+          <h2 class="section-title">Quality Rules</h2>
+          <div class="sds-table-container">
+            <table class="sds-table">
+              <thead>
+                <tr>
+                  <th>Rule</th>
+                  <th>Status</th>
+                  <th>Last Run</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-primary">No null order_id values</td>
+                  <td><span class="sds-tag sds-tag--success">Passing</span></td>
+                  <td>2 hours ago</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">total_amount &ge; 0</td>
+                  <td><span class="sds-tag sds-tag--success">Passing</span></td>
+                  <td>2 hours ago</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">Row count within expected range</td>
+                  <td><span class="sds-tag sds-tag--success">Passing</span></td>
+                  <td>2 hours ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Tab: Usage
+           ============================================================ -->
+      <div class="tab-content" id="tab-usage" role="tabpanel" aria-labelledby="tab-btn-usage">
+        <div class="stat-row stat-row-3">
+          <div class="sds-stat-card sds-stat-card--highlighted">
+            <span class="sds-stat-card__label">Query Volume</span>
+            <span class="sds-stat-card__value">1,234 / week</span>
+          </div>
+          <div class="sds-stat-card">
+            <span class="sds-stat-card__label">Unique Users</span>
+            <span class="sds-stat-card__value">28</span>
+          </div>
+          <div class="sds-stat-card">
+            <span class="sds-stat-card__label">Avg. Query Time</span>
+            <span class="sds-stat-card__value">1.2s</span>
+          </div>
+        </div>
+        <div class="section">
+          <h2 class="section-title">Top Users</h2>
+          <div class="sds-table-container">
+            <table class="sds-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Queries This Week</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-primary">A. Patel</td>
+                  <td>312</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">J. Smith</td>
+                  <td>198</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary">S. Wong</td>
+                  <td>147</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Tab: Activity
+           ============================================================ -->
+      <div class="tab-content" id="tab-activity" role="tabpanel" aria-labelledby="tab-btn-activity">
+        <div class="section">
+          <h2 class="section-title">Recent Activity</h2>
+          <div class="card">
+            <div class="timeline-item">
+              <span class="timeline-date">Mar 15, 2026</span>
+              <span class="timeline-action">Schema updated &mdash; added fulfillment_status column</span>
+              <span class="timeline-user">A. Patel</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">Mar 14, 2026</span>
+              <span class="timeline-action">Access granted to marketing-analysts group</span>
+              <span class="timeline-user">J. Smith</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">Mar 12, 2026</span>
+              <span class="timeline-action">Quality rule added: Row count within expected range</span>
+              <span class="timeline-user">S. Wong</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">Mar 10, 2026</span>
+              <span class="timeline-action">Description updated via AI documentation</span>
+              <span class="timeline-user">System</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">Mar 8, 2026</span>
+              <span class="timeline-action">Classification applied: PII detected in email, customer_id</span>
+              <span class="timeline-user">System</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ============================================================
+       Tab Switching JS
+       ============================================================ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabs = document.querySelectorAll('.sds-tab[data-tab]');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          // Deactivate all tabs
+          tabs.forEach(function (t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          // Hide all content
+          contents.forEach(function (c) {
+            c.classList.remove('active');
+          });
+          // Activate clicked tab
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          // Show corresponding content
+          var target = document.getElementById('tab-' + tab.getAttribute('data-tab'));
+          if (target) {
+            target.classList.add('active');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
