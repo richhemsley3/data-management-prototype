@@ -7,12 +7,270 @@
   <title>Home — DataShield</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
   <link rel="stylesheet" href="shared/shell.css">
+  <style>
+    /* ---- Home-specific layout ---- */
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: var(--sds-space-600);
+      margin-top: var(--sds-space-200);
+    }
+
+    /* ---- Alert banner ---- */
+    .home-alert {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-300) var(--sds-space-400);
+      border-radius: 10px;
+      margin-bottom: var(--sds-space-500);
+      font-size: var(--sds-type-label);
+      color: var(--sds-text-primary);
+    }
+    .home-alert--warning {
+      background: var(--sds-status-warning-bg);
+      border: 1px solid var(--sds-status-warning-border);
+    }
+    .home-alert .material-symbols-outlined { font-size: 20px; color: var(--sds-status-warning-text); }
+    .home-alert a { color: var(--sds-interactive-primary); font-weight: var(--sds-weight-medium); text-decoration: none; margin-left: auto; white-space: nowrap; }
+    .home-alert a:hover { text-decoration: underline; }
+
+    /* ---- Attention needed cards ---- */
+    .attention-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sds-space-300);
+      margin-bottom: var(--sds-space-600);
+    }
+    .attention-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-400);
+      background: var(--sds-bg-card);
+      border: 1px solid var(--sds-border-default);
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .attention-card:hover {
+      border-color: var(--sds-border-strong);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .attention-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .attention-icon .material-symbols-outlined { font-size: 22px; }
+    .attention-icon--red { background: var(--sds-color-red-050); color: var(--sds-color-red-550); }
+    .attention-icon--amber { background: var(--sds-color-yellow-050); color: var(--sds-color-yellow-650); }
+    .attention-icon--blue { background: var(--sds-color-blue-050); color: var(--sds-color-blue-550); }
+    .attention-icon--green { background: var(--sds-color-green-025); color: var(--sds-color-green-500); }
+    .attention-body { flex: 1; min-width: 0; }
+    .attention-title {
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      margin-bottom: var(--sds-space-050);
+    }
+    .attention-meta {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-secondary);
+      line-height: var(--sds-leading-normal);
+    }
+    .attention-badge {
+      font-size: 11px;
+      font-weight: var(--sds-weight-semibold);
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .attention-badge--red { background: var(--sds-color-red-050); color: var(--sds-color-red-550); }
+    .attention-badge--amber { background: var(--sds-color-yellow-050); color: var(--sds-color-yellow-650); }
+
+    /* ---- Activity feed ---- */
+    .activity-feed { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-300) 0;
+      border-bottom: 1px solid var(--sds-border-subtle);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--sds-color-warm-gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-color-warm-gray-600);
+      flex-shrink: 0;
+    }
+    .activity-avatar--system {
+      background: var(--sds-color-blue-050);
+      color: var(--sds-color-blue-550);
+    }
+    .activity-avatar--system .material-symbols-outlined { font-size: 16px; }
+    .activity-text {
+      flex: 1;
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-secondary);
+      line-height: var(--sds-leading-normal);
+    }
+    .activity-text strong { color: var(--sds-text-primary); font-weight: var(--sds-weight-medium); }
+    .activity-text a { color: var(--sds-interactive-primary); text-decoration: none; }
+    .activity-text a:hover { text-decoration: underline; }
+    .activity-time {
+      font-size: 11px;
+      color: var(--sds-color-warm-gray-400);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ---- Sidebar health cards ---- */
+    .health-card {
+      padding: var(--sds-space-400);
+      background: var(--sds-bg-card);
+      border: 1px solid var(--sds-border-default);
+      border-radius: 10px;
+      margin-bottom: var(--sds-space-300);
+    }
+    .health-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sds-space-300);
+    }
+    .health-card-title {
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+    }
+    .health-card-title .material-symbols-outlined { font-size: 18px; color: var(--sds-text-tertiary); }
+    .health-card-link {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-interactive-primary);
+      text-decoration: none;
+      font-weight: var(--sds-weight-medium);
+    }
+    .health-card-link:hover { text-decoration: underline; }
+
+    /* Score ring */
+    .score-ring {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-400);
+    }
+    .score-ring svg { flex-shrink: 0; }
+    .score-ring-details { flex: 1; }
+    .score-ring-value {
+      font-size: var(--sds-type-heading);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+      line-height: 1;
+    }
+    .score-ring-label {
+      font-size: var(--sds-type-caption);
+      color: var(--sds-text-secondary);
+      margin-top: var(--sds-space-050);
+    }
+    .score-ring-trend {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-top: var(--sds-space-100);
+    }
+    .score-ring-trend .material-symbols-outlined { font-size: 14px; }
+    .score-ring-trend--up { color: var(--sds-color-green-500); }
+    .score-ring-trend--down { color: var(--sds-color-red-550); }
+
+    /* Health bar breakdown */
+    .health-bars { display: flex; flex-direction: column; gap: var(--sds-space-200); margin-top: var(--sds-space-300); }
+    .health-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+      font-size: var(--sds-type-caption);
+    }
+    .health-bar-label { width: 80px; color: var(--sds-text-secondary); flex-shrink: 0; }
+    .health-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--sds-color-warm-gray-100);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .health-bar-fill { height: 100%; border-radius: 3px; }
+    .health-bar-value { width: 32px; text-align: right; color: var(--sds-text-primary); font-weight: var(--sds-weight-medium); }
+
+    /* ---- Quick action row ---- */
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sds-space-150);
+    }
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-250) var(--sds-space-300);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--sds-text-primary);
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-medium);
+      transition: background 0.15s ease;
+    }
+    .quick-action:hover { background: var(--sds-color-warm-gray-050); }
+    .quick-action .material-symbols-outlined {
+      font-size: 20px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: var(--sds-color-warm-gray-050);
+      color: var(--sds-text-secondary);
+    }
+    .quick-action span:last-child {
+      margin-left: auto;
+      color: var(--sds-color-warm-gray-300);
+      font-size: 18px;
+    }
+
+    /* ---- Section headers ---- */
+    .home-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sds-space-300);
+    }
+    .home-section-title {
+      font-size: var(--sds-type-subheading);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-primary);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ============================================================
-       Header
-       ============================================================ -->
+  <!-- Header -->
   <header class="sds-header">
     <div class="sds-header-left">
       <a href="index.html" class="sds-header-logo">
@@ -22,12 +280,10 @@
         <span class="sds-header-logo-text">DataShield</span>
       </a>
     </div>
-
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
       <input type="text" placeholder="Search datasets, tables, columns...  (/)" aria-label="Search">
     </div>
-
     <div class="sds-header-actions">
       <button class="sds-header-icon-btn" aria-label="Notifications" title="3 unread notifications">
         <span class="material-symbols-outlined">notifications</span>
@@ -47,12 +303,10 @@
     </div>
   </header>
 
-  <!-- ============================================================
-       Body: Sidebar + Main
-       ============================================================ -->
+  <!-- Body -->
   <div class="app-body">
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <nav class="sds-sidenav" aria-label="Main navigation">
       <a href="index.html" class="sds-sidenav-item active"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">home</span></span>Home</a>
       <a href="catalog.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">menu_book</span></span>Catalog</a>
@@ -75,25 +329,22 @@
     <!-- Main Content -->
     <main class="main-content">
 
-      <!-- Page Header -->
-      <div class="page-header">
-        <div>
-          <h1>Welcome back, Anika</h1>
-          <p>Here's what's happening across your data estate.</p>
-        </div>
+      <!-- Welcome -->
+      <div style="margin-bottom: var(--sds-space-100);">
+        <h1 style="margin-bottom: var(--sds-space-050);">Welcome back, Anika</h1>
+        <p style="color: var(--sds-text-secondary); font-size: var(--sds-type-label); margin: 0;">Monday, March 16, 2026 &middot; Acme Data Corp</p>
+      </div>
+
+      <!-- Alert Banner -->
+      <div class="home-alert home-alert--warning">
+        <span class="material-symbols-outlined">warning</span>
+        <span><strong>1 source SLA breach</strong> &mdash; Databricks sync is overdue by 2 hours</span>
+        <a href="settings.html">View sources &rarr;</a>
       </div>
 
       <!-- Stat Cards -->
       <div class="stat-row stat-row-4">
-        <div class="sds-stat-card">
-          <span class="sds-stat-card__label">Bookmarked Assets</span>
-          <span class="sds-stat-card__value">12</span>
-          <span class="sds-stat-card__trend sds-stat-card__trend--up">
-            <span class="material-symbols-outlined">arrow_upward</span>
-            +2 this week
-          </span>
-        </div>
-        <div class="sds-stat-card">
+        <div class="sds-stat-card sds-stat-card--highlighted">
           <span class="sds-stat-card__label">Catalog Assets</span>
           <span class="sds-stat-card__value">1,847</span>
           <span class="sds-stat-card__trend sds-stat-card__trend--up">
@@ -101,137 +352,332 @@
             +124 this month
           </span>
         </div>
-        <div class="sds-stat-card">
-          <span class="sds-stat-card__label">Governance Score</span>
-          <span class="sds-stat-card__value">67/100</span>
+        <div class="sds-stat-card sds-stat-card--success">
+          <span class="sds-stat-card__label">Quality Pass Rate</span>
+          <span class="sds-stat-card__value">98.2%</span>
           <span class="sds-stat-card__trend sds-stat-card__trend--up">
             <span class="material-symbols-outlined">arrow_upward</span>
-            +5 this month
+            +0.8% this week
           </span>
         </div>
-        <div class="sds-stat-card">
-          <span class="sds-stat-card__label">Security Score</span>
-          <span class="sds-stat-card__value">73/100</span>
+        <div class="sds-stat-card sds-stat-card--warning">
+          <span class="sds-stat-card__label">PII Detected</span>
+          <span class="sds-stat-card__value">342</span>
+          <span class="sds-stat-card__trend sds-stat-card__trend--up">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            +28 this week
+          </span>
+        </div>
+        <div class="sds-stat-card sds-stat-card--error">
+          <span class="sds-stat-card__label">At Risk Assets</span>
+          <span class="sds-stat-card__value">23</span>
           <span class="sds-stat-card__trend sds-stat-card__trend--down">
             <span class="material-symbols-outlined">arrow_downward</span>
-            -2 this week
+            -5 this week
           </span>
         </div>
       </div>
 
-      <!-- Recent Assets -->
-      <div class="section">
-        <h2 class="section-title">Recent Assets</h2>
-        <div class="sds-table-container">
-          <table class="sds-table sds-table--hoverable">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Source</th>
-                <th>Domain</th>
-                <th>Trust Signals</th>
-                <th>Owner</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="cell-primary"><a href="asset.html" class="cell-link">customer_orders</a></td>
-                <td>
-                  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">ac_unit</span>Snowflake
-                </td>
-                <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                <td class="cell-tags">
-                  <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2h</span>
-                  <span class="sds-tag sds-tag--info" data-tooltip="Data quality score">Quality:High</span>
-                  <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
-                </td>
-                <td>J. Smith</td>
-              </tr>
-              <tr>
-                <td class="cell-primary"><a href="asset.html" class="cell-link">user_events</a></td>
-                <td>
-                  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">cloud</span>BigQuery
-                </td>
-                <td><span class="sds-tag sds-tag--neutral">Engineering</span></td>
-                <td class="cell-tags">
-                  <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1h</span>
-                  <span class="sds-tag sds-tag--warning" data-tooltip="Contains Personally Identifiable Information">PII</span>
-                  <span class="sds-tag sds-tag--info">AI Documented</span>
-                </td>
-                <td>A. Patel</td>
-              </tr>
-              <tr>
-                <td class="cell-primary"><a href="asset.html" class="cell-link">product_catalog</a></td>
-                <td>
-                  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">database</span>PostgreSQL
-                </td>
-                <td><span class="sds-tag sds-tag--neutral">Commerce</span></td>
-                <td class="cell-tags">
-                  <span class="sds-tag sds-tag--error" data-tooltip="Data has not been refreshed recently">Stale:12d</span>
-                  <span class="sds-tag sds-tag--warning" data-tooltip="Data quality score">Quality:Med</span>
-                </td>
-                <td>S. Wong</td>
-              </tr>
-              <tr>
-                <td class="cell-primary"><a href="asset.html" class="cell-link">revenue_metrics</a></td>
-                <td>
-                  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">ac_unit</span>Snowflake
-                </td>
-                <td><span class="sds-tag sds-tag--neutral">Finance</span></td>
-                <td class="cell-tags">
-                  <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:30m</span>
-                  <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
-                  <span class="sds-tag sds-tag--info" data-tooltip="Security policies applied">Protected</span>
-                </td>
-                <td>M. Chen</td>
-              </tr>
-              <tr>
-                <td class="cell-primary"><a href="asset.html" class="cell-link">email_subscribers</a></td>
-                <td>
-                  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">cloud</span>Salesforce
-                </td>
-                <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                <td class="cell-tags">
-                  <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:6h</span>
-                  <span class="sds-tag sds-tag--warning" data-tooltip="Contains Personally Identifiable Information">PII</span>
-                  <span class="sds-tag sds-tag--error">Over-Permissioned</span>
-                </td>
-                <td>L. Garcia</td>
-              </tr>
-            </tbody>
-          </table>
-          <div style="text-align: right; padding-top: var(--sds-space-300);">
-            <a href="catalog.html" class="cell-link" style="font-size: var(--sds-type-label);">View all assets <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">arrow_forward</span></a>
+      <!-- Attention Needed -->
+      <div class="home-section-header">
+        <span class="home-section-title">Needs Your Attention</span>
+      </div>
+      <div class="attention-grid">
+        <a href="security.html" class="attention-card">
+          <div class="attention-icon attention-icon--red">
+            <span class="material-symbols-outlined">gpp_bad</span>
           </div>
-        </div>
+          <div class="attention-body">
+            <div class="attention-title">89 over-permissioned assets</div>
+            <div class="attention-meta">Users with excessive access to sensitive tables</div>
+          </div>
+          <span class="attention-badge attention-badge--red">Critical</span>
+        </a>
+        <a href="classifications.html" class="attention-card">
+          <div class="attention-icon attention-icon--amber">
+            <span class="material-symbols-outlined">label_off</span>
+          </div>
+          <div class="attention-body">
+            <div class="attention-title">412 unclassified assets</div>
+            <div class="attention-meta">22% of your catalog lacks classification</div>
+          </div>
+          <span class="attention-badge attention-badge--amber">Action</span>
+        </a>
+        <a href="quality.html" class="attention-card">
+          <div class="attention-icon attention-icon--red">
+            <span class="material-symbols-outlined">error</span>
+          </div>
+          <div class="attention-body">
+            <div class="attention-title">3 quality rules failing</div>
+            <div class="attention-meta">customer_orders freshness, email completeness, revenue nulls</div>
+          </div>
+          <span class="attention-badge attention-badge--red">Failing</span>
+        </a>
+        <a href="governance.html" class="attention-card">
+          <div class="attention-icon attention-icon--green">
+            <span class="material-symbols-outlined">emoji_events</span>
+          </div>
+          <div class="attention-body">
+            <div class="attention-title">12 governance tasks available</div>
+            <div class="attention-meta">Complete them to earn +47 maturity points</div>
+          </div>
+          <span class="attention-badge" style="background: var(--sds-color-green-025); color: var(--sds-color-green-500);">+47 pts</span>
+        </a>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="section">
-        <h2 class="section-title">Quick Actions</h2>
-        <div class="card-grid card-grid-3">
-          <a href="connect.html" class="card card--clickable" style="text-decoration:none">
-            <div class="card-title">
-              <span class="material-symbols-outlined">cable</span>
-              Connect a Source
+      <!-- Two-Column Layout -->
+      <div class="home-grid">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+          <!-- Recent Assets -->
+          <div class="home-section-header">
+            <span class="home-section-title">Recent Assets</span>
+            <a href="catalog.html" class="health-card-link">View catalog &rarr;</a>
+          </div>
+          <div class="sds-table-container" style="margin-bottom: var(--sds-space-600);">
+            <table class="sds-table sds-table--hoverable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Source</th>
+                  <th>Domain</th>
+                  <th>Trust Signals</th>
+                  <th>Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-primary"><a href="asset.html" class="cell-link">customer_orders</a></td>
+                  <td><span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">ac_unit</span>Snowflake</td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
+                  <td class="cell-tags">
+                    <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2h</span>
+                    <span class="sds-tag sds-tag--info" data-tooltip="Data quality score">Quality:High</span>
+                    <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
+                  </td>
+                  <td>J. Smith</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary"><a href="asset.html" class="cell-link">user_events</a></td>
+                  <td><span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">cloud</span>BigQuery</td>
+                  <td><span class="sds-tag sds-tag--neutral">Engineering</span></td>
+                  <td class="cell-tags">
+                    <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1h</span>
+                    <span class="sds-tag sds-tag--error" data-tooltip="Contains Personally Identifiable Information">PII</span>
+                    <span class="sds-tag sds-tag--info">AI Documented</span>
+                  </td>
+                  <td>A. Patel</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary"><a href="asset.html" class="cell-link">product_catalog</a></td>
+                  <td><span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">database</span>PostgreSQL</td>
+                  <td><span class="sds-tag sds-tag--neutral">Commerce</span></td>
+                  <td class="cell-tags">
+                    <span class="sds-tag sds-tag--error" data-tooltip="Data has not been refreshed recently">Stale:12d</span>
+                    <span class="sds-tag sds-tag--warning" data-tooltip="Data quality score">Quality:Med</span>
+                  </td>
+                  <td>S. Wong</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary"><a href="asset.html" class="cell-link">revenue_metrics</a></td>
+                  <td><span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">ac_unit</span>Snowflake</td>
+                  <td><span class="sds-tag sds-tag--neutral">Finance</span></td>
+                  <td class="cell-tags">
+                    <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:30m</span>
+                    <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
+                    <span class="sds-tag sds-tag--info" data-tooltip="Security policies applied">Protected</span>
+                  </td>
+                  <td>M. Chen</td>
+                </tr>
+                <tr>
+                  <td class="cell-primary"><a href="asset.html" class="cell-link">email_subscribers</a></td>
+                  <td><span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;margin-right:4px">cloud</span>Salesforce</td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
+                  <td class="cell-tags">
+                    <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:6h</span>
+                    <span class="sds-tag sds-tag--error" data-tooltip="Contains Personally Identifiable Information">PII</span>
+                    <span class="sds-tag sds-tag--error">Over-Permissioned</span>
+                  </td>
+                  <td>L. Garcia</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="home-section-header">
+            <span class="home-section-title">Activity</span>
+            <a href="audit-log.html" class="health-card-link">View audit log &rarr;</a>
+          </div>
+          <div class="card" style="padding: var(--sds-space-300) var(--sds-space-400);">
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-avatar activity-avatar--system"><span class="material-symbols-outlined">smart_toy</span></div>
+                <div class="activity-text"><strong>AI auto-classification</strong> classified 12 columns as PII in <a href="asset.html">revenue_metrics</a></div>
+                <span class="activity-time">4 min ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar">JL</div>
+                <div class="activity-text"><strong>Jordan Lee</strong> updated sync schedule on <a href="settings.html">Snowflake connector</a> to hourly</div>
+                <span class="activity-time">12 min ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar">PS</div>
+                <div class="activity-text"><strong>Priya Shah</strong> approved glossary term <a href="glossary.html">"Customer"</a></div>
+                <span class="activity-time">20 min ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar">MC</div>
+                <div class="activity-text"><strong>Marcus Chen</strong> exported <a href="security.html">Security Posture Report</a> as PDF</div>
+                <span class="activity-time">35 min ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar activity-avatar--system"><span class="material-symbols-outlined">radar</span></div>
+                <div class="activity-text"><strong>Discovery scan</strong> completed on BigQuery &mdash; found <a href="catalog.html">42 new tables</a></div>
+                <span class="activity-time">45 min ago</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-avatar">PS</div>
+                <div class="activity-text"><strong>Priya Shah</strong> revoked David Kumar's write access to <a href="asset.html">finance schema</a></div>
+                <span class="activity-time">55 min ago</span>
+              </div>
             </div>
-            <p style="color: var(--sds-text-primary);">Add a new data source to your catalog</p>
-          </a>
-          <a href="security.html" class="card card--clickable" style="text-decoration:none">
-            <div class="card-title">
-              <span class="material-symbols-outlined">shield</span>
-              Security Posture
-            </div>
-            <p style="color: var(--sds-text-primary);">Review classification and access risks</p>
-          </a>
-          <a href="governance.html" class="card card--clickable" style="text-decoration:none">
-            <div class="card-title">
-              <span class="material-symbols-outlined">task_alt</span>
-              Governance Tasks
-            </div>
-            <p style="color: var(--sds-text-primary);">12 tasks available &middot; +47 points</p>
-          </a>
+          </div>
+
         </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+
+          <!-- Security Health -->
+          <div class="health-card">
+            <div class="health-card-header">
+              <span class="health-card-title"><span class="material-symbols-outlined">shield</span> Security</span>
+              <a href="security.html" class="health-card-link">Details &rarr;</a>
+            </div>
+            <div class="score-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-warm-gray-100)" stroke-width="5"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-blue-550)" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="47.5" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                <text x="32" y="36" text-anchor="middle" font-size="16" font-weight="600" fill="var(--sds-text-primary)">73</text>
+              </svg>
+              <div class="score-ring-details">
+                <div class="score-ring-value">Good</div>
+                <div class="score-ring-label">Security Score</div>
+                <div class="score-ring-trend score-ring-trend--up">
+                  <span class="material-symbols-outlined">arrow_upward</span> +5 this month
+                </div>
+              </div>
+            </div>
+            <div class="health-bars">
+              <div class="health-bar-row">
+                <span class="health-bar-label">Classified</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:78%; background: var(--sds-color-blue-550);"></div></div>
+                <span class="health-bar-value">78%</span>
+              </div>
+              <div class="health-bar-row">
+                <span class="health-bar-label">Protected</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:64%; background: var(--sds-color-green-400);"></div></div>
+                <span class="health-bar-value">64%</span>
+              </div>
+              <div class="health-bar-row">
+                <span class="health-bar-label">Compliant</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:91%; background: var(--sds-color-green-500);"></div></div>
+                <span class="health-bar-value">91%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Governance Health -->
+          <div class="health-card">
+            <div class="health-card-header">
+              <span class="health-card-title"><span class="material-symbols-outlined">gavel</span> Governance</span>
+              <a href="governance.html" class="health-card-link">Details &rarr;</a>
+            </div>
+            <div class="score-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-warm-gray-100)" stroke-width="5"/>
+                <circle cx="32" cy="32" r="28" fill="none" stroke="var(--sds-color-yellow-500)" stroke-width="5" stroke-dasharray="175.9" stroke-dashoffset="58" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                <text x="32" y="36" text-anchor="middle" font-size="16" font-weight="600" fill="var(--sds-text-primary)">67</text>
+              </svg>
+              <div class="score-ring-details">
+                <div class="score-ring-value">Stage 2: Ownership</div>
+                <div class="score-ring-label">Governance Maturity</div>
+                <div class="score-ring-trend score-ring-trend--up">
+                  <span class="material-symbols-outlined">arrow_upward</span> +12 this month
+                </div>
+              </div>
+            </div>
+            <div class="health-bars">
+              <div class="health-bar-row">
+                <span class="health-bar-label">Ownership</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:72%; background: var(--sds-color-yellow-500);"></div></div>
+                <span class="health-bar-value">72%</span>
+              </div>
+              <div class="health-bar-row">
+                <span class="health-bar-label">Documented</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:58%; background: var(--sds-color-yellow-500);"></div></div>
+                <span class="health-bar-value">58%</span>
+              </div>
+              <div class="health-bar-row">
+                <span class="health-bar-label">Glossary</span>
+                <div class="health-bar-track"><div class="health-bar-fill" style="width:45%; background: var(--sds-color-yellow-400);"></div></div>
+                <span class="health-bar-value">45%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sources Health -->
+          <div class="health-card">
+            <div class="health-card-header">
+              <span class="health-card-title"><span class="material-symbols-outlined">dns</span> Sources</span>
+              <a href="settings.html" class="health-card-link">Manage &rarr;</a>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--sds-space-200);">
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: var(--sds-type-caption);">
+                <span style="display: flex; align-items: center; gap: var(--sds-space-150); color: var(--sds-text-primary);"><span class="material-symbols-outlined" style="font-size:16px; color: var(--sds-color-green-500);">check_circle</span> 7 sources healthy</span>
+                <span style="color: var(--sds-text-secondary);">Last sync: 2m ago</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: var(--sds-type-caption);">
+                <span style="display: flex; align-items: center; gap: var(--sds-space-150); color: var(--sds-color-red-550);"><span class="material-symbols-outlined" style="font-size:16px;">error</span> 1 SLA breach</span>
+                <span style="color: var(--sds-text-secondary);">Databricks &middot; 2h overdue</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="health-card" style="border: none; background: none; padding: var(--sds-space-200) 0;">
+            <div class="health-card-header" style="margin-bottom: var(--sds-space-200);">
+              <span class="health-card-title">Quick Actions</span>
+            </div>
+            <div class="quick-actions">
+              <a href="connect.html" class="quick-action">
+                <span class="material-symbols-outlined">add_circle</span>
+                Connect a source
+                <span class="material-symbols-outlined">chevron_right</span>
+              </a>
+              <a href="catalog.html" class="quick-action">
+                <span class="material-symbols-outlined">search</span>
+                Browse catalog
+                <span class="material-symbols-outlined">chevron_right</span>
+              </a>
+              <a href="governance.html" class="quick-action">
+                <span class="material-symbols-outlined">task_alt</span>
+                Governance tasks
+                <span class="material-symbols-outlined">chevron_right</span>
+              </a>
+              <a href="security.html" class="quick-action">
+                <span class="material-symbols-outlined">shield</span>
+                Security review
+                <span class="material-symbols-outlined">chevron_right</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </main>
