@@ -111,7 +111,7 @@
     </div>
     <div class="sds-header-search">
       <span class="material-symbols-outlined">search</span>
-      <input type="text" placeholder="Search datasets, tables, columns...">
+      <input type="text" placeholder="Search datasets, tables, columns..." aria-label="Search">
     </div>
     <div class="sds-header-actions">
       <button class="sds-header-icon-btn" aria-label="Notifications">
@@ -145,7 +145,7 @@
       <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
       <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
       <div class="sds-sidenav-group-label">Settings</div>
-      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">add_circle</span></span>Add Source</a>
       <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
       <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
       <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
@@ -309,12 +309,12 @@
                     <div class="table-desc">Customer purchase transactions from...</div>
                   </td>
                   <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:2h</span>
-                      <span class="sds-tag sds-tag--success">Quality:High</span>
-                      <span class="sds-tag sds-tag--purple">Certified</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2h</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
+                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
                     </div>
                   </td>
                   <td>
@@ -331,11 +331,11 @@
                     <div class="table-desc">Marketing campaign performance...</div>
                   </td>
                   <td>BigQuery</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:1d</span>
-                      <span class="sds-tag sds-tag--success">Quality:High</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1d</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
                       <span class="sds-tag sds-tag--neutral">AI Documented</span>
                     </div>
                   </td>
@@ -353,11 +353,11 @@
                     <div class="table-desc">Email subscriber list with...</div>
                   </td>
                   <td>Salesforce</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:6h</span>
-                      <span class="sds-tag sds-tag--warning">PII</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:6h</span>
+                      <span class="sds-tag sds-tag--warning" data-tooltip="Contains personally identifiable information">PII</span>
                       <span class="sds-tag sds-tag--error">Over-Permissioned</span>
                     </div>
                   </td>
@@ -375,11 +375,11 @@
                     <div class="table-desc">Daily advertising spend across...</div>
                   </td>
                   <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:12h</span>
-                      <span class="sds-tag sds-tag--warning">Quality:Med</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:12h</span>
+                      <span class="sds-tag sds-tag--warning" data-tooltip="Quality score from automated checks">Quality:Med</span>
                     </div>
                   </td>
                   <td>
@@ -396,11 +396,11 @@
                     <div class="table-desc">Social media engagement metrics...</div>
                   </td>
                   <td>BigQuery</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:3h</span>
-                      <span class="sds-tag sds-tag--purple">Certified</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:3h</span>
+                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
                       <span class="sds-tag sds-tag--info">Protected</span>
                     </div>
                   </td>
@@ -418,12 +418,12 @@
                     <div class="table-desc">Sales lead pipeline with...</div>
                   </td>
                   <td>Salesforce</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:1h</span>
-                      <span class="sds-tag sds-tag--warning">PII</span>
-                      <span class="sds-tag sds-tag--success">Quality:High</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1h</span>
+                      <span class="sds-tag sds-tag--warning" data-tooltip="Contains personally identifiable information">PII</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
                     </div>
                   </td>
                   <td>
@@ -440,11 +440,11 @@
                     <div class="table-desc">Content marketing performance...</div>
                   </td>
                   <td>PostgreSQL</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--error">Stale:8d</span>
-                      <span class="sds-tag sds-tag--error">Quality:Low</span>
+                      <span class="sds-tag sds-tag--error" data-tooltip="Data has not been refreshed recently">Stale:8d</span>
+                      <span class="sds-tag sds-tag--error" data-tooltip="Quality score from automated checks">Quality:Low</span>
                     </div>
                   </td>
                   <td>
@@ -461,12 +461,12 @@
                     <div class="table-desc">Customer segmentation model...</div>
                   </td>
                   <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--info">Marketing</span></td>
+                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
                   <td>
                     <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success">Fresh:2d</span>
+                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2d</span>
                       <span class="sds-tag sds-tag--neutral">AI Documented</span>
-                      <span class="sds-tag sds-tag--purple">Certified</span>
+                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
                     </div>
                   </td>
                   <td>

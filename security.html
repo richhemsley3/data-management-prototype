@@ -34,12 +34,7 @@
       text-transform: uppercase;
       letter-spacing: var(--sds-tracking-wide);
     }
-    .score-hero__number {
-      font-size: 48px;
-      font-weight: var(--sds-weight-bold);
-      color: var(--sds-text-primary);
-      line-height: 1;
-    }
+    /* .score-hero__number removed — score displayed in SVG gauge only */
     .score-hero__trend {
       display: flex;
       align-items: center;
@@ -167,7 +162,7 @@
       <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
       <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
       <div class="sds-sidenav-group-label">Settings</div>
-      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">add_circle</span></span>Add Source</a>
       <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
       <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
       <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
@@ -225,11 +220,11 @@
         <!-- Center info -->
         <div class="score-hero__center">
           <span class="score-hero__label">Security Score</span>
-          <span class="score-hero__number">73</span>
           <span class="score-hero__trend">
             <span class="material-symbols-outlined">arrow_upward</span>
             +5 this month
           </span>
+          <span style="font-size: var(--sds-type-caption); color: var(--sds-text-tertiary); margin-top: var(--sds-space-100);">Industry avg: 61</span>
         </div>
 
         <!-- Sparkline placeholder -->
@@ -312,7 +307,7 @@
             <span class="card-subtitle">156 requirements</span>
             <p>By regulation: GDPR, CCPA, HIPAA.</p>
             <div class="card-footer">
-              <span class="sds-tag sds-tag--warning">Compliance</span>
+              <span class="sds-tag sds-tag--neutral">Compliance</span>
             </div>
           </a>
 
@@ -371,8 +366,8 @@
                   <span class="sds-tag sds-tag--warning">Over-Permissioned</span>
                 </td>
                 <td>
-                  <button class="btn btn-tertiary btn-sm">Remediate</button>
-                  <button class="btn btn-primary btn-sm" aria-label="Remediate">Fix</button>
+                  <button class="btn btn-tertiary btn-sm">View Details</button>
+                  <button class="btn btn-primary btn-sm" aria-label="Auto-fix this risk">Auto-Fix</button>
                 </td>
               </tr>
               <tr>
@@ -387,7 +382,7 @@
                   <span class="sds-tag sds-tag--error">PII</span>
                   <span class="sds-tag sds-tag--warning">Broad Access</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">Remediate</button></td>
+                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
               </tr>
               <tr>
                 <td><a href="asset.html" class="cell-link">financial_records</a></td>
@@ -415,7 +410,7 @@
                   <span class="sds-tag sds-tag--error">PII</span>
                   <span class="sds-tag sds-tag--warning">HIPAA Gap</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">Remediate</button></td>
+                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
               </tr>
               <tr>
                 <td><a href="asset.html" class="cell-link">user_passwords</a></td>
@@ -429,7 +424,7 @@
                   <span class="sds-tag sds-tag--warning">Sensitive</span>
                   <span class="sds-tag sds-tag--error">Unencrypted</span>
                 </td>
-                <td><button class="btn btn-tertiary btn-sm">Remediate</button></td>
+                <td><button class="btn btn-tertiary btn-sm">View Details</button></td>
               </tr>
             </tbody>
           </table>

@@ -54,7 +54,7 @@
       <a href="glossary.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">book_2</span></span>Glossary</a>
       <a href="governance.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">gavel</span></span>Policies</a>
       <div class="sds-sidenav-group-label">Settings</div>
-      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">cable</span></span>Connectors</a>
+      <a href="connect.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">add_circle</span></span>Add Source</a>
       <a href="settings.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">dns</span></span>Sources</a>
       <a href="organization.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">domain</span></span>Organization</a>
       <a href="users.html" class="sds-sidenav-item"><span class="sds-sidenav-icon"><span class="material-symbols-outlined">group</span></span>Users</a>
@@ -186,7 +186,7 @@
               </tr>
               <tr>
                 <td><a href="#" class="cell-link">Full Name</a></td>
-                <td><span class="sds-tag sds-tag--warning">PII</span></td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>312</td>
                 <td>290</td>
                 <td>22</td>
@@ -195,7 +195,7 @@
               </tr>
               <tr>
                 <td><a href="#" class="cell-link">Date of Birth</a></td>
-                <td><span class="sds-tag sds-tag--warning">PII</span></td>
+                <td><span class="sds-tag sds-tag--error">PII</span></td>
                 <td>178</td>
                 <td>165</td>
                 <td>13</td>
@@ -264,21 +264,24 @@
         <div class="empty-state">
           <div class="empty-state-icon"><span class="material-symbols-outlined">tune</span></div>
           <h3>Sensitivity Levels</h3>
-          <p>Filter applied. Showing sensitivity level classifications only.</p>
+          <p>No sensitivity level classifications match the current filters.</p>
+          <button class="btn btn-primary btn-sm">Create Sensitivity Level</button>
         </div>
       </div>
       <div class="tab-content" data-tab-content="pii">
         <div class="empty-state">
           <div class="empty-state-icon"><span class="material-symbols-outlined">fingerprint</span></div>
           <h3>PII Types</h3>
-          <p>Filter applied. Showing PII type classifications only.</p>
+          <p>No PII type classifications match the current filters.</p>
+          <button class="btn btn-primary btn-sm">Create PII Type</button>
         </div>
       </div>
       <div class="tab-content" data-tab-content="custom">
         <div class="empty-state">
           <div class="empty-state-icon"><span class="material-symbols-outlined">edit_note</span></div>
           <h3>Custom Classifications</h3>
-          <p>Filter applied. Showing custom classifications only.</p>
+          <p>You haven't created any custom classifications yet. Custom classifications let you tag assets with your organization's unique taxonomy.</p>
+          <button class="btn btn-primary btn-sm">Create Custom Classification</button>
         </div>
       </div>
 
