@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <base href="/data-management-prototype/">
+  <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catalog - DataPlatform</title>
   <link rel="stylesheet" href="shared/shell.css">
@@ -21,29 +21,103 @@
     .results-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: var(--sds-space-300);
       margin-bottom: var(--sds-space-400);
       font-size: var(--sds-type-caption);
       color: var(--sds-text-tertiary);
     }
-    .sort-control {
+    .results-header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+    }
+    .results-header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-300);
+    }
+    .sort-select {
       font-size: var(--sds-type-caption);
       color: var(--sds-text-secondary);
-      background: none;
-      border: none;
+      background: var(--sds-bg-surface);
+      border: 1px solid var(--sds-border-default);
+      border-radius: 6px;
+      padding: var(--sds-space-100) var(--sds-space-200);
       font-family: var(--sds-font-sans);
       cursor: pointer;
     }
+
+    /* ---- Name Cell (enriched) ---- */
+    .asset-name-cell {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sds-space-250);
+      min-width: 0;
+    }
+    .asset-type-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--sds-bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .asset-type-icon .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--sds-text-secondary);
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .asset-name-info {
+      min-width: 0;
+      flex: 1;
+    }
+    .asset-name-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-200);
+    }
     .table-name {
       color: var(--sds-text-link);
-      font-weight: var(--sds-weight-medium);
+      font-weight: var(--sds-weight-semibold);
       font-size: var(--sds-type-label);
-      font-family: var(--sds-font-mono);
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .table-name:hover { text-decoration: underline; }
+    .asset-badge {
+      font-size: 10px;
+      font-weight: var(--sds-weight-semibold);
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .asset-badge--certified {
+      background: var(--sds-status-purple-bg);
+      color: var(--sds-status-purple-text);
+    }
+    .asset-path {
+      font-size: var(--sds-type-overline);
+      color: var(--sds-text-tertiary);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .table-desc {
-      font-size: var(--sds-type-caption);
+      font-size: var(--sds-type-overline);
       color: var(--sds-text-tertiary);
       margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .owner-cell {
       display: flex;
@@ -51,20 +125,150 @@
       gap: var(--sds-space-200);
       white-space: nowrap;
     }
-    /* Clickable table rows */
-    .sds-table--hoverable tbody tr td a {
-      color: inherit;
-      text-decoration: none;
+
+    /* ---- Quality indicator ---- */
+    .quality-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+      font-size: var(--sds-type-caption);
+      font-weight: var(--sds-weight-medium);
+      white-space: nowrap;
+    }
+    .quality-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .quality-dot--high { background: var(--sds-status-success-text); }
+    .quality-dot--med { background: var(--sds-status-warning-text); }
+    .quality-dot--low { background: var(--sds-status-error-text); }
+
+    /* ---- Freshness cell ---- */
+    .freshness-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+      font-size: var(--sds-type-caption);
+      white-space: nowrap;
+    }
+    .freshness-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .freshness-dot--fresh { display: none; }
+    .freshness-dot--stale { background: var(--sds-status-error-text); }
+    .freshness-cell--stale { color: var(--sds-status-error-text); font-weight: var(--sds-weight-medium); }
+
+    /* ---- Classification cell ---- */
+    .classification-cell .sds-tag { font-size: 11px; }
+
+    /* ---- Table fit ---- */
+    .catalog-results .sds-table { table-layout: fixed; }
+    .catalog-results .sds-table th:nth-child(2) { width: auto; } /* Name takes remaining */
+    .catalog-results .sds-table th:nth-child(3) { width: 90px; } /* Quality */
+    .catalog-results .sds-table th:nth-child(4) { width: 110px; } /* Last Updated */
+    .catalog-results .sds-table th:nth-child(5) { width: 130px; } /* Classification */
+    .catalog-results .sds-table th:nth-child(6) { width: 120px; } /* Owner */
+    .catalog-results .sds-table th:nth-child(7) { width: 70px; } /* Rows */
+
+    /* ---- Rows cell ---- */
+    .rows-cell {
+      font-size: var(--sds-type-caption);
+      font-family: var(--sds-font-mono);
+      color: var(--sds-text-secondary);
+      white-space: nowrap;
       display: block;
+      text-align: right;
     }
-    .catalog-row-link {
-      display: contents;
-      text-decoration: none;
-      color: inherit;
+    .col-rows-th { text-align: right !important; }
+
+    /* ---- Row risk accent (left border for problem rows) ---- */
+    .sds-table--hoverable tbody tr[data-type] {
+      border-left: 3px solid transparent;
     }
-    .catalog-row-link:hover {
-      text-decoration: none;
+    .sds-table--hoverable tbody tr.row-risk--warning {
+      border-left-color: var(--sds-status-warning-text);
+      background: color-mix(in srgb, var(--sds-status-warning-bg) 30%, transparent);
     }
+    .sds-table--hoverable tbody tr.row-risk--error {
+      border-left-color: var(--sds-status-error-text);
+      background: color-mix(in srgb, var(--sds-status-error-bg) 40%, transparent);
+    }
+
+    /* ---- Row hover open affordance ---- */
+    .row-open-hint {
+      opacity: 0;
+      font-size: var(--sds-type-overline);
+      color: var(--sds-interactive-primary);
+      font-weight: var(--sds-weight-semibold);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      transition: opacity 0.15s;
+    }
+    .row-open-hint .material-symbols-outlined {
+      font-size: 14px;
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+    }
+    .sds-table--hoverable tbody tr[data-type]:hover .row-open-hint {
+      opacity: 1;
+    }
+
+    /* ---- Source icon in breadcrumb path ---- */
+    .source-icon {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      vertical-align: -1px;
+      margin-right: 3px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .source-icon--snowflake { background: #29B5E8; }
+    .source-icon--bigquery { background: #4285F4; }
+    .source-icon--salesforce { background: #00A1E0; }
+    .source-icon--postgresql { background: #336791; }
+
+    /* ---- Certified badge with icon ---- */
+    .asset-badge--certified {
+      background: var(--sds-status-purple-bg);
+      color: var(--sds-status-purple-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .asset-badge--certified .material-symbols-outlined {
+      font-size: 12px;
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+    }
+
+    /* ---- Tab count badges ---- */
+    .tab-count {
+      font-size: 10px;
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-text-tertiary);
+      margin-left: 2px;
+    }
+    .sds-tab.active .tab-count {
+      color: var(--sds-interactive-primary);
+    }
+
+    /* ---- Bulk checkbox ---- */
+    .col-checkbox { width: 36px; padding-left: var(--sds-space-300) !important; padding-right: 0 !important; }
+    .col-checkbox input[type="checkbox"] {
+      width: 16px; height: 16px; cursor: pointer;
+      accent-color: var(--sds-interactive-primary);
+    }
+
+    /* ---- Clickable rows ---- */
+    .sds-table--hoverable tbody tr[data-type] { cursor: pointer; }
+    .sds-table--hoverable tbody tr[data-type]:active { background: var(--sds-color-blue-050); }
+
     /* Asset count in page header */
     .asset-count {
       font-size: var(--sds-type-label);
@@ -76,27 +280,36 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      overflow: hidden;        /* prevent main from scrolling */
+      overflow: hidden;
     }
     .catalog-top {
-      padding: var(--sds-space-600) var(--sds-space-1000) 0;
-      flex-shrink: 0;          /* pin header + tabs at top */
+      padding: var(--sds-space-600) var(--sds-space-600) 0;
+      flex-shrink: 0;
     }
     .catalog-body {
       display: flex;
       flex: 1;
-      min-height: 0;           /* allow flex children to shrink below content size */
+      min-height: 0;
       overflow: hidden;
     }
     .catalog-body .filter-sidebar {
       border-right: 1px solid var(--sds-border-subtle);
       overflow-y: auto;
       flex-shrink: 0;
+      transition: width 0.2s ease, min-width 0.2s ease, padding 0.2s ease, opacity 0.2s ease;
+    }
+    .catalog-body .filter-sidebar.collapsed {
+      width: 0 !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      overflow: hidden;
+      opacity: 0;
+      border-right: none;
     }
     .catalog-body .catalog-results {
       flex: 1;
       min-height: 0;
-      padding: var(--sds-space-400) var(--sds-space-1000) var(--sds-space-1600);
+      padding: var(--sds-space-400) var(--sds-space-600) var(--sds-space-1600);
       overflow-y: auto;
     }
     /* Sticky table column headers when results scroll */
@@ -115,6 +328,75 @@
       z-index: 3;
       padding-bottom: var(--sds-space-300);
     }
+
+    /* ---- Filter toggle button ---- */
+    .filter-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+      padding: var(--sds-space-150) var(--sds-space-300);
+      font-size: var(--sds-type-caption);
+      font-weight: var(--sds-weight-medium);
+      font-family: var(--sds-font-sans);
+      color: var(--sds-text-secondary);
+      background: var(--sds-bg-surface);
+      border: 1px solid var(--sds-border-default);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .filter-toggle-btn:hover { background: var(--sds-bg-subtle); color: var(--sds-text-primary); }
+    .filter-toggle-btn .material-symbols-outlined { font-size: 16px; }
+    .filter-toggle-btn .filter-count-badge {
+      background: var(--sds-interactive-primary);
+      color: var(--sds-text-on-primary);
+      font-size: 10px;
+      font-weight: var(--sds-weight-bold);
+      border-radius: 10px;
+      padding: 0 5px;
+      min-width: 16px;
+      text-align: center;
+      line-height: 16px;
+    }
+
+    /* ---- Bulk action bar ---- */
+    .bulk-action-bar {
+      display: none;
+      align-items: center;
+      gap: var(--sds-space-300);
+      padding: var(--sds-space-250) var(--sds-space-400);
+      background: var(--sds-interactive-primary);
+      color: var(--sds-text-on-primary);
+      border-radius: 10px;
+      font-size: var(--sds-type-caption);
+      font-weight: var(--sds-weight-medium);
+      margin-bottom: var(--sds-space-300);
+    }
+    .bulk-action-bar.visible { display: flex; }
+    .bulk-action-bar .bulk-count { opacity: 0.85; }
+    .bulk-action-bar .bulk-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--sds-text-on-primary);
+      border-radius: 6px;
+      padding: var(--sds-space-100) var(--sds-space-250);
+      font-size: var(--sds-type-caption);
+      font-family: var(--sds-font-sans);
+      font-weight: var(--sds-weight-medium);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .bulk-action-bar .bulk-btn:hover { background: rgba(255,255,255,0.25); }
+    .bulk-action-bar .bulk-deselect {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      font-family: var(--sds-font-sans);
+      font-size: var(--sds-type-caption);
+    }
+    .bulk-action-bar .bulk-deselect:hover { color: var(--sds-text-on-primary); }
 
     /* ---- View Mode Toggle (segmented control) ---- */
     .view-toggle {
@@ -164,6 +446,14 @@
       align-items: center;
       gap: var(--sds-space-400);
     }
+
+    /* ---- Column widths ---- */
+    .sds-table .col-name-th { width: 38%; }
+    .sds-table .col-quality-th { width: 10%; }
+    .sds-table .col-freshness-th { width: 12%; }
+    .sds-table .col-class-th { width: 12%; }
+    .sds-table .col-owner-th { width: 14%; }
+    .sds-table .col-rows-th { width: 10%; }
 
     /* ---- Mode Visibility ---- */
     /* Table mode (default) */
@@ -641,7 +931,7 @@
         <div class="page-header">
           <h1>Catalog</h1>
           <div class="page-header-actions">
-            <span class="asset-count">1,847 assets</span>
+            <span class="asset-count">342 assets</span>
             <div class="view-toggle" role="radiogroup" aria-label="View mode">
               <button class="view-toggle-btn active" data-mode="table" role="radio" aria-checked="true">
                 <span class="material-symbols-outlined">view_list</span>
@@ -657,12 +947,13 @@
 
         <!-- Scope Tabs (visible in table mode only) -->
         <div class="sds-tabs" role="tablist" aria-label="Asset type filter">
-          <button class="sds-tab active" role="tab" aria-selected="true" data-filter="all">All</button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables</button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="view">Views</button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="dashboard">Dashboards</button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="column">Columns</button>
+          <button class="sds-tab active" role="tab" aria-selected="true" data-filter="all">All <span class="tab-count">342</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables <span class="tab-count">198</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="view">Views <span class="tab-count">67</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="dashboard">Dashboards <span class="tab-count">42</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="column">Columns <span class="tab-count">35</span></button>
         </div>
+
       </div>
 
       <!-- Catalog Body -->
@@ -670,32 +961,23 @@
 
         <!-- ==================== TABLE MODE: Filter Sidebar ==================== -->
         <aside class="filter-sidebar" aria-label="Filters">
-          <!-- Active Filters -->
-          <div class="active-filters">
-            <div class="filter-pill">
-              Domain: Marketing
-              <button class="filter-pill-remove" aria-label="Remove Marketing filter">&times;</button>
-            </div>
-            <button class="btn btn-tertiary btn-sm clear-all-btn" style="margin-left:auto;font-size:var(--sds-type-caption)">Clear all</button>
-          </div>
-
           <!-- Domain -->
           <div class="filter-group">
             <div class="filter-group-label">Domain</div>
             <label class="filter-option">
-              <input type="checkbox" checked> Marketing
+              <input type="checkbox" checked> Marketing <span class="filter-count">342</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Finance
+              <input type="checkbox"> Finance <span class="filter-count">287</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Engineering
+              <input type="checkbox"> Engineering <span class="filter-count">524</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Commerce
+              <input type="checkbox"> Commerce <span class="filter-count">418</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> HR
+              <input type="checkbox"> HR <span class="filter-count">276</span>
             </label>
           </div>
 
@@ -703,16 +985,16 @@
           <div class="filter-group">
             <div class="filter-group-label">Source Type</div>
             <label class="filter-option">
-              <input type="checkbox"> Warehouse
+              <input type="checkbox"> Warehouse <span class="filter-count">892</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Lake
+              <input type="checkbox"> Lake <span class="filter-count">341</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> BI Tool
+              <input type="checkbox"> BI Tool <span class="filter-count">198</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> SaaS
+              <input type="checkbox"> SaaS <span class="filter-count">416</span>
             </label>
           </div>
 
@@ -720,16 +1002,16 @@
           <div class="filter-group">
             <div class="filter-group-label">Classification</div>
             <label class="filter-option">
-              <input type="checkbox"> PII
+              <input type="checkbox"> PII <span class="filter-count">342</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Sensitive
+              <input type="checkbox"> Sensitive <span class="filter-count">215</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Public
+              <input type="checkbox"> Public <span class="filter-count">648</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Unclassified
+              <input type="checkbox"> Unclassified <span class="filter-count">642</span>
             </label>
           </div>
 
@@ -737,13 +1019,13 @@
           <div class="filter-group">
             <div class="filter-group-label">Quality</div>
             <label class="filter-option">
-              <input type="checkbox"> High
+              <input type="checkbox"> High <span class="filter-count">1,204</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Medium
+              <input type="checkbox"> Medium <span class="filter-count">485</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Low
+              <input type="checkbox"> Low <span class="filter-count">158</span>
             </label>
           </div>
 
@@ -751,27 +1033,58 @@
           <div class="filter-group">
             <div class="filter-group-label">Freshness</div>
             <label class="filter-option">
-              <input type="checkbox"> Last 24h
+              <input type="checkbox"> Last 24h <span class="filter-count">1,102</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Last 7d
+              <input type="checkbox"> Last 7d <span class="filter-count">1,586</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Last 30d
+              <input type="checkbox"> Last 30d <span class="filter-count">1,732</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Stale
+              <input type="checkbox"> Stale <span class="filter-count">115</span>
             </label>
           </div>
         </aside>
 
         <!-- ==================== TABLE MODE: Results ==================== -->
         <div class="catalog-results">
+          <!-- Bulk Action Bar -->
+          <div class="bulk-action-bar" id="bulk-action-bar">
+            <span class="bulk-count"><strong id="bulk-count-num">0</strong> selected</span>
+            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">label</span> Classify</button>
+            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">person_add</span> Assign Owner</button>
+            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">sell</span> Add Tag</button>
+            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">file_download</span> Export</button>
+            <button class="bulk-deselect" id="bulk-deselect">Deselect all</button>
+          </div>
+
           <!-- Results Header -->
           <div class="results-header">
-            <span class="results-count">Showing 8 of 1,847 assets</span>
-            <span class="sds-tag sds-tag--info" style="margin-left: var(--sds-space-200);">1 filter applied</span>
-            <span class="sort-control">Sort by: Relevance</span>
+            <div class="results-header-left">
+              <button class="filter-toggle-btn" id="filter-toggle" title="Toggle filters">
+                <span class="material-symbols-outlined">filter_list</span>
+                Filters
+                <span class="filter-count-badge" id="filter-count-badge" style="display:none">0</span>
+              </button>
+              <div class="active-filters" id="active-filters">
+                <div class="filter-pill">
+                  Domain: Marketing
+                  <button class="filter-pill-remove" aria-label="Remove Marketing filter">&times;</button>
+                </div>
+                <button class="btn btn-tertiary btn-sm clear-all-btn" style="font-size:var(--sds-type-caption)">Clear all</button>
+              </div>
+              <span class="results-count">Showing 8 of 342 assets</span>
+            </div>
+            <div class="results-header-right">
+              <select class="sort-select" aria-label="Sort results">
+                <option>Sort: Name A-Z</option>
+                <option>Sort: Name Z-A</option>
+                <option>Sort: Last Updated</option>
+                <option>Sort: Quality</option>
+                <option>Sort: Rows (most)</option>
+              </select>
+            </div>
           </div>
 
           <!-- Results Table -->
@@ -779,190 +1092,197 @@
             <table class="sds-table sds-table--hoverable">
               <thead>
                 <tr>
-                  <th class="sortable sort-desc">Name</th>
-                  <th class="sortable">Source</th>
-                  <th class="sortable">Domain</th>
-                  <th>Trust Signals</th>
-                  <th class="sortable">Owner</th>
+                  <th class="col-checkbox"><input type="checkbox" id="select-all" aria-label="Select all" title="Select all"></th>
+                  <th class="col-name-th sortable sort-asc">Name</th>
+                  <th class="col-quality-th sortable">Quality</th>
+                  <th class="col-freshness-th sortable">Last Updated</th>
+                  <th class="col-class-th sortable">Classification</th>
+                  <th class="col-owner-th sortable">Owner</th>
+                  <th class="col-rows-th sortable">Rows</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- Row 1 -->
-                <tr data-type="table" data-source="Snowflake" data-asset="customer_orders">
+                <!-- Row 1: customer_orders -->
+                <tr data-type="table" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2h" data-classification="pii" data-asset="customer_orders">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select customer_orders"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">customer_orders</a></div>
-                    <div class="table-desc">Customer purchase transactions from...</div>
-                  </td>
-                  <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2h</span>
-                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
-                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">customer_orders</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / marketing</div>
+                        <div class="table-desc">Customer purchase transactions from e-commerce platform</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>
-                      J. Smith
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2h ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>J. Smith</div></td>
+                  <td><span class="rows-cell">2.4M</span></td>
                 </tr>
-                <!-- Row 2 -->
-                <tr data-type="table" data-source="BigQuery" data-asset="campaign_metrics">
+                <!-- Row 2: campaign_metrics -->
+                <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="1d" data-classification="" data-asset="campaign_metrics">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select campaign_metrics"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">campaign_metrics</a></div>
-                    <div class="table-desc">Marketing campaign performance...</div>
-                  </td>
-                  <td>BigQuery</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1d</span>
-                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
-                      <span class="sds-tag sds-tag--neutral">AI Documented</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">campaign_metrics</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--bigquery"></span> BigQuery / marketing</div>
+                        <div class="table-desc">Marketing campaign performance with attribution and ROI</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>
-                      A. Patel
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>A. Patel</div></td>
+                  <td><span class="rows-cell">12K</span></td>
                 </tr>
-                <!-- Row 3 -->
-                <tr data-type="table" data-source="Salesforce" data-asset="email_subscribers">
+                <!-- Row 3: email_subscribers -->
+                <tr data-type="table" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="6h" data-classification="pii" data-asset="email_subscribers">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select email_subscribers"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">email_subscribers</a></div>
-                    <div class="table-desc">Email subscriber list with...</div>
-                  </td>
-                  <td>Salesforce</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:6h</span>
-                      <span class="sds-tag sds-tag--error" data-tooltip="Contains personally identifiable information">PII</span>
-                      <span class="sds-tag sds-tag--error">Over-Permissioned</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">email_subscribers</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--salesforce"></span> Salesforce / crm</div>
+                        <div class="table-desc">Email subscriber list with contact details and engagement</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>
-                      L. Garcia
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 6h ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>L. Garcia</div></td>
+                  <td><span class="rows-cell">1.2M</span></td>
                 </tr>
-                <!-- Row 4 -->
-                <tr data-type="view" data-source="Snowflake" data-asset="ad_spend_daily">
+                <!-- Row 4: ad_spend_daily (medium quality = warning accent) -->
+                <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="med" data-freshness="12h" data-classification="" data-asset="ad_spend_daily" class="row-risk--warning">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select ad_spend_daily"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">ad_spend_daily</a></div>
-                    <div class="table-desc">Daily advertising spend across...</div>
-                  </td>
-                  <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:12h</span>
-                      <span class="sds-tag sds-tag--warning" data-tooltip="Quality score from automated checks">Quality:Med</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">ad_spend_daily</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / marketing</div>
+                        <div class="table-desc">Daily advertising spend across all marketing channels</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-yellow-500)">SW</div>
-                      S. Wong
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--med"></span> Medium</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 12h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-yellow-500)">SW</div>S. Wong</div></td>
+                  <td><span class="rows-cell">156K</span></td>
                 </tr>
-                <!-- Row 5 -->
-                <tr data-type="table" data-source="BigQuery" data-asset="social_engagement">
+                <!-- Row 5: social_engagement -->
+                <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="3h" data-classification="sensitive" data-asset="social_engagement">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select social_engagement"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">social_engagement</a></div>
-                    <div class="table-desc">Social media engagement metrics...</div>
-                  </td>
-                  <td>BigQuery</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:3h</span>
-                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
-                      <span class="sds-tag sds-tag--info">Protected</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">social_engagement</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--bigquery"></span> BigQuery / marketing</div>
+                        <div class="table-desc">Social media engagement metrics with sentiment analysis</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>
-                      M. Chen
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 3h ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--warning">Sensitive</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>M. Chen</div></td>
+                  <td><span class="rows-cell">340K</span></td>
                 </tr>
-                <!-- Row 6 -->
-                <tr data-type="dashboard" data-source="Salesforce" data-asset="lead_pipeline">
+                <!-- Row 6: lead_pipeline -->
+                <tr data-type="dashboard" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="1h" data-classification="pii" data-asset="lead_pipeline">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select lead_pipeline"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">lead_pipeline</a></div>
-                    <div class="table-desc">Sales lead pipeline with...</div>
-                  </td>
-                  <td>Salesforce</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:1h</span>
-                      <span class="sds-tag sds-tag--error" data-tooltip="Contains personally identifiable information">PII</span>
-                      <span class="sds-tag sds-tag--success" data-tooltip="Quality score from automated checks">Quality:High</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Dashboard"><span class="material-symbols-outlined">dashboard</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">lead_pipeline</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--salesforce"></span> Salesforce / crm</div>
+                        <div class="table-desc">Sales lead pipeline with deal stages and scoring</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-blue-700)">RJ</div>
-                      R. Johnson
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1h ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-700)">RJ</div>R. Johnson</div></td>
+                  <td><span class="rows-cell">34K</span></td>
                 </tr>
-                <!-- Row 7 -->
-                <tr data-type="column" data-source="PostgreSQL" data-asset="content_performance">
+                <!-- Row 7: content_performance (stale + low quality = error accent) -->
+                <tr data-type="column" data-source="PostgreSQL" data-domain="Marketing" data-quality="low" data-freshness="stale" data-classification="" data-asset="content_performance" class="row-risk--error">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select content_performance"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">content_performance</a></div>
-                    <div class="table-desc">Content marketing performance...</div>
-                  </td>
-                  <td>PostgreSQL</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--error" data-tooltip="Data has not been refreshed recently">Stale:8d</span>
-                      <span class="sds-tag sds-tag--error" data-tooltip="Quality score from automated checks">Quality:Low</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Column"><span class="material-symbols-outlined">view_column</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">content_performance</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--postgresql"></span> PostgreSQL / content</div>
+                        <div class="table-desc">Content marketing performance metrics with conversions</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>
-                      K. Davis
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--low"></span> Low</div></td>
+                  <td><div class="freshness-cell freshness-cell--stale"><span class="freshness-dot freshness-dot--stale"></span> 8d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>K. Davis</div></td>
+                  <td><span class="rows-cell">8.5K</span></td>
                 </tr>
-                <!-- Row 8 -->
-                <tr data-type="view" data-source="Snowflake" data-asset="customer_segments">
+                <!-- Row 8: customer_segments -->
+                <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2d" data-classification="" data-asset="customer_segments">
+                  <td class="col-checkbox"><input type="checkbox" aria-label="Select customer_segments"></td>
                   <td>
-                    <div class="table-name"><a href="asset.html" class="cell-link">customer_segments</a></div>
-                    <div class="table-desc">Customer segmentation model...</div>
-                  </td>
-                  <td>Snowflake</td>
-                  <td><span class="sds-tag sds-tag--neutral">Marketing</span></td>
-                  <td>
-                    <div class="cell-tags">
-                      <span class="sds-tag sds-tag--success" data-tooltip="Data refreshed recently">Fresh:2d</span>
-                      <span class="sds-tag sds-tag--neutral">AI Documented</span>
-                      <span class="sds-tag sds-tag--purple" data-tooltip="Verified by a data steward">Certified</span>
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">customer_segments</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / analytics</div>
+                        <div class="table-desc">Customer segmentation model with behavioral clusters</div>
+                      </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="owner-cell">
-                      <div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>
-                      T. Wilson
-                    </div>
-                  </td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>T. Wilson</div></td>
+                  <td><span class="rows-cell">890K</span></td>
                 </tr>
                 <tr class="empty-state-row" style="display:none;">
-                  <td colspan="6" style="text-align:center; padding: var(--sds-space-1200) var(--sds-space-600);">
+                  <td colspan="7" style="text-align:center; padding: var(--sds-space-1200) var(--sds-space-600);">
                     <div style="color: var(--sds-text-secondary);">
                       <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
                       <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
@@ -986,14 +1306,14 @@
                     <option>100</option>
                   </select>
                 </div>
-                <span class="pagination-info">Showing 1-8 of 1,847 results</span>
+                <span class="pagination-info">1–8 of 342</span>
               </div>
               <div class="pagination-pages">
                 <button class="btn btn-tertiary btn-sm" disabled aria-label="Previous page"><span class="material-symbols-outlined">chevron_left</span></button>
                 <button class="pagination-btn active">1</button>
                 <button class="pagination-btn">2</button>
                 <button class="pagination-btn">3</button>
-                <span class="pagination-page-count">Page 1 of 185</span>
+                <span class="pagination-page-count">Page 1 of 35</span>
                 <button class="btn btn-tertiary btn-sm" aria-label="Next page"><span class="material-symbols-outlined">chevron_right</span></button>
               </div>
             </div>
@@ -1171,6 +1491,57 @@
 
   <script>
   (function() {
+    // ============================================================
+    //  ROW CLICKS — make entire row navigate to asset
+    // ============================================================
+    document.querySelectorAll('.sds-table--hoverable tbody tr[data-type]').forEach(function(row) {
+      row.addEventListener('click', function(e) {
+        // Don't navigate if clicking a checkbox or a link
+        if (e.target.closest('input[type="checkbox"]') || e.target.closest('a')) return;
+        var link = row.querySelector('.table-name');
+        if (link) window.location.href = link.href;
+      });
+    });
+
+    // ============================================================
+    //  BULK SELECT — checkboxes + action bar
+    // ============================================================
+    var selectAllCb = document.getElementById('select-all');
+    var rowCheckboxes = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type] .col-checkbox input[type="checkbox"]');
+    var bulkBar = document.getElementById('bulk-action-bar');
+    var bulkCountNum = document.getElementById('bulk-count-num');
+    var bulkDeselect = document.getElementById('bulk-deselect');
+
+    function updateBulkBar() {
+      var checked = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type] .col-checkbox input:checked');
+      var count = checked.length;
+      bulkCountNum.textContent = count;
+      bulkBar.classList.toggle('visible', count > 0);
+      selectAllCb.checked = count > 0 && count === rowCheckboxes.length;
+      selectAllCb.indeterminate = count > 0 && count < rowCheckboxes.length;
+    }
+
+    selectAllCb.addEventListener('change', function() {
+      rowCheckboxes.forEach(function(cb) { cb.checked = selectAllCb.checked; });
+      updateBulkBar();
+    });
+    rowCheckboxes.forEach(function(cb) { cb.addEventListener('change', updateBulkBar); });
+    bulkDeselect.addEventListener('click', function() {
+      selectAllCb.checked = false;
+      rowCheckboxes.forEach(function(cb) { cb.checked = false; });
+      updateBulkBar();
+    });
+
+    // ============================================================
+    //  FILTER SIDEBAR TOGGLE
+    // ============================================================
+    var filterToggleBtn = document.getElementById('filter-toggle');
+    var filterSidebarEl = document.querySelector('.filter-sidebar');
+
+    filterToggleBtn.addEventListener('click', function() {
+      filterSidebarEl.classList.toggle('collapsed');
+    });
+
     // ============================================================
     //  DATA: Asset metadata for detail panel rendering
     // ============================================================
@@ -1727,7 +2098,7 @@
 
       if (resultsCount) {
         if (activeFilter === 'all') {
-          resultsCount.textContent = 'Showing ' + count + ' of 1,847 assets';
+          resultsCount.textContent = 'Showing ' + count + ' of 342 assets';
         } else {
           var label = tabLabelMap[activeFilter] || 'assets';
           resultsCount.textContent = 'Showing ' + count + ' ' + label;
@@ -1735,7 +2106,7 @@
       }
       var paginationInfo = document.querySelector('.pagination-info');
       if (paginationInfo) {
-        paginationInfo.textContent = 'Showing 1-' + count + ' of 1,847 results';
+        paginationInfo.textContent = '1–' + count + ' of 342';
       }
       updateEmptyState();
     }
@@ -1826,41 +2197,44 @@
         var match = false;
 
         if (groupLabel === 'Domain') {
-          var domainCell = row.querySelector('td:nth-child(3)');
-          var domainText = domainCell ? domainCell.textContent.trim().toLowerCase() : '';
-          match = checkedVals.some(function(v) { return domainText.indexOf(v) !== -1; });
+          var domain = (row.getAttribute('data-domain') || '').toLowerCase();
+          match = checkedVals.some(function(v) { return domain.indexOf(v) !== -1; });
         } else if (groupLabel === 'Source Type') {
-          var sourceCell = row.querySelector('td:nth-child(2)');
-          var sourceText = sourceCell ? sourceCell.textContent.trim().toLowerCase() : '';
+          var source = (row.getAttribute('data-source') || '').toLowerCase();
           match = checkedVals.some(function(v) {
             var mappedSources = sourceTypeMap[v];
             if (mappedSources) {
-              return mappedSources.some(function(s) { return sourceText.indexOf(s) !== -1; });
+              return mappedSources.some(function(s) { return source.indexOf(s) !== -1; });
             }
-            return sourceText.indexOf(v) !== -1;
+            return source.indexOf(v) !== -1;
           });
         } else if (groupLabel === 'Classification') {
-          var trustCell = row.querySelector('td:nth-child(4)');
-          var trustText = trustCell ? trustCell.textContent.trim().toLowerCase() : '';
-          match = checkedVals.some(function(v) {
-            return trustText.indexOf(v) !== -1;
-          });
+          var cls = (row.getAttribute('data-classification') || '').toLowerCase();
+          match = checkedVals.some(function(v) { return cls.indexOf(v) !== -1 || (v === 'unclassified' && !cls); });
         } else if (groupLabel === 'Quality') {
-          var qualCell = row.querySelector('td:nth-child(4)');
-          var qualText = qualCell ? qualCell.textContent.trim().toLowerCase() : '';
+          var qual = (row.getAttribute('data-quality') || '').toLowerCase();
           match = checkedVals.some(function(v) {
-            if (v === 'high') return /quality:high/i.test(qualText);
-            if (v === 'medium') return /quality:med/i.test(qualText);
-            if (v === 'low') return /quality:low/i.test(qualText);
-            return qualText.indexOf(v) !== -1;
+            if (v === 'high') return qual === 'high';
+            if (v === 'medium') return qual === 'med';
+            if (v === 'low') return qual === 'low';
+            return false;
           });
         } else if (groupLabel === 'Freshness') {
-          var freshCell = row.querySelector('td:nth-child(4)');
-          var freshText = freshCell ? freshCell.textContent.trim() : '';
+          var fresh = (row.getAttribute('data-freshness') || '').toLowerCase();
           match = checkedVals.some(function(v) {
-            var fn = freshnessMap[v];
-            if (fn) return fn(freshText);
-            return freshText.toLowerCase().indexOf(v) !== -1;
+            if (v === 'stale') return fresh === 'stale';
+            if (v === 'last 24h') return /^\d+h$/.test(fresh) || /^\d+m$/.test(fresh);
+            if (v === 'last 7d') {
+              if (/^\d+[hm]$/.test(fresh)) return true;
+              var m = fresh.match(/^(\d+)d$/);
+              return m && parseInt(m[1]) <= 7;
+            }
+            if (v === 'last 30d') {
+              if (/^\d+[hm]$/.test(fresh)) return true;
+              var m2 = fresh.match(/^(\d+)d$/);
+              return m2 && parseInt(m2[1]) <= 30;
+            }
+            return false;
           });
         }
 
@@ -1897,15 +2271,24 @@
         }
       });
 
-      var filterTag = document.querySelector('.sds-tag--info');
+      var filterTag = document.getElementById('filter-applied-tag');
+      var filterCountBadge = document.getElementById('filter-count-badge');
+      var checkedCount = 0;
+      checkboxes.forEach(function(cb) { if (cb.checked) checkedCount++; });
       if (filterTag) {
-        var checkedCount = 0;
-        checkboxes.forEach(function(cb) { if (cb.checked) checkedCount++; });
         if (checkedCount > 0) {
           filterTag.textContent = checkedCount + ' filter' + (checkedCount > 1 ? 's' : '') + ' applied';
           filterTag.style.display = '';
         } else {
           filterTag.style.display = 'none';
+        }
+      }
+      if (filterCountBadge) {
+        if (checkedCount > 0) {
+          filterCountBadge.textContent = checkedCount;
+          filterCountBadge.style.display = '';
+        } else {
+          filterCountBadge.style.display = 'none';
         }
       }
 
@@ -1953,6 +2336,12 @@
         visibleRows.sort(function(a, b) {
           var aText = a.children[colIndex] ? a.children[colIndex].textContent.trim().toLowerCase() : '';
           var bText = b.children[colIndex] ? b.children[colIndex].textContent.trim().toLowerCase() : '';
+          // Numeric sort for Rows column
+          var aNum = parseFloat(aText.replace(/[kmb]/gi, function(u) { return u.toLowerCase() === 'k' ? 'e3' : u.toLowerCase() === 'm' ? 'e6' : 'e9'; }));
+          var bNum = parseFloat(bText.replace(/[kmb]/gi, function(u) { return u.toLowerCase() === 'k' ? 'e3' : u.toLowerCase() === 'm' ? 'e6' : 'e9'; }));
+          if (!isNaN(aNum) && !isNaN(bNum)) {
+            return direction === 'asc' ? aNum - bNum : bNum - aNum;
+          }
           if (aText < bText) return direction === 'asc' ? -1 : 1;
           if (aText > bText) return direction === 'asc' ? 1 : -1;
           return 0;
@@ -1972,7 +2361,7 @@
     var pageCountEl = document.querySelector('.pagination-page-count');
     var perPageSelect = document.querySelector('.pagination-per-page select');
     var currentPage = 1;
-    var totalPages = 185;
+    var totalPages = 35;
 
     function updatePaginationState() {
       pageBtns.forEach(function(btn) {
@@ -1984,9 +2373,9 @@
       if (pageCountEl) pageCountEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
       var perPage = parseInt(perPageSelect ? perPageSelect.value : 10);
       var start = (currentPage - 1) * perPage + 1;
-      var end = Math.min(currentPage * perPage, 1847);
+      var end = Math.min(currentPage * perPage, 342);
       var paginationInfo = document.querySelector('.pagination-info');
-      if (paginationInfo) paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 1,847 results';
+      if (paginationInfo) paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 342';
     }
 
     pageBtns.forEach(function(btn) {
@@ -2020,7 +2409,7 @@
     if (perPageSelect) {
       perPageSelect.addEventListener('change', function() {
         var perPage = parseInt(perPageSelect.value);
-        totalPages = Math.ceil(1847 / perPage);
+        totalPages = Math.ceil(342 / perPage);
         currentPage = 1;
         if (pageCountEl) pageCountEl.textContent = 'Page 1 of ' + totalPages;
         pageBtns.forEach(function(btn, i) { btn.textContent = i + 1; });

@@ -649,7 +649,7 @@ a:hover { text-decoration: underline; }
    ============================================================ */
 .filter-sidebar {
   width: 240px; min-width: 240px; border-right: 1px solid var(--sds-border-subtle);
-  padding: var(--sds-space-400); overflow-y: auto; background: var(--sds-bg-surface);
+  padding: var(--sds-space-400); overflow-y: auto; background: var(--sds-bg-page);
 }
 .filter-group { margin-bottom: var(--sds-space-500); }
 .filter-group-label {
@@ -663,9 +663,10 @@ a:hover { text-decoration: underline; }
   color: var(--sds-text-secondary); cursor: pointer;
 }
 .filter-option input[type="checkbox"] { accent-color: var(--sds-interactive-primary); width: 14px; height: 14px; }
+.filter-count { margin-left: auto; font-size: var(--sds-type-overline); color: var(--sds-text-disabled); font-weight: var(--sds-weight-regular); }
 
 /* Active filter pills */
-.active-filters { display: flex; gap: var(--sds-space-200); flex-wrap: wrap; margin-bottom: var(--sds-space-400); }
+.active-filters { display: flex; align-items: center; gap: var(--sds-space-200); flex-wrap: wrap; }
 .filter-pill {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 8px 2px 10px; border-radius: 12px;
@@ -724,10 +725,13 @@ a:hover { text-decoration: underline; }
    ============================================================ */
 .pagination {
   display: flex; align-items: center; justify-content: space-between;
-  padding: var(--sds-space-300) var(--sds-space-400); font-size: var(--sds-type-caption);
+  padding: var(--sds-space-400) var(--sds-space-400); font-size: var(--sds-type-caption);
   color: var(--sds-text-tertiary);
+  border-top: 1px solid var(--sds-border-subtle);
+  margin-top: var(--sds-space-200);
 }
-.pagination-pages { display: flex; gap: var(--sds-space-050); }
+.pagination-pages { display: flex; align-items: center; gap: var(--sds-space-050); }
+.pagination-page-count { margin-left: var(--sds-space-200); }
 .pagination-btn {
   width: 28px; height: 28px; border-radius: 6px; border: none; background: transparent;
   font-family: var(--sds-font-sans); font-size: var(--sds-type-caption);
