@@ -471,7 +471,7 @@ a:hover { text-decoration: underline; }
 }
 .sds-tab:hover { color: var(--sds-text-primary); }
 .sds-tab:focus-visible { outline: 2px solid var(--sds-interactive-primary); outline-offset: -2px; }
-.sds-tab.active { color: var(--sds-interactive-primary); border-bottom-color: var(--sds-interactive-primary); }
+.sds-tab.active, .sds-tab.is-active, .sds-tab[aria-selected="true"] { color: var(--sds-interactive-primary); border-bottom-color: var(--sds-interactive-primary); }
 .sds-tab:disabled, .sds-tab.disabled { color: var(--sds-text-disabled); cursor: not-allowed; pointer-events: none; }
 .sds-tab .tab-badge {
   font-size: 10px; min-width: 18px; height: 18px; border-radius: 50%;

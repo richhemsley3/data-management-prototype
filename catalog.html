@@ -421,15 +421,25 @@
       font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
     }
 
-    /* ---- Tab count badges ---- */
-    .tab-count {
-      font-size: 10px;
-      font-weight: var(--sds-weight-semibold);
-      color: var(--sds-text-tertiary);
-      margin-left: 2px;
+    /* ---- Tab badge (DS pattern) ---- */
+    .sds-tabs .sds-tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 var(--sds-space-150);
+      font-size: var(--sds-type-caption, 11px);
+      font-weight: var(--sds-weight-medium);
+      line-height: 1;
+      border-radius: 10px;
+      background: var(--sds-color-warm-gray-100, #ede9e5);
+      color: var(--sds-color-warm-gray-650, #5e574e);
     }
-    .sds-tab.active .tab-count {
-      color: var(--sds-interactive-primary);
+    .sds-tab[aria-selected="true"] .sds-tab-badge,
+    .sds-tab.is-active .sds-tab-badge {
+      background: var(--sds-color-blue-100, #e8f0fe);
+      color: var(--sds-color-blue-750, var(--sds-interactive-primary));
     }
 
     /* ---- Checkbox (design system pattern) ---- */
@@ -626,6 +636,24 @@
       position: absolute; width: 1px; height: 1px;
       padding: 0; margin: -1px; overflow: hidden;
       clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    /* ---- Empty state — center in visible viewport ---- */
+    .empty-state-cell {
+      padding: 0 !important;
+      border-bottom: none !important;
+    }
+    .empty-state-content {
+      position: sticky;
+      left: 0;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--sds-text-secondary);
+      text-align: center;
+      padding: var(--sds-space-800) var(--sds-space-400);
     }
 
     /* ---- View Mode Toggle (segmented control) ---- */
@@ -1177,11 +1205,11 @@
 
         <!-- Scope Tabs (visible in table mode only) -->
         <div class="sds-tabs" role="tablist" aria-label="Asset type filter">
-          <button class="sds-tab active" role="tab" aria-selected="true" data-filter="all">All <span class="tab-count">342</span></button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables <span class="tab-count">198</span></button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="view">Views <span class="tab-count">67</span></button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="dashboard">Dashboards <span class="tab-count">42</span></button>
-          <button class="sds-tab" role="tab" aria-selected="false" data-filter="column">Columns <span class="tab-count">35</span></button>
+          <button class="sds-tab is-active" role="tab" aria-selected="true" data-filter="all">All <span class="sds-tab-badge">342</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="table">Tables <span class="sds-tab-badge">198</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="view">Views <span class="sds-tab-badge">67</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="dashboard">Dashboards <span class="sds-tab-badge">42</span></button>
+          <button class="sds-tab" role="tab" aria-selected="false" data-filter="column">Columns <span class="sds-tab-badge">35</span></button>
         </div>
 
       </div>
@@ -1192,87 +1220,93 @@
         <!-- ==================== TABLE MODE: Filter Sidebar ==================== -->
         <aside class="filter-sidebar" aria-label="Filters">
           <!-- Domain -->
-          <div class="filter-group">
+          <div class="filter-group" data-filter-attr="domain">
             <div class="filter-group-label">Domain</div>
             <label class="filter-option">
-              <input type="checkbox" checked> Marketing <span class="filter-count">342</span>
+              <input type="checkbox" data-value="marketing"> Marketing <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Finance <span class="filter-count">287</span>
+              <input type="checkbox" data-value="analytics"> Analytics <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Engineering <span class="filter-count">524</span>
+              <input type="checkbox" data-value="finance"> Finance <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Commerce <span class="filter-count">418</span>
+              <input type="checkbox" data-value="operations"> Operations <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> HR <span class="filter-count">276</span>
+              <input type="checkbox" data-value="product"> Product <span class="filter-count">0</span>
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" data-value="sales"> Sales <span class="filter-count">0</span>
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" data-value="crm"> CRM <span class="filter-count">0</span>
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" data-value="support"> Support <span class="filter-count">0</span>
             </label>
           </div>
 
-          <!-- Source Type -->
-          <div class="filter-group">
-            <div class="filter-group-label">Source Type</div>
+          <!-- Source -->
+          <div class="filter-group" data-filter-attr="source">
+            <div class="filter-group-label">Source</div>
             <label class="filter-option">
-              <input type="checkbox"> Warehouse <span class="filter-count">892</span>
+              <input type="checkbox" data-value="snowflake"> Snowflake <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Lake <span class="filter-count">341</span>
+              <input type="checkbox" data-value="bigquery"> BigQuery <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> BI Tool <span class="filter-count">198</span>
+              <input type="checkbox" data-value="postgresql"> PostgreSQL <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> SaaS <span class="filter-count">416</span>
+              <input type="checkbox" data-value="salesforce"> Salesforce <span class="filter-count">0</span>
             </label>
           </div>
 
           <!-- Classification -->
-          <div class="filter-group">
+          <div class="filter-group" data-filter-attr="classification">
             <div class="filter-group-label">Classification</div>
             <label class="filter-option">
-              <input type="checkbox"> PII <span class="filter-count">342</span>
+              <input type="checkbox" data-value="pii"> PII <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Sensitive <span class="filter-count">215</span>
+              <input type="checkbox" data-value="sensitive"> Sensitive <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Public <span class="filter-count">648</span>
-            </label>
-            <label class="filter-option">
-              <input type="checkbox"> Unclassified <span class="filter-count">642</span>
+              <input type="checkbox" data-value="unclassified"> Unclassified <span class="filter-count">0</span>
             </label>
           </div>
 
           <!-- Quality -->
-          <div class="filter-group">
+          <div class="filter-group" data-filter-attr="quality">
             <div class="filter-group-label">Quality</div>
             <label class="filter-option">
-              <input type="checkbox"> High <span class="filter-count">1,204</span>
+              <input type="checkbox" data-value="high"> High <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Medium <span class="filter-count">485</span>
+              <input type="checkbox" data-value="med"> Medium <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Low <span class="filter-count">158</span>
+              <input type="checkbox" data-value="low"> Low <span class="filter-count">0</span>
             </label>
           </div>
 
           <!-- Freshness -->
-          <div class="filter-group">
+          <div class="filter-group" data-filter-attr="freshness">
             <div class="filter-group-label">Freshness</div>
             <label class="filter-option">
-              <input type="checkbox"> Last 24h <span class="filter-count">1,102</span>
+              <input type="checkbox" data-value="last24h"> Last 24h <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Last 7d <span class="filter-count">1,586</span>
+              <input type="checkbox" data-value="last7d"> Last 7d <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Last 30d <span class="filter-count">1,732</span>
+              <input type="checkbox" data-value="last30d"> Last 30d <span class="filter-count">0</span>
             </label>
             <label class="filter-option">
-              <input type="checkbox"> Stale <span class="filter-count">115</span>
+              <input type="checkbox" data-value="stale"> Stale <span class="filter-count">0</span>
             </label>
           </div>
         </aside>
@@ -1353,7 +1387,7 @@
               </thead>
               <tbody>
                 <!-- Row 1: customer_orders -->
-                <tr data-type="table" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2h" data-classification="pii" data-asset="customer_orders">
+                <tr data-type="table" data-source="Snowflake" data-domain="marketing" data-quality="high" data-freshness="2h" data-classification="pii" data-asset="customer_orders">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="customer_orders" role="checkbox" aria-checked="false" aria-label="Select customer_orders" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1380,7 +1414,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">ecommerce</span><span class="sds-tag">revenue</span></div></td>
                 </tr>
                 <!-- Row 2: campaign_metrics -->
-                <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="1d" data-classification="" data-asset="campaign_metrics">
+                <tr data-type="table" data-source="BigQuery" data-domain="marketing" data-quality="high" data-freshness="1d" data-classification="" data-asset="campaign_metrics">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="campaign_metrics" role="checkbox" aria-checked="false" aria-label="Select campaign_metrics" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1406,7 +1440,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">attribution</span><span class="sds-tag">roi</span></div></td>
                 </tr>
                 <!-- Row 3: email_subscribers -->
-                <tr data-type="table" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="6h" data-classification="pii" data-asset="email_subscribers">
+                <tr data-type="table" data-source="Salesforce" data-domain="crm" data-quality="high" data-freshness="6h" data-classification="pii" data-asset="email_subscribers">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="email_subscribers" role="checkbox" aria-checked="false" aria-label="Select email_subscribers" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1432,7 +1466,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">contacts</span><span class="sds-tag">gdpr</span></div></td>
                 </tr>
                 <!-- Row 4: ad_spend_daily (medium quality = warning accent) -->
-                <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="med" data-freshness="12h" data-classification="" data-asset="ad_spend_daily" class="row-risk--warning">
+                <tr data-type="view" data-source="Snowflake" data-domain="marketing" data-quality="med" data-freshness="12h" data-classification="" data-asset="ad_spend_daily" class="row-risk--warning">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="ad_spend_daily" role="checkbox" aria-checked="false" aria-label="Select ad_spend_daily" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1458,7 +1492,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">paid</span></div></td>
                 </tr>
                 <!-- Row 5: social_engagement -->
-                <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="3h" data-classification="sensitive" data-asset="social_engagement">
+                <tr data-type="table" data-source="BigQuery" data-domain="marketing" data-quality="high" data-freshness="3h" data-classification="sensitive" data-asset="social_engagement">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="social_engagement" role="checkbox" aria-checked="false" aria-label="Select social_engagement" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1485,7 +1519,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">social</span><span class="sds-tag">nlp</span></div></td>
                 </tr>
                 <!-- Row 6: lead_pipeline -->
-                <tr data-type="dashboard" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="1h" data-classification="pii" data-asset="lead_pipeline">
+                <tr data-type="dashboard" data-source="Salesforce" data-domain="crm" data-quality="high" data-freshness="1h" data-classification="pii" data-asset="lead_pipeline">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="lead_pipeline" role="checkbox" aria-checked="false" aria-label="Select lead_pipeline" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1511,7 +1545,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">sales</span><span class="sds-tag">pipeline</span></div></td>
                 </tr>
                 <!-- Row 7: content_performance (stale + low quality = error accent) -->
-                <tr data-type="column" data-source="PostgreSQL" data-domain="Marketing" data-quality="low" data-freshness="stale" data-classification="" data-asset="content_performance" class="row-risk--error">
+                <tr data-type="column" data-source="PostgreSQL" data-domain="marketing" data-quality="low" data-freshness="stale" data-classification="" data-asset="content_performance" class="row-risk--error">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="content_performance" role="checkbox" aria-checked="false" aria-label="Select content_performance" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1526,7 +1560,7 @@
                     </div>
                   </td>
                   <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
-                  <td class="domain-cell">content</td>
+                  <td class="domain-cell">marketing</td>
                   <td><div class="type-cell"><span class="material-symbols-outlined">view_column</span> Column</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--low"></span> Low</div></td>
                   <td><div class="freshness-cell freshness-cell--stale"><span class="freshness-dot freshness-dot--stale"></span> 8d ago</div></td>
@@ -1537,7 +1571,7 @@
                   <td><div class="tags-cell"><span class="sds-tag">content</span></div></td>
                 </tr>
                 <!-- Row 8: customer_segments -->
-                <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2d" data-classification="" data-asset="customer_segments">
+                <tr data-type="view" data-source="Snowflake" data-domain="analytics" data-quality="high" data-freshness="2d" data-classification="" data-asset="customer_segments">
                   <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="customer_segments" role="checkbox" aria-checked="false" aria-label="Select customer_segments" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
                   <td class="col-frozen-name">
                     <div class="asset-name-cell">
@@ -1563,15 +1597,459 @@
                   <td><span class="rows-cell">890K</span></td>
                   <td><div class="tags-cell"><span class="sds-tag">ml</span><span class="sds-tag">segments</span></div></td>
                 </tr>
-                <tr class="empty-state-row" style="display:none;">
-                  <td colspan="12" style="text-align:center; padding: 0; height: 1px;">
-                    <div style="display:flex; align-items:center; justify-content:center; min-height: 400px; color: var(--sds-text-secondary);">
-                      <div>
-                        <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
-                        <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
-                        <p style="font-size: var(--sds-type-label); margin-bottom: var(--sds-space-400);">Try adjusting your filters or search criteria.</p>
-                        <button class="btn btn-secondary" onclick="document.querySelector('.clear-all-btn').click()">Clear all filters</button>
+                <!-- Row 9: product_inventory -->
+                <tr data-type="table" data-source="PostgreSQL" data-domain="operations" data-quality="high" data-freshness="4h" data-classification="" data-asset="product_inventory">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="product_inventory" role="checkbox" aria-checked="false" aria-label="Select product_inventory" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">product_inventory</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Real-time product inventory levels across warehouses</div>
                       </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
+                  <td class="domain-cell">operations</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 4h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-yellow-600)">NR</div>N. Reyes</div></td>
+                  <td><span class="cols-cell">16</span></td>
+                  <td><span class="rows-cell">45K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">inventory</span><span class="sds-tag">supply-chain</span></div></td>
+                </tr>
+                <!-- Row 10: revenue_forecast -->
+                <tr data-type="view" data-source="Snowflake" data-domain="finance" data-quality="high" data-freshness="1d" data-classification="sensitive" data-asset="revenue_forecast">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="revenue_forecast" role="checkbox" aria-checked="false" aria-label="Select revenue_forecast" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">revenue_forecast</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Quarterly revenue projections with confidence intervals</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">finance</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">visibility</span> View</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1d ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--warning">Sensitive</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>J. Smith</div></td>
+                  <td><span class="cols-cell">14</span></td>
+                  <td><span class="rows-cell">2.1K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">finance</span><span class="sds-tag">forecast</span></div></td>
+                </tr>
+                <!-- Row 11: user_activity_log -->
+                <tr data-type="table" data-source="BigQuery" data-domain="product" data-quality="high" data-freshness="30m" data-classification="pii" data-asset="user_activity_log">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="user_activity_log" role="checkbox" aria-checked="false" aria-label="Select user_activity_log" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">user_activity_log</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Clickstream and session activity for all platform users</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">product</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 30m ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>M. Chen</div></td>
+                  <td><span class="cols-cell">32</span></td>
+                  <td><span class="rows-cell">18M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">clickstream</span><span class="sds-tag">product</span></div></td>
+                </tr>
+                <!-- Row 12: marketing_dashboard -->
+                <tr data-type="dashboard" data-source="BigQuery" data-domain="marketing" data-quality="high" data-freshness="2h" data-classification="" data-asset="marketing_dashboard">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="marketing_dashboard" role="checkbox" aria-checked="false" aria-label="Select marketing_dashboard" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Dashboard"><span class="material-symbols-outlined">dashboard</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">marketing_dashboard</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Executive marketing KPI dashboard with channel mix</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">dashboard</span> Dashboard</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>A. Patel</div></td>
+                  <td><span class="cols-cell">—</span></td>
+                  <td><span class="rows-cell">—</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">executive</span><span class="sds-tag">kpi</span></div></td>
+                </tr>
+                <!-- Row 13: payment_transactions -->
+                <tr data-type="table" data-source="PostgreSQL" data-domain="finance" data-quality="high" data-freshness="1h" data-classification="pii" data-asset="payment_transactions">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="payment_transactions" role="checkbox" aria-checked="false" aria-label="Select payment_transactions" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">payment_transactions</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Payment processing records with fraud scoring</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
+                  <td class="domain-cell">finance</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1h ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>L. Garcia</div></td>
+                  <td><span class="cols-cell">28</span></td>
+                  <td><span class="rows-cell">5.6M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">payments</span><span class="sds-tag">fraud</span></div></td>
+                </tr>
+                <!-- Row 14: churn_prediction -->
+                <tr data-type="view" data-source="Snowflake" data-domain="analytics" data-quality="med" data-freshness="3d" data-classification="" data-asset="churn_prediction" class="row-risk--warning">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="churn_prediction" role="checkbox" aria-checked="false" aria-label="Select churn_prediction" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">churn_prediction</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">ML-based customer churn probability scores</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">analytics</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">visibility</span> View</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--med"></span> Medium</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 3d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-yellow-500)">SW</div>S. Wong</div></td>
+                  <td><span class="cols-cell">11</span></td>
+                  <td><span class="rows-cell">420K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">ml</span><span class="sds-tag">churn</span></div></td>
+                </tr>
+                <!-- Row 15: order_fulfillment -->
+                <tr data-type="table" data-source="Salesforce" data-domain="operations" data-quality="high" data-freshness="5h" data-classification="" data-asset="order_fulfillment">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="order_fulfillment" role="checkbox" aria-checked="false" aria-label="Select order_fulfillment" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">order_fulfillment</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Order fulfillment tracking with shipping and delivery status</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--salesforce"></span> Salesforce</div></td>
+                  <td class="domain-cell">operations</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 5h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-700)">RJ</div>R. Johnson</div></td>
+                  <td><span class="cols-cell">20</span></td>
+                  <td><span class="rows-cell">780K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">logistics</span><span class="sds-tag">shipping</span></div></td>
+                </tr>
+                <!-- Row 16: email_open_rate -->
+                <tr data-type="column" data-source="BigQuery" data-domain="marketing" data-quality="high" data-freshness="6h" data-classification="" data-asset="email_open_rate">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="email_open_rate" role="checkbox" aria-checked="false" aria-label="Select email_open_rate" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Column"><span class="material-symbols-outlined">view_column</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">email_open_rate</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Calculated email open rate metric by campaign cohort</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">view_column</span> Column</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 6h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>A. Patel</div></td>
+                  <td><span class="cols-cell">1</span></td>
+                  <td><span class="rows-cell">—</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">email</span><span class="sds-tag">metric</span></div></td>
+                </tr>
+                <!-- Row 17: sales_dashboard -->
+                <tr data-type="dashboard" data-source="Snowflake" data-domain="sales" data-quality="high" data-freshness="45m" data-classification="sensitive" data-asset="sales_dashboard">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="sales_dashboard" role="checkbox" aria-checked="false" aria-label="Select sales_dashboard" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Dashboard"><span class="material-symbols-outlined">dashboard</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">sales_dashboard</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Regional sales performance with quota attainment</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">sales</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">dashboard</span> Dashboard</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 45m ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--warning">Sensitive</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>K. Davis</div></td>
+                  <td><span class="cols-cell">—</span></td>
+                  <td><span class="rows-cell">—</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">sales</span><span class="sds-tag">quota</span></div></td>
+                </tr>
+                <!-- Row 18: website_sessions -->
+                <tr data-type="table" data-source="BigQuery" data-domain="marketing" data-quality="high" data-freshness="15m" data-classification="" data-asset="website_sessions">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="website_sessions" role="checkbox" aria-checked="false" aria-label="Select website_sessions" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">website_sessions</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Website session data with UTM parameters and conversions</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 15m ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>M. Chen</div></td>
+                  <td><span class="cols-cell">26</span></td>
+                  <td><span class="rows-cell">42M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">web</span><span class="sds-tag">utm</span></div></td>
+                </tr>
+                <!-- Row 19: supplier_contacts -->
+                <tr data-type="table" data-source="Salesforce" data-domain="operations" data-quality="med" data-freshness="4d" data-classification="pii" data-asset="supplier_contacts" class="row-risk--warning">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="supplier_contacts" role="checkbox" aria-checked="false" aria-label="Select supplier_contacts" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">supplier_contacts</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Vendor and supplier contact directory with contract info</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--salesforce"></span> Salesforce</div></td>
+                  <td class="domain-cell">operations</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--med"></span> Medium</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 4d ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-yellow-600)">NR</div>N. Reyes</div></td>
+                  <td><span class="cols-cell">14</span></td>
+                  <td><span class="rows-cell">3.2K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">vendor</span><span class="sds-tag">contacts</span></div></td>
+                </tr>
+                <!-- Row 20: conversion_funnel -->
+                <tr data-type="view" data-source="Snowflake" data-domain="marketing" data-quality="high" data-freshness="8h" data-classification="" data-asset="conversion_funnel">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="conversion_funnel" role="checkbox" aria-checked="false" aria-label="Select conversion_funnel" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">conversion_funnel</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Multi-step conversion funnel analysis by acquisition source</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">visibility</span> View</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 8h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>T. Wilson</div></td>
+                  <td><span class="cols-cell">7</span></td>
+                  <td><span class="rows-cell">1.5M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">funnel</span><span class="sds-tag">acquisition</span></div></td>
+                </tr>
+                <!-- Row 21: expense_reports -->
+                <tr data-type="table" data-source="PostgreSQL" data-domain="finance" data-quality="low" data-freshness="stale" data-classification="sensitive" data-asset="expense_reports" class="row-risk--error">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="expense_reports" role="checkbox" aria-checked="false" aria-label="Select expense_reports" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">expense_reports</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Employee expense report submissions and approvals</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
+                  <td class="domain-cell">finance</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--low"></span> Low</div></td>
+                  <td><div class="freshness-cell freshness-cell--stale"><span class="freshness-dot freshness-dot--stale"></span> 12d ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--warning">Sensitive</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>J. Smith</div></td>
+                  <td><span class="cols-cell">19</span></td>
+                  <td><span class="rows-cell">67K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">expense</span><span class="sds-tag">hr</span></div></td>
+                </tr>
+                <!-- Row 22: operations_dashboard -->
+                <tr data-type="dashboard" data-source="Snowflake" data-domain="operations" data-quality="high" data-freshness="1h" data-classification="" data-asset="operations_dashboard">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="operations_dashboard" role="checkbox" aria-checked="false" aria-label="Select operations_dashboard" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Dashboard"><span class="material-symbols-outlined">dashboard</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">operations_dashboard</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Operational health metrics with SLA monitoring</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">operations</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">dashboard</span> Dashboard</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1h ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>L. Garcia</div></td>
+                  <td><span class="cols-cell">—</span></td>
+                  <td><span class="rows-cell">—</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">ops</span><span class="sds-tag">sla</span></div></td>
+                </tr>
+                <!-- Row 23: ab_test_results -->
+                <tr data-type="table" data-source="BigQuery" data-domain="product" data-quality="high" data-freshness="2d" data-classification="" data-asset="ab_test_results">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="ab_test_results" role="checkbox" aria-checked="false" aria-label="Select ab_test_results" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">ab_test_results</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">A/B experiment outcomes with statistical significance</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">product</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>M. Chen</div></td>
+                  <td><span class="cols-cell">15</span></td>
+                  <td><span class="rows-cell">9.4K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">experiment</span><span class="sds-tag">testing</span></div></td>
+                </tr>
+                <!-- Row 24: customer_lifetime_value -->
+                <tr data-type="column" data-source="Snowflake" data-domain="analytics" data-quality="high" data-freshness="1d" data-classification="" data-asset="customer_lifetime_value">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="customer_lifetime_value" role="checkbox" aria-checked="false" aria-label="Select customer_lifetime_value" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Column"><span class="material-symbols-outlined">view_column</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">customer_lifetime_value</a>
+                          <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Predicted customer LTV score based on purchase history</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">analytics</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">view_column</span> Column</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1d ago</div></td>
+                  <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>T. Wilson</div></td>
+                  <td><span class="cols-cell">1</span></td>
+                  <td><span class="rows-cell">—</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">ltv</span><span class="sds-tag">ml</span></div></td>
+                </tr>
+                <!-- Row 25: support_tickets -->
+                <tr data-type="table" data-source="PostgreSQL" data-domain="support" data-quality="high" data-freshness="20m" data-classification="pii" data-asset="support_tickets">
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="support_tickets" role="checkbox" aria-checked="false" aria-label="Select support_tickets" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
+                    <div class="asset-name-cell">
+                      <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
+                      <div class="asset-name-info">
+                        <div class="asset-name-row">
+                          <a href="asset.html" class="table-name">support_tickets</a>
+                          <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
+                        </div>
+                        <div class="table-desc">Customer support tickets with priority and resolution time</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
+                  <td class="domain-cell">support</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
+                  <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
+                  <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 20m ago</div></td>
+                  <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
+                  <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>K. Davis</div></td>
+                  <td><span class="cols-cell">21</span></td>
+                  <td><span class="rows-cell">124K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">support</span><span class="sds-tag">tickets</span></div></td>
+                </tr>
+                <tr class="empty-state-row" style="display:none;">
+                  <td colspan="12" class="empty-state-cell">
+                    <div class="empty-state-content">
+                      <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
+                      <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
+                      <p style="font-size: var(--sds-type-label); margin-bottom: var(--sds-space-400);">Try adjusting your filters or search criteria.</p>
+                      <button class="btn btn-secondary" onclick="document.querySelector('.clear-all-btn').click()">Clear all filters</button>
                     </div>
                   </td>
                 </tr>
@@ -2413,6 +2891,43 @@
       'column': 'columns'
     };
 
+    // ---- Compute all counts from actual data ----
+    function computeCounts() {
+      var totalCount = dataRows.length;
+      var typeCounts = {};
+      dataRows.forEach(function(row) {
+        var t = row.getAttribute('data-type');
+        typeCounts[t] = (typeCounts[t] || 0) + 1;
+      });
+
+      // Update tab badges
+      tabs.forEach(function(tab) {
+        var filter = tab.getAttribute('data-filter');
+        var badge = tab.querySelector('.sds-tab-badge');
+        if (badge) {
+          badge.textContent = filter === 'all' ? totalCount : (typeCounts[filter] || 0);
+        }
+      });
+
+      // Update header asset count
+      var assetCountEl = document.querySelector('.asset-count');
+      if (assetCountEl) assetCountEl.textContent = totalCount + ' assets';
+
+      // Update filter sidebar counts
+      document.querySelectorAll('.filter-group[data-filter-attr]').forEach(function(group) {
+        var attr = group.getAttribute('data-filter-attr');
+        group.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+          var val = cb.getAttribute('data-value');
+          var count = 0;
+          dataRows.forEach(function(row) {
+            if (rowMatchesFilterValue(row, attr, val)) count++;
+          });
+          var countSpan = cb.closest('label').querySelector('.filter-count');
+          if (countSpan) countSpan.textContent = count;
+        });
+      });
+    }
+
     function updateEmptyState() {
       var anyVisible = false;
       var visibleCount = 0;
@@ -2421,6 +2936,14 @@
       });
       if (emptyStateRow) {
         emptyStateRow.style.display = anyVisible ? 'none' : '';
+        // Size empty state content to match visible container width
+        if (!anyVisible) {
+          var container = document.querySelector('.catalog-results .sds-table-container');
+          var emptyContent = emptyStateRow.querySelector('.empty-state-content');
+          if (container && emptyContent) {
+            emptyContent.style.width = container.clientWidth + 'px';
+          }
+        }
       }
       if (paginationContainer) {
         paginationContainer.style.display = (!anyVisible || visibleCount <= perPage) ? 'none' : '';
@@ -2441,9 +2964,10 @@
         }
       });
 
+      var total = dataRows.length;
       if (resultsCount) {
         if (activeFilter === 'all') {
-          resultsCount.textContent = 'Showing ' + count + ' of 342 assets';
+          resultsCount.textContent = 'Showing ' + count + ' of ' + total + ' assets';
         } else {
           var label = tabLabelMap[activeFilter] || 'assets';
           resultsCount.textContent = 'Showing ' + count + ' ' + label;
@@ -2451,7 +2975,7 @@
       }
       var paginationSpan = document.querySelector('.sds-table-pagination > span');
       if (paginationSpan) {
-        paginationSpan.textContent = 'Showing 1–' + count + ' of 342';
+        paginationSpan.textContent = 'Showing 1–' + count + ' of ' + total;
       }
       updateEmptyState();
     }
@@ -2459,10 +2983,10 @@
     tabs.forEach(function(tab) {
       tab.addEventListener('click', function() {
         tabs.forEach(function(t) {
-          t.classList.remove('active');
+          t.classList.remove('is-active');
           t.setAttribute('aria-selected', 'false');
         });
-        tab.classList.add('active');
+        tab.classList.add('is-active');
         tab.setAttribute('aria-selected', 'true');
         activeFilter = tab.getAttribute('data-filter');
         updateVisibleRows();
@@ -2493,99 +3017,45 @@
       return clone.textContent.trim();
     }
 
-    var sourceTypeMap = {
-      'warehouse': ['snowflake', 'bigquery', 'redshift'],
-      'lake': ['databricks', 's3', 'delta lake', 'lake'],
-      'bi tool': ['tableau', 'looker', 'power bi', 'metabase'],
-      'saas': ['salesforce', 'hubspot', 'marketo', 'stripe']
-    };
-
-    var freshnessMap = {
-      'last 24h': function(text) {
-        return /fresh:\d+h/i.test(text) || /fresh:\d+m/i.test(text);
-      },
-      'last 7d': function(text) {
-        var m = text.match(/fresh:(\d+)(h|d|m)/i);
-        if (!m) return false;
-        var val = parseInt(m[1]);
-        var unit = m[2].toLowerCase();
-        if (unit === 'h' || unit === 'm') return true;
-        if (unit === 'd' && val <= 7) return true;
-        return false;
-      },
-      'last 30d': function(text) {
-        var m = text.match(/fresh:(\d+)(h|d|m)/i);
-        if (!m) return false;
-        var val = parseInt(m[1]);
-        var unit = m[2].toLowerCase();
-        if (unit === 'h' || unit === 'm') return true;
-        if (unit === 'd' && val <= 30) return true;
-        return false;
-      },
-      'stale': function(text) {
-        return /stale/i.test(text);
+    function rowMatchesFreshnessValue(fresh, val) {
+      if (val === 'stale') return fresh === 'stale';
+      if (val === 'last24h') return /^\d+h$/.test(fresh) || /^\d+m$/.test(fresh);
+      if (val === 'last7d') {
+        if (/^\d+[hm]$/.test(fresh)) return true;
+        var m = fresh.match(/^(\d+)d$/);
+        return m && parseInt(m[1]) <= 7;
       }
-    };
+      if (val === 'last30d') {
+        if (/^\d+[hm]$/.test(fresh)) return true;
+        var m2 = fresh.match(/^(\d+)d$/);
+        return m2 && parseInt(m2[1]) <= 30;
+      }
+      return false;
+    }
+
+    function rowMatchesFilterValue(row, attr, val) {
+      if (attr === 'freshness') return rowMatchesFreshnessValue((row.getAttribute('data-freshness') || '').toLowerCase(), val);
+      var rowVal = (row.getAttribute('data-' + attr) || '').toLowerCase();
+      if (attr === 'classification') return val === 'unclassified' ? !rowVal : rowVal === val;
+      return rowVal === val;
+    }
 
     function checkRowMatchesFilters(row) {
-      var groups = filterSidebar.querySelectorAll('.filter-group');
+      var groups = filterSidebar.querySelectorAll('.filter-group[data-filter-attr]');
       var anyGroupHasChecked = false;
       var allGroupsMatch = true;
 
       groups.forEach(function(group) {
+        var attr = group.getAttribute('data-filter-attr');
         var cbs = group.querySelectorAll('input[type="checkbox"]');
         var checkedVals = [];
         cbs.forEach(function(cb) {
-          if (cb.checked) checkedVals.push(getFilterValue(cb).toLowerCase());
+          if (cb.checked) checkedVals.push(cb.getAttribute('data-value'));
         });
         if (checkedVals.length === 0) return;
 
         anyGroupHasChecked = true;
-        var groupLabel = group.querySelector('.filter-group-label').textContent.trim();
-        var match = false;
-
-        if (groupLabel === 'Domain') {
-          var domain = (row.getAttribute('data-domain') || '').toLowerCase();
-          match = checkedVals.some(function(v) { return domain.indexOf(v) !== -1; });
-        } else if (groupLabel === 'Source Type') {
-          var source = (row.getAttribute('data-source') || '').toLowerCase();
-          match = checkedVals.some(function(v) {
-            var mappedSources = sourceTypeMap[v];
-            if (mappedSources) {
-              return mappedSources.some(function(s) { return source.indexOf(s) !== -1; });
-            }
-            return source.indexOf(v) !== -1;
-          });
-        } else if (groupLabel === 'Classification') {
-          var cls = (row.getAttribute('data-classification') || '').toLowerCase();
-          match = checkedVals.some(function(v) { return cls.indexOf(v) !== -1 || (v === 'unclassified' && !cls); });
-        } else if (groupLabel === 'Quality') {
-          var qual = (row.getAttribute('data-quality') || '').toLowerCase();
-          match = checkedVals.some(function(v) {
-            if (v === 'high') return qual === 'high';
-            if (v === 'medium') return qual === 'med';
-            if (v === 'low') return qual === 'low';
-            return false;
-          });
-        } else if (groupLabel === 'Freshness') {
-          var fresh = (row.getAttribute('data-freshness') || '').toLowerCase();
-          match = checkedVals.some(function(v) {
-            if (v === 'stale') return fresh === 'stale';
-            if (v === 'last 24h') return /^\d+h$/.test(fresh) || /^\d+m$/.test(fresh);
-            if (v === 'last 7d') {
-              if (/^\d+[hm]$/.test(fresh)) return true;
-              var m = fresh.match(/^(\d+)d$/);
-              return m && parseInt(m[1]) <= 7;
-            }
-            if (v === 'last 30d') {
-              if (/^\d+[hm]$/.test(fresh)) return true;
-              var m2 = fresh.match(/^(\d+)d$/);
-              return m2 && parseInt(m2[1]) <= 30;
-            }
-            return false;
-          });
-        }
-
+        var match = checkedVals.some(function(v) { return rowMatchesFilterValue(row, attr, v); });
         if (!match) allGroupsMatch = false;
       });
 
@@ -2657,6 +3127,8 @@
     });
 
     updatePills();
+    computeCounts();
+    updateVisibleRows();
 
     // ============================================================
     //  TABLE MODE: Column sort
