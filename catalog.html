@@ -166,14 +166,188 @@
     /* ---- Classification cell ---- */
     .classification-cell .sds-tag { font-size: 11px; }
 
-    /* ---- Table fit ---- */
-    .catalog-results .sds-table { table-layout: fixed; }
-    .catalog-results .sds-table th:nth-child(2) { width: auto; } /* Name takes remaining */
-    .catalog-results .sds-table th:nth-child(3) { width: 90px; } /* Quality */
-    .catalog-results .sds-table th:nth-child(4) { width: 110px; } /* Last Updated */
-    .catalog-results .sds-table th:nth-child(5) { width: 130px; } /* Classification */
-    .catalog-results .sds-table th:nth-child(6) { width: 120px; } /* Owner */
-    .catalog-results .sds-table th:nth-child(7) { width: 70px; } /* Rows */
+    /* ---- Table container — horizontal scroll ---- */
+    .catalog-results .sds-table-container {
+      overflow: hidden;
+      overflow-x: auto;
+    }
+    .catalog-results .sds-table {
+      min-width: 1400px;
+    }
+
+    /* ---- Frozen columns: checkbox + name ---- */
+    .catalog-results .sds-table th.col-frozen-checkbox,
+    .catalog-results .sds-table td.col-frozen-checkbox {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      background: var(--sds-color-white, #fff);
+      width: 40px;
+      min-width: 40px;
+    }
+    .catalog-results .sds-table th.col-frozen-name,
+    .catalog-results .sds-table td.col-frozen-name {
+      position: sticky;
+      left: 40px;
+      z-index: 4;
+      background: var(--sds-color-white, #fff);
+      min-width: 280px;
+      max-width: 340px;
+      border-right: 1px solid var(--sds-color-warm-gray-150, var(--sds-border-default));
+    }
+    .catalog-results .sds-table thead th.col-frozen-checkbox,
+    .catalog-results .sds-table thead th.col-frozen-name {
+      z-index: 6;
+      background: var(--sds-color-warm-gray-025, var(--sds-bg-surface));
+    }
+    /* Selected row frozen cell backgrounds */
+    .sds-table__row--selected td.col-frozen-checkbox,
+    .sds-table__row--selected td.col-frozen-name {
+      background: var(--sds-color-blue-100, #e8f0fe) !important;
+    }
+    /* Risk row frozen cell backgrounds */
+    .row-risk--warning td.col-frozen-checkbox,
+    .row-risk--warning td.col-frozen-name {
+      background: color-mix(in srgb, var(--sds-status-warning-bg) 30%, white) !important;
+    }
+    .row-risk--error td.col-frozen-checkbox,
+    .row-risk--error td.col-frozen-name {
+      background: color-mix(in srgb, var(--sds-status-error-bg) 40%, white) !important;
+    }
+    /* Hover state for frozen cells */
+    .sds-table--hoverable tbody tr:hover td.col-frozen-checkbox,
+    .sds-table--hoverable tbody tr:hover td.col-frozen-name {
+      background: var(--sds-color-warm-gray-050, var(--sds-bg-subtle)) !important;
+    }
+
+    /* ---- Source cell ---- */
+    .source-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-150);
+      white-space: nowrap;
+      font-size: var(--sds-type-caption);
+    }
+    /* ---- Domain cell ---- */
+    .domain-cell { white-space: nowrap; }
+    /* ---- Type cell ---- */
+    .type-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sds-space-100);
+      font-size: var(--sds-type-caption);
+      white-space: nowrap;
+    }
+    .type-cell .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--sds-text-tertiary);
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    /* ---- Columns count cell ---- */
+    .cols-cell {
+      font-size: var(--sds-type-caption);
+      font-family: var(--sds-font-mono);
+      color: var(--sds-text-secondary);
+      white-space: nowrap;
+    }
+    /* ---- Tags cell ---- */
+    .tags-cell {
+      display: flex;
+      gap: 4px;
+      flex-wrap: nowrap;
+    }
+    .tags-cell .sds-tag { font-size: 10px; flex-shrink: 0; }
+
+    /* ---- Sort button (design system pattern) ---- */
+    .sds-table__sort-btn {
+      all: unset;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sds-space-100);
+      cursor: pointer;
+      font-size: var(--sds-type-caption);
+      font-weight: var(--sds-weight-semibold);
+      color: var(--sds-color-warm-gray-550, var(--sds-text-secondary));
+      font-family: inherit;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: var(--sds-tracking-wide);
+    }
+    .sds-table__sort-btn:focus-visible {
+      outline: 2px solid var(--sds-color-blue-750, var(--sds-interactive-primary));
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    .sds-table__sort-btn:hover {
+      color: var(--sds-color-warm-gray-700, var(--sds-text-primary));
+    }
+    .sds-table__sort-icon {
+      display: inline-flex;
+      opacity: 0.35;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      vertical-align: middle;
+    }
+    .sds-table__sort-icon--active {
+      opacity: 1;
+      color: var(--sds-color-warm-gray-900, var(--sds-text-primary));
+    }
+    .sds-table__sort-icon--desc {
+      transform: rotate(180deg);
+    }
+    /* Override shell.css sortable ::after — we use explicit sort buttons now */
+    .catalog-results .sds-table th.sortable::after { display: none; }
+    .catalog-results .sds-table th.sortable { cursor: default; }
+
+    /* ---- Pagination (design system pattern) ---- */
+    .sds-table-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sds-space-300) var(--sds-space-400);
+      font-size: var(--sds-type-label);
+      color: var(--sds-color-warm-gray-550, var(--sds-text-tertiary));
+      border-top: 1px solid var(--sds-color-warm-gray-100, var(--sds-border-subtle));
+    }
+    .sds-table-pagination__controls {
+      display: flex;
+      align-items: center;
+      gap: var(--sds-space-050);
+    }
+    .sds-table-pagination__btn {
+      all: unset;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 var(--sds-space-200);
+      border-radius: 6px;
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-medium);
+      color: var(--sds-color-warm-gray-650, var(--sds-text-secondary));
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      font-family: inherit;
+    }
+    .sds-table-pagination__btn:hover:not(:disabled) {
+      background: var(--sds-color-warm-gray-050, var(--sds-bg-subtle));
+    }
+    .sds-table-pagination__btn:focus-visible {
+      outline: 2px solid var(--sds-color-blue-750, var(--sds-interactive-primary));
+      outline-offset: 2px;
+    }
+    .sds-table-pagination__btn--active {
+      background: var(--sds-color-blue-100);
+      color: var(--sds-color-blue-750, var(--sds-interactive-primary));
+      font-weight: var(--sds-weight-semibold);
+    }
+    .sds-table-pagination__btn--active:hover {
+      background: var(--sds-color-blue-100);
+    }
+    .sds-table-pagination__btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
 
     /* ---- Rows cell ---- */
     .rows-cell {
@@ -184,7 +358,7 @@
       display: block;
       text-align: right;
     }
-    .col-rows-th { text-align: right !important; }
+    .sds-table th:last-child .sds-table__sort-btn { justify-content: flex-end; }
 
     /* ---- Row risk accent (left border for problem rows) ---- */
     .sds-table--hoverable tbody tr[data-type] {
@@ -258,12 +432,38 @@
       color: var(--sds-interactive-primary);
     }
 
-    /* ---- Bulk checkbox ---- */
-    .col-checkbox { width: 36px; padding-left: var(--sds-space-300) !important; padding-right: 0 !important; }
-    .col-checkbox input[type="checkbox"] {
-      width: 16px; height: 16px; cursor: pointer;
-      accent-color: var(--sds-interactive-primary);
+    /* ---- Checkbox (design system pattern) ---- */
+    .col-checkbox { width: 40px; text-align: center; padding-left: var(--sds-space-300) !important; padding-right: 0 !important; }
+    .sds-table-checkbox {
+      width: 16px; height: 16px; flex-shrink: 0;
+      border: 1.5px solid var(--sds-color-warm-gray-350, var(--sds-border-strong));
+      border-radius: 4px; background: var(--sds-color-white, #fff);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease;
+      margin: 0 auto;
     }
+    .sds-table-checkbox svg { width: 10px; height: 10px; opacity: 0; }
+    .sds-table-checkbox:hover { border-color: var(--sds-interactive-primary); }
+    .sds-table-checkbox.is-checked {
+      background: var(--sds-interactive-primary); border-color: var(--sds-interactive-primary);
+    }
+    .sds-table-checkbox.is-checked svg { opacity: 1; }
+    .sds-table-checkbox.is-indeterminate {
+      background: var(--sds-interactive-primary); border-color: var(--sds-interactive-primary);
+    }
+    .sds-table-checkbox-dash {
+      display: none; width: 8px; height: 2px;
+      background: var(--sds-color-white, #fff); border-radius: 1px;
+    }
+    .sds-table-checkbox.is-indeterminate svg { display: none; }
+    .sds-table-checkbox.is-indeterminate .sds-table-checkbox-dash { display: block; }
+    .sds-table-checkbox:focus-visible {
+      border: 2px solid var(--sds-border-focus);
+      box-shadow: 0 0 0 3px rgba(1, 61, 91, 0.15);
+      outline: none;
+    }
+    /* Selected row highlight */
+    .sds-table__row--selected td { background: var(--sds-color-blue-100, #e8f0fe) !important; }
 
     /* ---- Clickable rows ---- */
     .sds-table--hoverable tbody tr[data-type] { cursor: pointer; }
@@ -316,8 +516,8 @@
     .catalog-results .sds-table thead th {
       position: sticky;
       top: -1px;
-      background: var(--sds-bg-surface);
-      z-index: 2;
+      background: var(--sds-color-warm-gray-025, var(--sds-bg-surface));
+      z-index: 5;
       box-shadow: inset 0 -1px 0 var(--sds-border-default);
     }
     /* Sticky results header bar */
@@ -359,44 +559,74 @@
       line-height: 16px;
     }
 
-    /* ---- Bulk action bar ---- */
-    .bulk-action-bar {
+    /* ---- Bulk action bar (design system pattern) ---- */
+    .sds-table-bulk-bar {
       display: none;
       align-items: center;
       gap: var(--sds-space-300);
-      padding: var(--sds-space-250) var(--sds-space-400);
-      background: var(--sds-interactive-primary);
-      color: var(--sds-text-on-primary);
-      border-radius: 10px;
-      font-size: var(--sds-type-caption);
-      font-weight: var(--sds-weight-medium);
       margin-bottom: var(--sds-space-300);
+      min-height: 36px;
     }
-    .bulk-action-bar.visible { display: flex; }
-    .bulk-action-bar .bulk-count { opacity: 0.85; }
-    .bulk-action-bar .bulk-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: var(--sds-text-on-primary);
+    .sds-table-bulk-bar--visible { display: flex; }
+    .sds-table-bulk-bar__count {
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-regular);
+      color: var(--sds-color-warm-gray-650);
+      white-space: nowrap;
+    }
+    .sds-table-bulk-bar__clear {
+      all: unset;
+      font-family: inherit;
+      font-size: var(--sds-type-label);
+      font-weight: var(--sds-weight-medium);
+      color: var(--sds-color-blue-750, var(--sds-interactive-primary));
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sds-table-bulk-bar__clear:hover { text-decoration: underline; }
+    .sds-table-bulk-bar__clear:focus-visible {
+      outline: 2px solid var(--sds-color-blue-750);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    .sds-table-bulk-bar__actions {
+      display: flex;
+      gap: var(--sds-space-200);
+    }
+    .sds-table-bulk-bar__btn {
+      all: unset;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sds-space-100);
+      padding: var(--sds-space-150) var(--sds-space-300);
       border-radius: 6px;
-      padding: var(--sds-space-100) var(--sds-space-250);
-      font-size: var(--sds-type-caption);
-      font-family: var(--sds-font-sans);
+      font-size: var(--sds-type-label);
       font-weight: var(--sds-weight-medium);
       cursor: pointer;
-      transition: background 0.12s;
+      font-family: inherit;
+      transition: background 0.15s ease;
     }
-    .bulk-action-bar .bulk-btn:hover { background: rgba(255,255,255,0.25); }
-    .bulk-action-bar .bulk-deselect {
-      margin-left: auto;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.7);
-      cursor: pointer;
-      font-family: var(--sds-font-sans);
-      font-size: var(--sds-type-caption);
+    .sds-table-bulk-bar__btn:focus-visible {
+      outline: 2px solid var(--sds-color-blue-750);
+      outline-offset: 2px;
     }
-    .bulk-action-bar .bulk-deselect:hover { color: var(--sds-text-on-primary); }
+    .sds-table-bulk-bar__btn--secondary {
+      color: var(--sds-color-warm-gray-700);
+      border: 1px solid var(--sds-color-warm-gray-150, var(--sds-border-default));
+    }
+    .sds-table-bulk-bar__btn--secondary:hover { background: var(--sds-color-warm-gray-050, var(--sds-bg-subtle)); }
+    .sds-table-bulk-bar__btn--danger {
+      color: var(--sds-color-red-550, var(--sds-status-error-text));
+      border: 1px solid var(--sds-color-red-200, var(--sds-status-error-bg));
+    }
+    .sds-table-bulk-bar__btn--danger:hover { background: var(--sds-color-red-050); }
+
+    /* Screen reader only */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
 
     /* ---- View Mode Toggle (segmented control) ---- */
     .view-toggle {
@@ -1050,14 +1280,29 @@
         <!-- ==================== TABLE MODE: Results ==================== -->
         <div class="catalog-results">
           <!-- Bulk Action Bar -->
-          <div class="bulk-action-bar" id="bulk-action-bar">
-            <span class="bulk-count"><strong id="bulk-count-num">0</strong> selected</span>
-            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">label</span> Classify</button>
-            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">person_add</span> Assign Owner</button>
-            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">sell</span> Add Tag</button>
-            <button class="bulk-btn"><span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">file_download</span> Export</button>
-            <button class="bulk-deselect" id="bulk-deselect">Deselect all</button>
+          <div class="sds-table-bulk-bar" id="bulk-bar" role="toolbar" aria-label="Bulk actions">
+            <span class="sds-table-bulk-bar__count" id="bulk-count">0 selected</span>
+            <button class="sds-table-bulk-bar__clear" id="bulk-clear">Clear</button>
+            <div class="sds-table-bulk-bar__actions">
+              <button class="sds-table-bulk-bar__btn sds-table-bulk-bar__btn--secondary">
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">label</span>
+                Classify
+              </button>
+              <button class="sds-table-bulk-bar__btn sds-table-bulk-bar__btn--secondary">
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">person_add</span>
+                Assign Owner
+              </button>
+              <button class="sds-table-bulk-bar__btn sds-table-bulk-bar__btn--secondary">
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">download</span>
+                Export
+              </button>
+              <button class="sds-table-bulk-bar__btn sds-table-bulk-bar__btn--danger">
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">delete</span>
+                Delete
+              </button>
+            </div>
           </div>
+          <div aria-live="polite" class="sr-only" id="selection-announce"></div>
 
           <!-- Results Header -->
           <div class="results-header">
@@ -1092,20 +1337,25 @@
             <table class="sds-table sds-table--hoverable">
               <thead>
                 <tr>
-                  <th class="col-checkbox"><input type="checkbox" id="select-all" aria-label="Select all" title="Select all"></th>
-                  <th class="col-name-th sortable sort-asc">Name</th>
-                  <th class="col-quality-th sortable">Quality</th>
-                  <th class="col-freshness-th sortable">Last Updated</th>
-                  <th class="col-class-th sortable">Classification</th>
-                  <th class="col-owner-th sortable">Owner</th>
-                  <th class="col-rows-th sortable">Rows</th>
+                  <th class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" id="select-all" role="checkbox" aria-checked="false" aria-label="Select all rows" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></th>
+                  <th class="col-frozen-name"><button class="sds-table__sort-btn" data-col="name">Name <span class="material-symbols-outlined sds-table__sort-icon sds-table__sort-icon--active" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="source">Source <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="domain">Domain <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="type">Type <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="quality">Quality <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="freshness">Last Updated <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="classification">Classification <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="owner">Owner <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="columns">Columns <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th style="text-align:right"><button class="sds-table__sort-btn" data-col="rows">Rows <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
+                  <th><button class="sds-table__sort-btn" data-col="tags">Tags <span class="material-symbols-outlined sds-table__sort-icon" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">arrow_upward</span></button></th>
                 </tr>
               </thead>
               <tbody>
                 <!-- Row 1: customer_orders -->
                 <tr data-type="table" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2h" data-classification="pii" data-asset="customer_orders">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select customer_orders"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="customer_orders" role="checkbox" aria-checked="false" aria-label="Select customer_orders" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
                       <div class="asset-name-info">
@@ -1114,21 +1364,25 @@
                           <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / marketing</div>
                         <div class="table-desc">Customer purchase transactions from e-commerce platform</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2h ago</div></td>
                   <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-450)">JS</div>J. Smith</div></td>
+                  <td><span class="cols-cell">24</span></td>
                   <td><span class="rows-cell">2.4M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">ecommerce</span><span class="sds-tag">revenue</span></div></td>
                 </tr>
                 <!-- Row 2: campaign_metrics -->
                 <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="1d" data-classification="" data-asset="campaign_metrics">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select campaign_metrics"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="campaign_metrics" role="checkbox" aria-checked="false" aria-label="Select campaign_metrics" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
                       <div class="asset-name-info">
@@ -1136,21 +1390,25 @@
                           <a href="asset.html" class="table-name">campaign_metrics</a>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--bigquery"></span> BigQuery / marketing</div>
                         <div class="table-desc">Marketing campaign performance with attribution and ROI</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1d ago</div></td>
                   <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-400)">AP</div>A. Patel</div></td>
+                  <td><span class="cols-cell">18</span></td>
                   <td><span class="rows-cell">12K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">attribution</span><span class="sds-tag">roi</span></div></td>
                 </tr>
                 <!-- Row 3: email_subscribers -->
                 <tr data-type="table" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="6h" data-classification="pii" data-asset="email_subscribers">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select email_subscribers"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="email_subscribers" role="checkbox" aria-checked="false" aria-label="Select email_subscribers" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
                       <div class="asset-name-info">
@@ -1158,21 +1416,25 @@
                           <a href="asset.html" class="table-name">email_subscribers</a>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--salesforce"></span> Salesforce / crm</div>
                         <div class="table-desc">Email subscriber list with contact details and engagement</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--salesforce"></span> Salesforce</div></td>
+                  <td class="domain-cell">crm</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 6h ago</div></td>
                   <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-red-500)">LG</div>L. Garcia</div></td>
+                  <td><span class="cols-cell">15</span></td>
                   <td><span class="rows-cell">1.2M</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">contacts</span><span class="sds-tag">gdpr</span></div></td>
                 </tr>
                 <!-- Row 4: ad_spend_daily (medium quality = warning accent) -->
                 <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="med" data-freshness="12h" data-classification="" data-asset="ad_spend_daily" class="row-risk--warning">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select ad_spend_daily"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="ad_spend_daily" role="checkbox" aria-checked="false" aria-label="Select ad_spend_daily" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
                       <div class="asset-name-info">
@@ -1180,21 +1442,25 @@
                           <a href="asset.html" class="table-name">ad_spend_daily</a>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / marketing</div>
                         <div class="table-desc">Daily advertising spend across all marketing channels</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">visibility</span> View</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--med"></span> Medium</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 12h ago</div></td>
                   <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-yellow-500)">SW</div>S. Wong</div></td>
+                  <td><span class="cols-cell">8</span></td>
                   <td><span class="rows-cell">156K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">paid</span></div></td>
                 </tr>
                 <!-- Row 5: social_engagement -->
                 <tr data-type="table" data-source="BigQuery" data-domain="Marketing" data-quality="high" data-freshness="3h" data-classification="sensitive" data-asset="social_engagement">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select social_engagement"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="social_engagement" role="checkbox" aria-checked="false" aria-label="Select social_engagement" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Table"><span class="material-symbols-outlined">table_chart</span></div>
                       <div class="asset-name-info">
@@ -1203,21 +1469,25 @@
                           <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--bigquery"></span> BigQuery / marketing</div>
                         <div class="table-desc">Social media engagement metrics with sentiment analysis</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--bigquery"></span> BigQuery</div></td>
+                  <td class="domain-cell">marketing</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">table_chart</span> Table</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 3h ago</div></td>
                   <td class="classification-cell"><span class="sds-tag sds-tag--warning">Sensitive</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-purple-550)">MC</div>M. Chen</div></td>
+                  <td><span class="cols-cell">22</span></td>
                   <td><span class="rows-cell">340K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">social</span><span class="sds-tag">nlp</span></div></td>
                 </tr>
                 <!-- Row 6: lead_pipeline -->
                 <tr data-type="dashboard" data-source="Salesforce" data-domain="Marketing" data-quality="high" data-freshness="1h" data-classification="pii" data-asset="lead_pipeline">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select lead_pipeline"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="lead_pipeline" role="checkbox" aria-checked="false" aria-label="Select lead_pipeline" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Dashboard"><span class="material-symbols-outlined">dashboard</span></div>
                       <div class="asset-name-info">
@@ -1225,21 +1495,25 @@
                           <a href="asset.html" class="table-name">lead_pipeline</a>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--salesforce"></span> Salesforce / crm</div>
                         <div class="table-desc">Sales lead pipeline with deal stages and scoring</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--salesforce"></span> Salesforce</div></td>
+                  <td class="domain-cell">crm</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">dashboard</span> Dashboard</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 1h ago</div></td>
                   <td class="classification-cell"><span class="sds-tag sds-tag--error">PII</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-blue-700)">RJ</div>R. Johnson</div></td>
+                  <td><span class="cols-cell">12</span></td>
                   <td><span class="rows-cell">34K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">sales</span><span class="sds-tag">pipeline</span></div></td>
                 </tr>
                 <!-- Row 7: content_performance (stale + low quality = error accent) -->
                 <tr data-type="column" data-source="PostgreSQL" data-domain="Marketing" data-quality="low" data-freshness="stale" data-classification="" data-asset="content_performance" class="row-risk--error">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select content_performance"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="content_performance" role="checkbox" aria-checked="false" aria-label="Select content_performance" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="Column"><span class="material-symbols-outlined">view_column</span></div>
                       <div class="asset-name-info">
@@ -1247,21 +1521,25 @@
                           <a href="asset.html" class="table-name">content_performance</a>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--postgresql"></span> PostgreSQL / content</div>
                         <div class="table-desc">Content marketing performance metrics with conversions</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--postgresql"></span> PostgreSQL</div></td>
+                  <td class="domain-cell">content</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">view_column</span> Column</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--low"></span> Low</div></td>
                   <td><div class="freshness-cell freshness-cell--stale"><span class="freshness-dot freshness-dot--stale"></span> 8d ago</div></td>
                   <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-warm-gray-500)">KD</div>K. Davis</div></td>
+                  <td><span class="cols-cell">18</span></td>
                   <td><span class="rows-cell">8.5K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">content</span></div></td>
                 </tr>
                 <!-- Row 8: customer_segments -->
                 <tr data-type="view" data-source="Snowflake" data-domain="Marketing" data-quality="high" data-freshness="2d" data-classification="" data-asset="customer_segments">
-                  <td class="col-checkbox"><input type="checkbox" aria-label="Select customer_segments"></td>
-                  <td>
+                  <td class="col-frozen-checkbox col-checkbox"><div class="sds-table-checkbox" data-row-id="customer_segments" role="checkbox" aria-checked="false" aria-label="Select customer_segments" tabindex="0"><svg viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sds-table-checkbox-dash"></span></div></td>
+                  <td class="col-frozen-name">
                     <div class="asset-name-cell">
                       <div class="asset-type-icon" title="View"><span class="material-symbols-outlined">visibility</span></div>
                       <div class="asset-name-info">
@@ -1270,52 +1548,52 @@
                           <span class="asset-badge asset-badge--certified"><span class="material-symbols-outlined">verified</span> Certified</span>
                           <span class="row-open-hint"><span class="material-symbols-outlined">arrow_forward</span> Open</span>
                         </div>
-                        <div class="asset-path"><span class="source-icon source-icon--snowflake"></span> Snowflake / analytics</div>
                         <div class="table-desc">Customer segmentation model with behavioral clusters</div>
                       </div>
                     </div>
                   </td>
+                  <td><div class="source-cell"><span class="source-icon source-icon--snowflake"></span> Snowflake</div></td>
+                  <td class="domain-cell">analytics</td>
+                  <td><div class="type-cell"><span class="material-symbols-outlined">visibility</span> View</div></td>
                   <td><div class="quality-indicator"><span class="quality-dot quality-dot--high"></span> High</div></td>
                   <td><div class="freshness-cell"><span class="freshness-dot freshness-dot--fresh"></span> 2d ago</div></td>
                   <td class="classification-cell"><span style="color:var(--sds-text-disabled)">—</span></td>
                   <td><div class="owner-cell"><div class="avatar avatar-sm" style="background:var(--sds-color-green-500)">TW</div>T. Wilson</div></td>
+                  <td><span class="cols-cell">9</span></td>
                   <td><span class="rows-cell">890K</span></td>
+                  <td><div class="tags-cell"><span class="sds-tag">ml</span><span class="sds-tag">segments</span></div></td>
                 </tr>
                 <tr class="empty-state-row" style="display:none;">
-                  <td colspan="7" style="text-align:center; padding: var(--sds-space-1200) var(--sds-space-600);">
-                    <div style="color: var(--sds-text-secondary);">
-                      <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
-                      <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
-                      <p style="font-size: var(--sds-type-label); margin-bottom: var(--sds-space-400);">Try adjusting your filters or search criteria.</p>
-                      <button class="btn btn-secondary" onclick="document.querySelector('.clear-all-btn').click()">Clear all filters</button>
+                  <td colspan="12" style="text-align:center; padding: 0; height: 1px;">
+                    <div style="display:flex; align-items:center; justify-content:center; min-height: 400px; color: var(--sds-text-secondary);">
+                      <div>
+                        <span class="material-symbols-outlined" style="font-size:48px; color: var(--sds-color-warm-gray-300); display:block; margin-bottom: var(--sds-space-300);">search_off</span>
+                        <p style="font-size: var(--sds-type-subheading); font-weight: var(--sds-weight-semibold); color: var(--sds-text-primary); margin-bottom: var(--sds-space-100);">No assets match your filters</p>
+                        <p style="font-size: var(--sds-type-label); margin-bottom: var(--sds-space-400);">Try adjusting your filters or search criteria.</p>
+                        <button class="btn btn-secondary" onclick="document.querySelector('.clear-all-btn').click()">Clear all filters</button>
+                      </div>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
 
-            <!-- Pagination -->
-            <div class="pagination">
-              <div class="pagination-controls">
-                <div class="pagination-per-page">
-                  <span>Rows per page:</span>
-                  <select aria-label="Rows per page">
-                    <option selected>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
-                  </select>
-                </div>
-                <span class="pagination-info">1–8 of 342</span>
-              </div>
-              <div class="pagination-pages">
-                <button class="btn btn-tertiary btn-sm" disabled aria-label="Previous page"><span class="material-symbols-outlined">chevron_left</span></button>
-                <button class="pagination-btn active">1</button>
-                <button class="pagination-btn">2</button>
-                <button class="pagination-btn">3</button>
-                <span class="pagination-page-count">Page 1 of 35</span>
-                <button class="btn btn-tertiary btn-sm" aria-label="Next page"><span class="material-symbols-outlined">chevron_right</span></button>
-              </div>
+          </div>
+          <!-- Pagination (design system pattern) -->
+          <div class="sds-table-pagination" id="catalog-pagination">
+            <span>Showing 1–8 of 342</span>
+            <div class="sds-table-pagination__controls">
+              <button class="sds-table-pagination__btn" aria-label="Previous page" disabled>
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">chevron_left</span>
+              </button>
+              <button class="sds-table-pagination__btn sds-table-pagination__btn--active" aria-current="page" aria-label="Page 1">1</button>
+              <button class="sds-table-pagination__btn" aria-label="Page 2">2</button>
+              <button class="sds-table-pagination__btn" aria-label="Page 3">3</button>
+              <button class="sds-table-pagination__btn" aria-label="Page 4">4</button>
+              <button class="sds-table-pagination__btn" aria-label="Page 5">5</button>
+              <button class="sds-table-pagination__btn" aria-label="Next page">
+                <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;">chevron_right</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1497,39 +1775,102 @@
     document.querySelectorAll('.sds-table--hoverable tbody tr[data-type]').forEach(function(row) {
       row.addEventListener('click', function(e) {
         // Don't navigate if clicking a checkbox or a link
-        if (e.target.closest('input[type="checkbox"]') || e.target.closest('a')) return;
+        if (e.target.closest('.sds-table-checkbox') || e.target.closest('a')) return;
         var link = row.querySelector('.table-name');
         if (link) window.location.href = link.href;
       });
     });
 
     // ============================================================
-    //  BULK SELECT — checkboxes + action bar
+    //  BULK SELECT — div-based checkboxes (design system pattern)
     // ============================================================
-    var selectAllCb = document.getElementById('select-all');
-    var rowCheckboxes = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type] .col-checkbox input[type="checkbox"]');
-    var bulkBar = document.getElementById('bulk-action-bar');
-    var bulkCountNum = document.getElementById('bulk-count-num');
-    var bulkDeselect = document.getElementById('bulk-deselect');
+    var selected = {};
+    var selectAllEl = document.getElementById('select-all');
+    var bulkBar = document.getElementById('bulk-bar');
+    var bulkCount = document.getElementById('bulk-count');
+    var bulkClear = document.getElementById('bulk-clear');
+    var announce = document.getElementById('selection-announce');
 
-    function updateBulkBar() {
-      var checked = document.querySelectorAll('.sds-table--hoverable tbody tr[data-type] .col-checkbox input:checked');
-      var count = checked.length;
-      bulkCountNum.textContent = count;
-      bulkBar.classList.toggle('visible', count > 0);
-      selectAllCb.checked = count > 0 && count === rowCheckboxes.length;
-      selectAllCb.indeterminate = count > 0 && count < rowCheckboxes.length;
+    function getRowCheckboxes() {
+      return document.querySelectorAll('.sds-table--hoverable tbody tr[data-type] .sds-table-checkbox[data-row-id]');
     }
 
-    selectAllCb.addEventListener('change', function() {
-      rowCheckboxes.forEach(function(cb) { cb.checked = selectAllCb.checked; });
-      updateBulkBar();
+    function updateSelection() {
+      var rowCbs = getRowCheckboxes();
+      var totalSelected = Object.keys(selected).filter(function(k) { return selected[k]; }).length;
+
+      // Update row checkboxes & row highlight
+      rowCbs.forEach(function(cb) {
+        var id = cb.getAttribute('data-row-id');
+        var isSelected = !!selected[id];
+        var row = cb.closest('tr');
+        cb.classList.toggle('is-checked', isSelected);
+        cb.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        row.classList.toggle('sds-table__row--selected', isSelected);
+      });
+
+      // Update select-all state
+      var allSelected = totalSelected === rowCbs.length && totalSelected > 0;
+      var someSelected = totalSelected > 0 && !allSelected;
+      selectAllEl.classList.toggle('is-checked', allSelected);
+      selectAllEl.classList.toggle('is-indeterminate', someSelected);
+      selectAllEl.setAttribute('aria-checked', allSelected ? 'true' : (someSelected ? 'mixed' : 'false'));
+
+      // Update bulk bar
+      if (totalSelected > 0) {
+        bulkBar.classList.add('sds-table-bulk-bar--visible');
+        bulkCount.textContent = totalSelected + ' item' + (totalSelected !== 1 ? 's' : '') + ' selected';
+      } else {
+        bulkBar.classList.remove('sds-table-bulk-bar--visible');
+      }
+
+      // Announce for screen readers
+      if (announce) {
+        announce.textContent = totalSelected > 0
+          ? totalSelected + ' item' + (totalSelected !== 1 ? 's' : '') + ' selected'
+          : 'No items selected';
+      }
+    }
+
+    // Checkbox click handler (div-based)
+    document.addEventListener('click', function(e) {
+      var cb = e.target.closest('.sds-table-checkbox');
+      if (!cb) return;
+
+      // Select-all
+      if (cb.id === 'select-all') {
+        var wasChecked = cb.classList.contains('is-checked');
+        var rowCbs = getRowCheckboxes();
+        rowCbs.forEach(function(rcb) {
+          var id = rcb.getAttribute('data-row-id');
+          if (wasChecked) delete selected[id];
+          else selected[id] = true;
+        });
+        updateSelection();
+        return;
+      }
+
+      // Individual row
+      var rowId = cb.getAttribute('data-row-id');
+      if (rowId) {
+        if (selected[rowId]) delete selected[rowId];
+        else selected[rowId] = true;
+        updateSelection();
+      }
     });
-    rowCheckboxes.forEach(function(cb) { cb.addEventListener('change', updateBulkBar); });
-    bulkDeselect.addEventListener('click', function() {
-      selectAllCb.checked = false;
-      rowCheckboxes.forEach(function(cb) { cb.checked = false; });
-      updateBulkBar();
+
+    // Keyboard support for div checkboxes
+    document.addEventListener('keydown', function(e) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        var cb = e.target.closest('.sds-table-checkbox');
+        if (cb) { e.preventDefault(); cb.click(); }
+      }
+    });
+
+    // Clear selection
+    bulkClear.addEventListener('click', function() {
+      selected = {};
+      updateSelection();
     });
 
     // ============================================================
@@ -2074,11 +2415,15 @@
 
     function updateEmptyState() {
       var anyVisible = false;
+      var visibleCount = 0;
       dataRows.forEach(function(row) {
-        if (row.style.display !== 'none') anyVisible = true;
+        if (row.style.display !== 'none') { anyVisible = true; visibleCount++; }
       });
       if (emptyStateRow) {
         emptyStateRow.style.display = anyVisible ? 'none' : '';
+      }
+      if (paginationContainer) {
+        paginationContainer.style.display = (!anyVisible || visibleCount <= perPage) ? 'none' : '';
       }
     }
 
@@ -2104,9 +2449,9 @@
           resultsCount.textContent = 'Showing ' + count + ' ' + label;
         }
       }
-      var paginationInfo = document.querySelector('.pagination-info');
-      if (paginationInfo) {
-        paginationInfo.textContent = '1–' + count + ' of 342';
+      var paginationSpan = document.querySelector('.sds-table-pagination > span');
+      if (paginationSpan) {
+        paginationSpan.textContent = 'Showing 1–' + count + ' of 342';
       }
       updateEmptyState();
     }
@@ -2142,7 +2487,10 @@
     function getFilterValue(checkbox) {
       var label = checkbox.closest('label');
       if (!label) return '';
-      return label.textContent.trim();
+      var clone = label.cloneNode(true);
+      var countSpan = clone.querySelector('.filter-count');
+      if (countSpan) countSpan.remove();
+      return clone.textContent.trim();
     }
 
     var sourceTypeMap = {
@@ -2353,69 +2701,78 @@
     });
 
     // ============================================================
-    //  TABLE MODE: Pagination
+    //  TABLE MODE: Pagination (design system pattern)
     // ============================================================
-    var pageBtns = document.querySelectorAll('.pagination-btn');
-    var prevBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Previous page"]');
-    var nextBtn = document.querySelector('.pagination-pages .btn-tertiary[aria-label="Next page"]');
-    var pageCountEl = document.querySelector('.pagination-page-count');
-    var perPageSelect = document.querySelector('.pagination-per-page select');
+    var paginationContainer = document.getElementById('catalog-pagination');
     var currentPage = 1;
     var totalPages = 35;
+    var totalItems = 342;
+    var perPage = 10;
 
-    function updatePaginationState() {
-      pageBtns.forEach(function(btn) {
-        btn.classList.remove('active');
-        if (parseInt(btn.textContent) === currentPage) btn.classList.add('active');
-      });
-      if (prevBtn) prevBtn.disabled = (currentPage === 1);
-      if (nextBtn) nextBtn.disabled = (currentPage === totalPages);
-      if (pageCountEl) pageCountEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
-      var perPage = parseInt(perPageSelect ? perPageSelect.value : 10);
-      var start = (currentPage - 1) * perPage + 1;
-      var end = Math.min(currentPage * perPage, 342);
-      var paginationInfo = document.querySelector('.pagination-info');
-      if (paginationInfo) paginationInfo.textContent = 'Showing ' + start + '-' + end + ' of 342';
+    function renderPagination() {
+      if (totalItems <= perPage) {
+        paginationContainer.style.display = 'none';
+        return;
+      }
+      paginationContainer.style.display = '';
+      var start = totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
+      var end = Math.min(currentPage * perPage, totalItems);
+      var html = '<span>Showing ' + start + '–' + end + ' of ' + totalItems + '</span>';
+      html += '<div class="sds-table-pagination__controls">';
+      html += '<button class="sds-table-pagination__btn" data-page="' + (currentPage - 1) + '" aria-label="Previous page"' + (currentPage <= 1 ? ' disabled' : '') + '>';
+      html += '<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:\'FILL\' 0,\'wght\' 300,\'GRAD\' 0,\'opsz\' 20;">chevron_left</span></button>';
+      var maxVisible = 5;
+      var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      var endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      if (endPage - startPage < maxVisible - 1) startPage = Math.max(1, endPage - maxVisible + 1);
+      for (var i = startPage; i <= endPage; i++) {
+        var active = i === currentPage ? ' sds-table-pagination__btn--active' : '';
+        var ariaCurrent = i === currentPage ? ' aria-current="page"' : '';
+        html += '<button class="sds-table-pagination__btn' + active + '" data-page="' + i + '" aria-label="Page ' + i + '"' + ariaCurrent + '>' + i + '</button>';
+      }
+      html += '<button class="sds-table-pagination__btn" data-page="' + (currentPage + 1) + '" aria-label="Next page"' + (currentPage >= totalPages ? ' disabled' : '') + '>';
+      html += '<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:\'FILL\' 0,\'wght\' 300,\'GRAD\' 0,\'opsz\' 20;">chevron_right</span></button>';
+      html += '</div>';
+      paginationContainer.innerHTML = html;
     }
 
-    pageBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        currentPage = parseInt(btn.textContent);
-        updatePaginationState();
-      });
+    paginationContainer.addEventListener('click', function(e) {
+      var btn = e.target.closest('.sds-table-pagination__btn');
+      if (btn && !btn.disabled) {
+        var page = parseInt(btn.getAttribute('data-page'), 10);
+        if (!isNaN(page) && page >= 1 && page <= totalPages) {
+          currentPage = page;
+          renderPagination();
+        }
+      }
     });
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        if (currentPage > 1) { currentPage--; updatePaginationState(); }
-      });
-    }
+    renderPagination();
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        if (currentPage < totalPages) {
-          currentPage++;
-          pageBtns.forEach(function(btn, i) {
-            var pageNum = currentPage - 1 + i;
-            if (pageNum < 1) pageNum = 1;
-            if (pageNum > totalPages) pageNum = totalPages;
-            btn.textContent = pageNum;
-          });
-          updatePaginationState();
-        }
-      });
-    }
+    // ============================================================
+    //  TABLE MODE: Sort buttons (design system pattern)
+    // ============================================================
+    var sortState = { col: 'name', dir: 'asc' };
 
-    if (perPageSelect) {
-      perPageSelect.addEventListener('change', function() {
-        var perPage = parseInt(perPageSelect.value);
-        totalPages = Math.ceil(342 / perPage);
-        currentPage = 1;
-        if (pageCountEl) pageCountEl.textContent = 'Page 1 of ' + totalPages;
-        pageBtns.forEach(function(btn, i) { btn.textContent = i + 1; });
-        updatePaginationState();
+    document.addEventListener('click', function(e) {
+      var sortBtn = e.target.closest('.sds-table__sort-btn');
+      if (!sortBtn) return;
+      var col = sortBtn.getAttribute('data-col');
+      if (sortState.col === col) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.col = col;
+        sortState.dir = 'asc';
+      }
+      // Update all sort button icons
+      document.querySelectorAll('.sds-table__sort-btn').forEach(function(btn) {
+        var icon = btn.querySelector('.sds-table__sort-icon');
+        if (!icon) return;
+        var btnCol = btn.getAttribute('data-col');
+        icon.classList.toggle('sds-table__sort-icon--active', btnCol === sortState.col);
+        icon.classList.toggle('sds-table__sort-icon--desc', btnCol === sortState.col && sortState.dir === 'desc');
       });
-    }
+    });
   })();
   </script>
 </body>
